@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Feeds&Speeds">
   <meta name="theme-color" content="#e0e5ec">
-  <title>Feeds & Speeds — Micro End Mill Calculator</title>
+  <title>CNC Feeds & Speeds Calculator</title>
   <style>
     :root {
       /* Theme Defaults (Neumorphism Light) */
@@ -45,11 +45,11 @@
       background-color: var(--ground);
       color: var(--ink);
       font-family: var(--font-family);
-      padding-top: max(12px, env(safe-area-inset-top));
+      padding-top: max(10px, env(safe-area-inset-top));
       padding-bottom: max(80px, calc(env(safe-area-inset-bottom) + 60px));
       padding-left: max(12px, env(safe-area-inset-left));
       padding-right: max(12px, env(safe-area-inset-right));
-      max-width: 600px;
+      max-width: 650px;
       margin: 0 auto;
       user-select: none;
       -webkit-user-select: none;
@@ -60,10 +60,10 @@
     .ios-header {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 12px;
       background: var(--panel);
-      padding: 16px;
+      padding: 12px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-out);
       border: var(--border);
@@ -74,20 +74,26 @@
     .ios-title-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 10px;
     }
 
     .app-title {
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.2px;
+      line-height: 1.2;
       color: var(--ink);
+      padding-top: 2px;
+      min-width: 0;
+      flex-shrink: 1;
     }
 
     .header-field-inline {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .header-input-label {
@@ -96,6 +102,11 @@
       letter-spacing: 0.05em;
       color: var(--secondary);
       font-weight: 700;
+    }
+
+    .header-input-label.stacked {
+      display: block;
+      margin-bottom: 6px;
     }
 
     .header-input-wrapper {
@@ -107,6 +118,7 @@
       border-radius: var(--radius-sm);
       padding: 0 8px;
       height: 36px;
+      flex-shrink: 0;
     }
 
     input[type="number"].header-num-input {
@@ -114,17 +126,18 @@
       border: none;
       box-shadow: none;
       color: var(--accent);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       height: 36px;
-      width: 70px;
+      width: 84px;
+      padding: 0;
       outline: none;
       font-family: "SF Mono", ui-monospace, monospace;
       text-align: center;
     }
 
-    /* iOS Segmented Control for Theme Picker */
-    .theme-segmented-wrapper {
+    /* Standard Segmented Wrapper & Select Dropdowns */
+    .segmented-wrapper {
       width: 100%;
       background: var(--ground);
       box-shadow: var(--shadow-in);
@@ -134,7 +147,7 @@
       position: relative;
     }
 
-    .theme-select {
+    .select-input {
       width: 100%;
       background: transparent;
       border: none;
@@ -150,7 +163,7 @@
       padding-right: 24px;
     }
 
-    .theme-segmented-wrapper::after {
+    .segmented-wrapper::after {
       content: "⌵";
       position: absolute;
       right: 12px;
@@ -161,7 +174,7 @@
       pointer-events: none;
     }
 
-    .theme-select option {
+    .select-input option {
       background: var(--ground);
       color: var(--ink);
     }
@@ -192,8 +205,8 @@
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-radius: var(--radius-lg);
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
     }
 
     .section-title {
@@ -202,21 +215,30 @@
       text-transform: uppercase;
       color: var(--secondary);
       padding-bottom: 6px;
-      margin-bottom: 12px;
+      margin-top: 14px;
+      margin-bottom: 10px;
       font-weight: 800;
       border-bottom: 1px solid rgba(128, 128, 128, 0.15);
     }
 
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
     /* Form Controls & Groups */
     .control-group {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .control-header {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: center;
       margin-bottom: 6px;
+    }
+
+    .control-header label {
+      margin-bottom: 0;
     }
 
     /* Touch Sliders */
@@ -230,7 +252,7 @@
       border: var(--border);
       border-radius: 10px;
       outline: none;
-      margin: 8px 0;
+      margin: 6px 0;
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -253,7 +275,7 @@
 
     input[type="number"] {
       width: 100%;
-      height: 44px;
+      height: 40px;
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
@@ -266,7 +288,12 @@
       font-weight: 600;
     }
 
-    /* Horizontal Scroll Presets Bar */
+    input[type="number"]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Presets Bar */
     .preset-scroll-container {
       display: flex;
       gap: 8px;
@@ -280,10 +307,10 @@
       display: none;
     }
 
-    .preset-btn {
+    .preset-btn, .option-btn {
       flex: 0 0 auto;
-      height: 38px;
-      padding: 0 14px;
+      height: 34px;
+      padding: 0 12px;
       background: var(--ground);
       box-shadow: var(--shadow-btn);
       border: var(--border);
@@ -295,15 +322,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
     }
 
-    .preset-btn:active, .preset-btn.active {
+    .preset-btn:active, .preset-btn.active, .option-btn.active {
       box-shadow: var(--shadow-btn-active);
       color: var(--accent);
       border-color: var(--accent);
     }
 
-    /* iOS Segmented Control for Flutes */
+    /* Flute Segmented Control */
     .flute-segmented-control {
       display: flex;
       background: var(--ground);
@@ -318,10 +346,10 @@
 
     .flute-btn {
       flex: 1;
-      min-width: 32px;
-      height: 36px;
+      min-width: 30px;
+      height: 32px;
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       border-radius: 8px;
       color: var(--ink);
       font-family: "SF Mono", ui-monospace, monospace;
@@ -332,13 +360,13 @@
       justify-content: center;
     }
 
-    .flute-btn.active {
-      background: var(--panel);
-      box-shadow: var(--shadow-out-sm);
+    .flute-btn:active, .flute-btn.active {
+      box-shadow: var(--shadow-btn-active);
       color: var(--accent);
+      border-color: var(--accent);
     }
 
-    /* iOS Modal Trigger for Material */
+    /* Material Trigger */
     .material-trigger {
       display: flex;
       align-items: center;
@@ -348,7 +376,7 @@
       border: var(--border);
       border-radius: var(--radius-sm);
       padding: 0 14px;
-      height: 44px;
+      height: 40px;
       width: 100%;
       cursor: pointer;
     }
@@ -364,13 +392,10 @@
       font-weight: bold;
     }
 
-    /* iOS Sheet Modal */
+    /* Modal Sheet */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
@@ -451,6 +476,7 @@
     }
 
     .material-option-item.selected {
+      box-shadow: var(--shadow-btn-active);
       border-color: var(--accent);
       color: var(--accent);
     }
@@ -458,7 +484,7 @@
     .checkbox-group {
       display: flex;
       align-items: center;
-      min-height: 44px;
+      min-height: 40px;
       gap: 12px;
       cursor: pointer;
       background: var(--ground);
@@ -466,6 +492,7 @@
       border: var(--border);
       border-radius: var(--radius-sm);
       padding: 0 14px;
+      margin-bottom: 0;
     }
 
     .checkbox-group input {
@@ -475,8 +502,22 @@
       cursor: pointer;
     }
 
+    .checkbox-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .checkbox-inline input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
     .checkbox-label {
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--ink);
@@ -489,8 +530,8 @@
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
 
     .gauge-bar-wrap {
@@ -500,7 +541,7 @@
       box-shadow: var(--shadow-in);
       border: var(--border);
       border-radius: 10px;
-      margin: 12px 0 8px 0;
+      margin: 8px 0 6px 0;
       display: flex;
       overflow: hidden;
       padding: 2px;
@@ -512,8 +553,7 @@
 
     .gauge-needle {
       position: absolute;
-      top: 0;
-      bottom: 0;
+      top: 0; bottom: 0;
       width: 6px;
       background: var(--ink);
       border-radius: 4px;
@@ -526,8 +566,8 @@
     .data-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 6px;
-      margin-bottom: 16px;
+      border-spacing: 0 4px;
+      margin-bottom: 10px;
       font-size: 13px;
     }
 
@@ -537,7 +577,7 @@
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 4px 8px;
+      padding: 2px 8px;
       text-align: left;
     }
 
@@ -545,7 +585,7 @@
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
-      padding: 10px 8px;
+      padding: 8px 8px;
       text-align: left;
     }
 
@@ -560,8 +600,8 @@
     .secondary-feeds-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
     .feed-card {
@@ -569,13 +609,13 @@
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-sm);
-      padding: 12px;
+      padding: 10px;
     }
 
     /* Checks Section */
     .check-item {
-      padding: 10px 14px;
-      margin-bottom: 8px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
       font-size: 12px;
       line-height: 1.4;
       border-radius: var(--radius-sm);
@@ -601,31 +641,34 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-bottom: 10px;
     }
 
-    /* iOS Sticky Bottom Toolbar */
+    .form-grid-2 .control-group {
+      margin-bottom: 0;
+    }
+
+    /* Sticky Bottom Toolbar */
     .ios-toolbar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       background: var(--panel);
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-top: var(--border);
       box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-      padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+      padding: 8px 16px max(8px, env(safe-area-inset-bottom));
       display: flex;
-      gap: 12px;
+      gap: 10px;
       z-index: 999;
       justify-content: center;
     }
 
     .ios-toolbar-inner {
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       display: flex;
-      gap: 12px;
+      gap: 8px;
     }
 
     .btn-action {
@@ -635,10 +678,10 @@
       border: var(--border);
       border-radius: var(--radius-sm);
       color: var(--ink);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.05em;
-      height: 44px;
+      letter-spacing: 0.03em;
+      height: 42px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -653,26 +696,30 @@
     .btn-accent {
       color: var(--accent);
     }
+
+    .btn-json {
+      color: var(--ok);
+    }
   </style>
 </head>
 <body>
 
-  <!-- iOS Header Title Bar -->
+  <!-- Navigation Header Bar -->
   <header class="ios-header">
     <div class="ios-title-bar">
-      <div class="app-title">Feeds & Speeds</div>
+      <div class="app-title">CNC Feeds &amp; Speeds Calculator</div>
       <div class="header-field-inline">
-        <label for="inp_maxSpindle" class="header-input-label" data-i18n="max_spindle">MAX U/MIN:</label>
+        <label for="inp_maxSpindle" class="header-input-label" data-i18n="max_spindle">MAX RPM:</label>
         <div class="header-input-wrapper">
           <input type="number" id="inp_maxSpindle" value="18000" min="1000" max="100000" step="500" class="header-num-input">
         </div>
       </div>
     </div>
     
-    <!-- iOS Theme Picker Segmented Bar -->
-    <label for="themeSelector" class="header-input-label" data-i18n="theme_label" style="margin-bottom: 6px;">Themes</label>
-    <div class="theme-segmented-wrapper">
-      <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)"></select>
+    <!-- Theme Picker Segmented Bar -->
+    <label for="themeSelector" class="header-input-label stacked" data-i18n="theme_label">Themes</label>
+    <div class="segmented-wrapper">
+      <select id="themeSelector" class="select-input" onchange="applyTheme(this.value)"></select>
     </div>
   </header>
 
@@ -701,7 +748,17 @@
       <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="0.6">
     </div>
 
-    <!-- Flutes (Z) iOS Segmented Control -->
+    <!-- Tool Stickout (L/D) Penalty Slider -->
+    <div class="control-group">
+      <div class="control-header">
+        <label data-i18n="overhang">Werkzeug-Auskragung (L/D)</label>
+        <span class="num" id="val_overhang" style="font-size: 15px;">3.0 × D</span>
+      </div>
+      <input type="range" id="inp_overhang" min="1.0" max="10.0" step="0.5" value="3.0">
+      <div class="note-text" id="overhangNote">L/D ≤ 3.0: Standard Steifigkeit (100%)</div>
+    </div>
+
+    <!-- Flutes (Z) Segmented Control -->
     <div class="control-group">
       <label data-i18n="flutes">Schneidenanzahl (Z)</label>
       <div class="flute-segmented-control" id="fluteGrid">
@@ -726,6 +783,30 @@
       <div class="note-text" id="matNote">---</div>
     </div>
 
+    <!-- Tool Coating & Coolant Modifiers -->
+    <div class="form-grid-2">
+      <div class="control-group">
+        <label data-i18n="coating">Beschichtung</label>
+        <div class="segmented-wrapper">
+          <select id="inp_coating" class="select-input">
+            <option value="uncoated">Uncoated (1.0× Vc)</option>
+            <option value="tialn">TiAlN (+25% Vc)</option>
+            <option value="dlc">DLC (+50% Vc)</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label data-i18n="coolant">Kühlung</label>
+        <div class="segmented-wrapper">
+          <select id="inp_coolant" class="select-input">
+            <option value="dry">Dry / Air (1.0× Vc)</option>
+            <option value="mql">MQL (+15% Vc)</option>
+            <option value="flood">Flood (+30% Vc)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <!-- Spindle Speed Slider -->
     <div class="control-group">
       <div class="control-header">
@@ -736,6 +817,12 @@
       <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
     </div>
 
+    <!-- Machine Acceleration Limit (CAM Feed Feasibility) -->
+    <div class="control-group">
+      <label data-i18n="machine_accel">Maschinen-Beschleunigung (mm/s²)</label>
+      <input type="number" id="inp_accel" value="1000" step="100" min="100" max="20000">
+    </div>
+
     <!-- Chip Thinning Checkbox -->
     <div class="control-group">
       <label class="checkbox-group">
@@ -744,7 +831,59 @@
       </label>
     </div>
 
-    <div class="section-title" style="margin-top: 20px;" data-i18n="feature_dims">Form-Geometrien</div>
+    <div class="section-title" data-i18n="feature_dims">Form-Geometrien & CAM Parameter</div>
+
+    <!-- Dynamic Custom Overrides ae / ap with Auto Mode Checkboxes -->
+    <div class="form-grid-2">
+      <div class="control-group">
+        <div class="control-header">
+          <label data-i18n="custom_ae">Custom ae (mm)</label>
+          <label class="checkbox-inline">
+            <input type="checkbox" id="chk_autoAe" checked onchange="toggleAutoMode('ae')">
+            <span class="checkbox-label" data-i18n="auto_mode">Auto</span>
+          </label>
+        </div>
+        <input type="number" id="inp_customAe" placeholder="Auto" step="0.01" disabled>
+      </div>
+      <div class="control-group">
+        <div class="control-header">
+          <label data-i18n="custom_ap">Custom ap (mm)</label>
+          <label class="checkbox-inline">
+            <input type="checkbox" id="chk_autoAp" checked onchange="toggleAutoMode('ap')">
+            <span class="checkbox-label" data-i18n="auto_mode">Auto</span>
+          </label>
+        </div>
+        <input type="number" id="inp_customAp" placeholder="Auto" step="0.01" disabled>
+      </div>
+    </div>
+
+    <!-- Ramp Configuration -->
+    <div class="form-grid-2">
+      <div class="control-group">
+        <label data-i18n="ramp_angle">Rampen-Winkel (°)</label>
+        <input type="number" id="inp_rampAngle" value="2.0" step="0.5" min="0.5" max="15.0">
+      </div>
+      <div class="control-group">
+        <label data-i18n="ramp_type">Rampen-Typ</label>
+        <div class="segmented-wrapper">
+          <select id="inp_rampType" class="select-input">
+            <option value="linear">Linear ZigZag</option>
+            <option value="helical">Helical Ramp</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thread Mode Selection -->
+    <div class="control-group">
+      <label data-i18n="thread_mode">Gewinde-Typ (Thread Mill)</label>
+      <div class="segmented-wrapper">
+        <select id="inp_threadMode" class="select-input">
+          <option value="internal" data-i18n="thread_internal">Innen-Gewinde</option>
+          <option value="external" data-i18n="thread_external">Aussen-Gewinde</option>
+        </select>
+      </div>
+    </div>
 
     <!-- Feature Inputs -->
     <div class="form-grid-2">
@@ -773,6 +912,18 @@
 
   <!-- RESULTS PANEL -->
   <section class="panel">
+    <!-- Power & MRR Summary Card -->
+    <div class="secondary-feeds-grid">
+      <div class="feed-card">
+        <label data-i18n="mrr_label">Zeitspanvolumen (MRR)</label>
+        <div class="num" id="val_mrr" style="font-size: 14px;">0.00 cm³/min</div>
+      </div>
+      <div class="feed-card">
+        <label data-i18n="power_label">Spindelleistung (P)</label>
+        <div class="num" id="val_power" style="font-size: 14px;">0.00 W</div>
+      </div>
+    </div>
+
     <!-- Chip Load Gauge -->
     <div class="gauge-card">
       <div class="control-header">
@@ -806,10 +957,10 @@
       <tbody id="millingTbody"></tbody>
     </table>
 
-    <!-- Secondary Ramp & Plunge -->
+    <!-- Ramp & Plunge Secondary Feeds -->
     <div class="secondary-feeds-grid">
       <div class="feed-card">
-        <label data-i18n="ramp_feed">Rampe (0.7×D, 1.5-2°)</label>
+        <label id="lbl_rampFeed" data-i18n="ramp_feed">Rampe Feed</label>
         <div class="num" id="val_rampFeed" style="font-size: 14px;">0 mm/min</div>
       </div>
       <div class="feed-card">
@@ -831,20 +982,27 @@
       <tbody id="specialTbody"></tbody>
     </table>
 
+    <!-- Drilling Pecking Schedule Output Card -->
+    <div class="feed-card" style="margin-bottom:10px;">
+      <label data-i18n="peck_schedule">Bohr-Tiefzyklus (Pecking Schedule)</label>
+      <div id="val_peckSchedule" class="num" style="font-size: 12px; margin-top:4px; color:var(--ink);">1st Peck: - | Sub: -</div>
+    </div>
+
     <!-- Checks & Warnings -->
-    <div class="section-title" style="margin-top: 16px;" data-i18n="checks">Plausibilitätsprüfungen</div>
+    <div class="section-title" data-i18n="checks">Plausibilitätsprüfungen</div>
     <div id="checksContainer"></div>
   </section>
 
-  <!-- iOS Bottom Toolbar -->
+  <!-- Sticky Bottom Toolbar -->
   <div class="ios-toolbar">
     <div class="ios-toolbar-inner">
       <button class="btn-action" id="langToggle">EN</button>
-      <button class="btn-action btn-accent" id="copyBtn">COPY</button>
+      <button class="btn-action btn-accent" id="copyBtn">COPY TXT</button>
+      <button class="btn-action btn-json" id="exportJsonBtn">EXPORT JSON</button>
     </div>
   </div>
 
-  <!-- iOS Material Picker Bottom Sheet Modal -->
+  <!-- Material Picker Bottom Sheet Modal -->
   <div class="modal-overlay" id="materialModal" onclick="closeMaterialModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -964,348 +1122,6 @@
         '--ok': '#10b981',
         '--border': '1px solid #4b5563',
         '--blur': 'none'
-      },
-      matrix: {
-        label: "7. Matrix Terminal",
-        '--ground': '#020d04',
-        '--panel': '#051808',
-        '--shadow-out': '0 0 10px rgba(0, 255, 65, 0.15)',
-        '--shadow-out-sm': '0 0 5px rgba(0, 255, 65, 0.15)',
-        '--shadow-in': 'inset 0 0 8px rgba(0, 0, 0, 0.9)',
-        '--shadow-btn': '0 0 8px rgba(0, 255, 65, 0.3)',
-        '--shadow-btn-active': 'inset 0 0 8px rgba(0, 255, 65, 0.5)',
-        '--accent': '#00ff41',
-        '--secondary': '#008f11',
-        '--warning': '#ccff00',
-        '--critical': '#ff3300',
-        '--ink': '#00ff41',
-        '--ok': '#00ff41',
-        '--border': '1px solid #008f11',
-        '--blur': 'none'
-      },
-      iosLight: {
-        label: "8. iOS Clean Light",
-        '--ground': '#f2f2f7',
-        '--panel': '#ffffff',
-        '--shadow-out': '0 4px 20px rgba(0, 0, 0, 0.05)',
-        '--shadow-out-sm': '0 2px 8px rgba(0, 0, 0, 0.04)',
-        '--shadow-in': 'inset 0 1px 3px rgba(0, 0, 0, 0.06)',
-        '--shadow-btn': '0 2px 6px rgba(0, 0, 0, 0.06)',
-        '--shadow-btn-active': 'inset 0 1px 3px rgba(0, 0, 0, 0.1)',
-        '--accent': '#007aff',
-        '--secondary': '#8e8e93',
-        '--warning': '#ff9500',
-        '--critical': '#ff3b30',
-        '--ink': '#000000',
-        '--ok': '#34c759',
-        '--border': '1px solid #e5e5ea',
-        '--blur': 'none'
-      },
-      iosDark: {
-        label: "9. iOS Clean Dark",
-        '--ground': '#000000',
-        '--panel': '#1c1c1e',
-        '--shadow-out': '0 4px 20px rgba(0, 0, 0, 0.5)',
-        '--shadow-out-sm': '0 2px 8px rgba(0, 0, 0, 0.4)',
-        '--shadow-in': 'inset 0 1px 3px rgba(255, 255, 255, 0.05)',
-        '--shadow-btn': '0 2px 6px rgba(255, 255, 255, 0.05)',
-        '--shadow-btn-active': 'inset 0 1px 3px rgba(0, 0, 0, 0.5)',
-        '--accent': '#0a84ff',
-        '--secondary': '#8e8e93',
-        '--warning': '#ff9f0a',
-        '--critical': '#ff453a',
-        '--ink': '#ffffff',
-        '--ok': '#30d158',
-        '--border': '1px solid #2c2c2e',
-        '--blur': 'none'
-      },
-      nord: {
-        label: "10. Nord Arctic",
-        '--ground': '#2e3440',
-        '--panel': '#3b4252',
-        '--shadow-out': '5px 5px 12px #242932, -5px -5px 12px #424b5d',
-        '--shadow-out-sm': '3px 3px 6px #242932',
-        '--shadow-in': 'inset 3px 3px 6px #242932',
-        '--shadow-btn': '4px 4px 8px #242932',
-        '--shadow-btn-active': 'inset 3px 3px 6px #242932',
-        '--accent': '#88c0d0',
-        '--secondary': '#d8dee9',
-        '--warning': '#ebcb8b',
-        '--critical': '#bf616a',
-        '--ink': '#eceff4',
-        '--ok': '#a3be8c',
-        '--border': '1px solid #4c566a',
-        '--blur': 'none'
-      },
-      dracula: {
-        label: "11. Dracula Theme",
-        '--ground': '#282a36',
-        '--panel': '#44475a',
-        '--shadow-out': '4px 4px 10px #1e1f29, -2px -2px 8px #52566d',
-        '--shadow-out-sm': '2px 2px 5px #1e1f29',
-        '--shadow-in': 'inset 3px 3px 6px #1e1f29',
-        '--shadow-btn': '3px 3px 8px #1e1f29',
-        '--shadow-btn-active': 'inset 3px 3px 6px #1e1f29',
-        '--accent': '#bd93f9',
-        '--secondary': '#6272a4',
-        '--warning': '#ffb86c',
-        '--critical': '#ff5555',
-        '--ink': '#f8f8f2',
-        '--ok': '#50fa7b',
-        '--border': '1px solid #6272a4',
-        '--blur': 'none'
-      },
-      monokai: {
-        label: "12. Monokai Pro",
-        '--ground': '#2d2a2e',
-        '--panel': '#403e41',
-        '--shadow-out': '4px 4px 10px #222023, -2px -2px 8px #4e4c50',
-        '--shadow-out-sm': '2px 2px 5px #222023',
-        '--shadow-in': 'inset 3px 3px 6px #222023',
-        '--shadow-btn': '3px 3px 6px #222023',
-        '--shadow-btn-active': 'inset 3px 3px 6px #222023',
-        '--accent': '#ffd866',
-        '--secondary': '#939293',
-        '--warning': '#fc9867',
-        '--critical': '#ff6188',
-        '--ink': '#fcfcfa',
-        '--ok': '#a9dc76',
-        '--border': '1px solid #5b595c',
-        '--blur': 'none'
-      },
-      solarizedLight: {
-        label: "13. Solarized Light",
-        '--ground': '#fdf6e3',
-        '--panel': '#eee8d5',
-        '--shadow-out': '4px 4px 10px #d3cbb7, -4px -4px 10px #ffffff',
-        '--shadow-out-sm': '2px 2px 5px #d3cbb7',
-        '--shadow-in': 'inset 3px 3px 6px #d3cbb7',
-        '--shadow-btn': '3px 3px 6px #d3cbb7',
-        '--shadow-btn-active': 'inset 3px 3px 6px #d3cbb7',
-        '--accent': '#268bd2',
-        '--secondary': '#93a1a1',
-        '--warning': '#cb4b16',
-        '--critical': '#dc322f',
-        '--ink': '#073642',
-        '--ok': '#859900',
-        '--border': '1px solid #d3cbb7',
-        '--blur': 'none'
-      },
-      solarizedDark: {
-        label: "14. Solarized Dark",
-        '--ground': '#002b36',
-        '--panel': '#073642',
-        '--shadow-out': '4px 4px 10px #001f27, -2px -2px 8px #0e4d5e',
-        '--shadow-out-sm': '2px 2px 5px #001f27',
-        '--shadow-in': 'inset 3px 3px 6px #001f27',
-        '--shadow-btn': '3px 3px 6px #001f27',
-        '--shadow-btn-active': 'inset 3px 3px 6px #001f27',
-        '--accent': '#2aa198',
-        '--secondary': '#657b83',
-        '--warning': '#b58900',
-        '--critical': '#dc322f',
-        '--ink': '#839496',
-        '--ok': '#859900',
-        '--border': '1px solid #586e75',
-        '--blur': 'none'
-      },
-      slateSteel: {
-        label: "15. Slate Steel",
-        '--ground': '#1e293b',
-        '--panel': '#334155',
-        '--shadow-out': '6px 6px 14px #111827, -4px -4px 10px #475569',
-        '--shadow-out-sm': '3px 3px 6px #111827',
-        '--shadow-in': 'inset 3px 3px 6px #111827',
-        '--shadow-btn': '4px 4px 8px #111827',
-        '--shadow-btn-active': 'inset 3px 3px 6px #111827',
-        '--accent': '#14b8a6',
-        '--secondary': '#94a3b8',
-        '--warning': '#f59e0b',
-        '--critical': '#f43f5e',
-        '--ink': '#f8fafc',
-        '--ok': '#10b981',
-        '--border': '1px solid #475569',
-        '--blur': 'none'
-      },
-      synthwave: {
-        label: "16. Synthwave 80s",
-        '--ground': '#1a102f',
-        '--panel': '#271947',
-        '--shadow-out': '0 0 12px rgba(255, 0, 128, 0.3)',
-        '--shadow-out-sm': '0 0 6px rgba(255, 0, 128, 0.2)',
-        '--shadow-in': 'inset 0 0 8px rgba(0, 0, 0, 0.8)',
-        '--shadow-btn': '0 0 8px rgba(0, 240, 255, 0.4)',
-        '--shadow-btn-active': 'inset 0 0 8px rgba(255, 0, 128, 0.6)',
-        '--accent': '#ff007f',
-        '--secondary': '#a855f7',
-        '--warning': '#facc15',
-        '--critical': '#ff2a6d',
-        '--ink': '#00f0ff',
-        '--ok': '#05ffa1',
-        '--border': '1px solid #ff007f',
-        '--blur': 'none'
-      },
-      highContrast: {
-        label: "17. High Contrast (A11y)",
-        '--ground': '#000000',
-        '--panel': '#000000',
-        '--shadow-out': 'none',
-        '--shadow-out-sm': 'none',
-        '--shadow-in': 'none',
-        '--shadow-btn': 'none',
-        '--shadow-btn-active': 'none',
-        '--accent': '#ffff00',
-        '--secondary': '#ffffff',
-        '--warning': '#ffaa00',
-        '--critical': '#ff0000',
-        '--ink': '#ffffff',
-        '--ok': '#00ff00',
-        '--border': '2px solid #ffffff',
-        '--blur': 'none'
-      },
-      emeraldGreen: {
-        label: "18. Emerald Forest",
-        '--ground': '#062c21',
-        '--panel': '#0c3e30',
-        '--shadow-out': '5px 5px 12px #031812, -3px -3px 8px #155442',
-        '--shadow-out-sm': '3px 3px 6px #031812',
-        '--shadow-in': 'inset 3px 3px 6px #031812',
-        '--shadow-btn': '4px 4px 8px #031812',
-        '--shadow-btn-active': 'inset 3px 3px 6px #031812',
-        '--accent': '#34d399',
-        '--secondary': '#6ee7b7',
-        '--warning': '#fbbf24',
-        '--critical': '#f87171',
-        '--ink': '#ecfdf5',
-        '--ok': '#10b981',
-        '--border': '1px solid #10b981',
-        '--blur': 'none'
-      },
-      midnightBlue: {
-        label: "19. Midnight Blue",
-        '--ground': '#0a192f',
-        '--panel': '#112240',
-        '--shadow-out': '6px 6px 14px #020c1b, -3px -3px 8px #1d3557',
-        '--shadow-out-sm': '3px 3px 6px #020c1b',
-        '--shadow-in': 'inset 3px 3px 6px #020c1b',
-        '--shadow-btn': '4px 4px 8px #020c1b',
-        '--shadow-btn-active': 'inset 3px 3px 6px #020c1b',
-        '--accent': '#64ffda',
-        '--secondary': '#8892b0',
-        '--warning': '#ffd166',
-        '--critical': '#ff5a5f',
-        '--ink': '#e6f1ff',
-        '--ok': '#00f5d4',
-        '--border': '1px solid #233554',
-        '--blur': 'none'
-      },
-      sunsetAmber: {
-        label: "20. Sunset Amber",
-        '--ground': '#1c1917',
-        '--panel': '#292524',
-        '--shadow-out': '5px 5px 12px #0c0a09, -3px -3px 8px #3a3533',
-        '--shadow-out-sm': '3px 3px 6px #0c0a09',
-        '--shadow-in': 'inset 3px 3px 6px #0c0a09',
-        '--shadow-btn': '4px 4px 8px #0c0a09',
-        '--shadow-btn-active': 'inset 4px 4px 8px #0c0a09',
-        '--accent': '#f97316',
-        '--secondary': '#a8a29e',
-        '--warning': '#eab308',
-        '--critical': '#ef4444',
-        '--ink': '#fafaf9',
-        '--ok': '#22c55e',
-        '--border': '1px solid #44403c',
-        '--blur': 'none'
-      },
-      softPastel: {
-        label: "21. Lavender Soft",
-        '--ground': '#f3f0ff',
-        '--panel': '#e9e3ff',
-        '--shadow-out': '6px 6px 14px #d2c8f5, -6px -6px 14px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #d2c8f5',
-        '--shadow-in': 'inset 3px 3px 6px #d2c8f5',
-        '--shadow-btn': '4px 4px 8px #d2c8f5',
-        '--shadow-btn-active': 'inset 3px 3px 6px #d2c8f5',
-        '--accent': '#7c3aed',
-        '--secondary': '#8b5cf6',
-        '--warning': '#f59e0b',
-        '--critical': '#e11d48',
-        '--ink': '#2e1065',
-        '--ok': '#059669',
-        '--border': '1px solid transparent',
-        '--blur': 'none'
-      },
-      materialLight: {
-        label: "22. Material Light",
-        '--ground': '#f5f5f5',
-        '--panel': '#ffffff',
-        '--shadow-out': '0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05)',
-        '--shadow-out-sm': '0 1px 3px rgba(0,0,0,0.1)',
-        '--shadow-in': 'inset 0 1px 3px rgba(0,0,0,0.12)',
-        '--shadow-btn': '0 2px 5px rgba(0,0,0,0.15)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.2)',
-        '--accent': '#6200ee',
-        '--secondary': '#757575',
-        '--warning': '#ff9800',
-        '--critical': '#b00020',
-        '--ink': '#212121',
-        '--ok': '#4caf50',
-        '--border': '1px solid #e0e0e0',
-        '--blur': 'none'
-      },
-      materialDark: {
-        label: "23. Material Dark",
-        '--ground': '#121212',
-        '--panel': '#1e1e1e',
-        '--shadow-out': '0 4px 10px rgba(0,0,0,0.5)',
-        '--shadow-out-sm': '0 2px 4px rgba(0,0,0,0.4)',
-        '--shadow-in': 'inset 0 1px 3px rgba(255,255,255,0.05)',
-        '--shadow-btn': '0 2px 6px rgba(0,0,0,0.4)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.6)',
-        '--accent': '#03dac6',
-        '--secondary': '#9e9e9e',
-        '--warning': '#ffb74d',
-        '--critical': '#cf6679',
-        '--ink': '#ffffff',
-        '--ok': '#81c784',
-        '--border': '1px solid #2c2c2c',
-        '--blur': 'none'
-      },
-      retroTerminal: {
-        label: "24. Retro Amber CRT",
-        '--ground': '#120a00',
-        '--panel': '#1f1200',
-        '--shadow-out': '0 0 10px rgba(255, 170, 0, 0.2)',
-        '--shadow-out-sm': '0 0 5px rgba(255, 170, 0, 0.2)',
-        '--shadow-in': 'inset 0 0 8px rgba(0,0,0,0.9)',
-        '--shadow-btn': '0 0 8px rgba(255, 170, 0, 0.3)',
-        '--shadow-btn-active': 'inset 0 0 8px rgba(255, 170, 0, 0.5)',
-        '--accent': '#ffaa00',
-        '--secondary': '#b37700',
-        '--warning': '#ffdd00',
-        '--critical': '#ff3300',
-        '--ink': '#ffaa00',
-        '--ok': '#ffcc00',
-        '--border': '1px solid #b37700',
-        '--blur': 'none'
-      },
-      cleanMinimalist: {
-        label: "25. Stark Minimalist",
-        '--ground': '#ffffff',
-        '--panel': '#f8f9fa',
-        '--shadow-out': '0 1px 3px rgba(0,0,0,0.05)',
-        '--shadow-out-sm': '0 1px 2px rgba(0,0,0,0.05)',
-        '--shadow-in': 'inset 0 1px 2px rgba(0,0,0,0.05)',
-        '--shadow-btn': '0 1px 2px rgba(0,0,0,0.05)',
-        '--shadow-btn-active': 'inset 0 1px 2px rgba(0,0,0,0.1)',
-        '--accent': '#09090b',
-        '--secondary': '#71717a',
-        '--warning': '#d97706',
-        '--critical': '#ef4444',
-        '--ink': '#09090b',
-        '--ok': '#16a34a',
-        '--border': '1px solid #e4e4e7',
-        '--blur': 'none'
       }
     };
 
@@ -1338,17 +1154,17 @@
       }
     }
 
-    // Material Database
+    // Material Database with specific cutting force Kc (N/mm²)
     const MATERIALS = [
-      { id: 'ms58', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
-      { id: 'ms63', name: 'Brass MS63 (CuZn37, sheet)', vcMin: 120, vcMax: 200, ff: 0.85, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
-      { id: 'mail', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
-      { id: 'cu',   name: 'Copper', vcMin: 120, vcMax: 200, ff: 0.80, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
-      { id: 'alu',  name: 'Aluminium', vcMin: 200, vcMax: 400, ff: 1.10, noteDE: 'Aufbauschneide beachten.', noteEN: 'Watch for built-up edge.' },
-      { id: 'steel',name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
-      { id: 'ino',  name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
-      { id: 'ti',   name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
-      { id: 'pom',  name: 'POM / plastics', vcMin: 200, vcMax: 500, ff: 1.30, noteDE: 'Schmilzt bei geringem Vorschub.', noteEN: 'Melts if feed too low.' }
+      { id: 'ms58', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
+      { id: 'ms63', name: 'Brass MS63 (CuZn37, sheet)', vcMin: 120, vcMax: 200, ff: 0.85, kc: 750, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
+      { id: 'mail', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, kc: 900, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
+      { id: 'cu',   name: 'Copper', vcMin: 120, vcMax: 200, ff: 0.80, kc: 650, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
+      { id: 'alu',  name: 'Aluminium', vcMin: 200, vcMax: 400, ff: 1.10, kc: 800, noteDE: 'Aufbauschneide beachten.', noteEN: 'Watch for built-up edge.' },
+      { id: 'steel',name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, kc: 1900, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
+      { id: 'ino',  name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, kc: 2200, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
+      { id: 'ti',   name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, kc: 1400, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
+      { id: 'pom',  name: 'POM / plastics', vcMin: 200, vcMax: 500, ff: 1.30, kc: 250, noteDE: 'Schmilzt bei geringem Vorschub.', noteEN: 'Melts if feed too low.' }
     ];
 
     const PCT_Z = { 1: 0.012, 2: 0.010, 3: 0.008, 4: 0.007, 5: 0.006, 6: 0.0055, 7: 0.005, 8: 0.0045 };
@@ -1360,23 +1176,38 @@
         tool_material: "Werkzeug & Werkstoff",
         presets: "Tool-Presets",
         tool_dia: "Fräserdurchmesser (D)",
+        overhang: "Werkzeug-Auskragung (L/D)",
         flutes: "Schneidenanzahl (Z)",
         material: "Werkstoff",
+        coating: "Beschichtung",
+        coolant: "Kühlung",
         spindle: "Spindeldrehzahl (n)",
+        machine_accel: "Maschinen-Beschleunigung (mm/s²)",
         chip_thinning: "Spanausdünnung kompensieren",
-        feature_dims: "Form-Geometrien",
+        feature_dims: "Form-Geometrien & CAM Parameter",
+        custom_ae: "Custom ae (mm)",
+        custom_ap: "Custom ap (mm)",
+        auto_mode: "Auto",
+        ramp_angle: "Rampen-Winkel (°)",
+        ramp_type: "Rampen-Typ",
+        thread_mode: "Gewinde-Typ (Thread Mill)",
+        thread_internal: "Innen-Gewinde",
+        thread_external: "Aussen-Gewinde",
         bore_dia: "Bohrung Ø (mm)",
         thread_dia: "Gewinde Ø (mm)",
         chamfer_w: "Fasenbreite (mm)",
         drill_dia: "Bohrer Ø (mm)",
         hole_depth: "Bohrtiefe (mm)",
+        mrr_label: "Zeitspanvolumen (MRR)",
+        power_label: "Spindelleistung (P)",
         chip_load_gauge: "Spanungsdicke h (Adaptive)",
         milling_ops: "Fräsoperationen (CAM)",
         special_ops: "Spezialoperationen",
+        peck_schedule: "Bohr-Tiefzyklus (Pecking Schedule)",
         op: "Op",
         param: "Parameter",
         checks: "Plausibilitätsprüfungen",
-        ramp_feed: "Rampe (0.7×D, 1.5-2°)",
+        ramp_feed: "Rampen-Vorschub",
         plunge_feed: "Eintauchen (Plunge)",
         dec_sep: ",",
         rubbing: "Reiben (<3µm)",
@@ -1390,23 +1221,38 @@
         tool_material: "Tool & Material",
         presets: "Tool Presets",
         tool_dia: "Tool Diameter (D)",
+        overhang: "Tool Stickout (L/D)",
         flutes: "Flute Count (Z)",
         material: "Material",
+        coating: "Coating",
+        coolant: "Coolant",
         spindle: "Spindle Speed (n)",
+        machine_accel: "Machine Accel (mm/s²)",
         chip_thinning: "Chip thinning compensation",
-        feature_dims: "Feature Dimensions",
+        feature_dims: "Feature Dims & CAM Params",
+        custom_ae: "Custom ae (mm)",
+        custom_ap: "Custom ap (mm)",
+        auto_mode: "Auto",
+        ramp_angle: "Ramp Angle (°)",
+        ramp_type: "Ramp Type",
+        thread_mode: "Thread Mill Type",
+        thread_internal: "Internal Thread",
+        thread_external: "External Thread",
         bore_dia: "Bore Ø (mm)",
         thread_dia: "Thread Ø (mm)",
         chamfer_w: "Chamfer Width (mm)",
         drill_dia: "Drill Ø (mm)",
         hole_depth: "Hole Depth (mm)",
+        mrr_label: "Material Removal (MRR)",
+        power_label: "Spindle Power (P)",
         chip_load_gauge: "Chip Thickness h (Adaptive)",
         milling_ops: "Milling Operations (CAM)",
         special_ops: "Special Operations",
+        peck_schedule: "Drilling Pecking Schedule",
         op: "Op",
         param: "Parameters",
         checks: "Plausibility Checks",
-        ramp_feed: "Ramp Feed (0.7×D, 1.5-2°)",
+        ramp_feed: "Ramp Feed Rate",
         plunge_feed: "Plunge Feed",
         dec_sep: ".",
         rubbing: "Rubbing (<3µm)",
@@ -1423,11 +1269,24 @@
     const inpMaxSpindle = document.getElementById('inp_maxSpindle');
     const inpToolDia = document.getElementById('inp_toolDia');
     const valToolDia = document.getElementById('val_toolDia');
+    const inpOverhang = document.getElementById('inp_overhang');
+    const valOverhang = document.getElementById('val_overhang');
+    const overhangNote = document.getElementById('overhangNote');
     const matNote = document.getElementById('matNote');
+    const inpCoating = document.getElementById('inp_coating');
+    const inpCoolant = document.getElementById('inp_coolant');
     const inpSpindle = document.getElementById('inp_spindle');
     const valSpindle = document.getElementById('val_spindle');
     const spindleWarn = document.getElementById('spindleWarn');
+    const inpAccel = document.getElementById('inp_accel');
     const inpComp = document.getElementById('inp_comp');
+    const inpCustomAe = document.getElementById('inp_customAe');
+    const inpCustomAp = document.getElementById('inp_customAp');
+    const chkAutoAe = document.getElementById('chk_autoAe');
+    const chkAutoAp = document.getElementById('chk_autoAp');
+    const inpRampAngle = document.getElementById('inp_rampAngle');
+    const inpRampType = document.getElementById('inp_rampType');
+    const inpThreadMode = document.getElementById('inp_threadMode');
     const inpBore = document.getElementById('inp_bore');
     const inpThread = document.getElementById('inp_thread');
     const inpChamfer = document.getElementById('inp_chamfer');
@@ -1435,6 +1294,7 @@
     const inpDepth = document.getElementById('inp_depth');
     const langToggle = document.getElementById('langToggle');
     const copyBtn = document.getElementById('copyBtn');
+    const exportJsonBtn = document.getElementById('exportJsonBtn');
 
     function triggerHaptic() {
       if (window.navigator && window.navigator.vibrate) {
@@ -1442,7 +1302,6 @@
       }
     }
 
-    // Modal Control Functions for iOS Sheet
     function openMaterialModal() {
       triggerHaptic();
       populateMaterialModal();
@@ -1479,6 +1338,18 @@
       updateUI();
     });
 
+    window.toggleAutoMode = function(type) {
+      triggerHaptic();
+      if (type === 'ae') {
+        inpCustomAe.disabled = chkAutoAe.checked;
+        if (chkAutoAe.checked) inpCustomAe.value = '';
+      } else if (type === 'ap') {
+        inpCustomAp.disabled = chkAutoAp.checked;
+        if (chkAutoAp.checked) inpCustomAp.value = '';
+      }
+      recalc();
+    };
+
     window.applyPreset = function(dia, flutes) {
       triggerHaptic();
       inpToolDia.value = dia;
@@ -1495,8 +1366,14 @@
       recalc();
     };
 
-    [inpMaxSpindle, inpToolDia, inpSpindle, inpComp, inpBore, inpThread, inpChamfer, inpDrill, inpDepth].forEach(el => {
+    [
+      inpMaxSpindle, inpToolDia, inpOverhang, inpCoating, inpCoolant, 
+      inpSpindle, inpAccel, inpComp, inpCustomAe, inpCustomAp, 
+      inpRampAngle, inpRampType, inpThreadMode, inpBore, inpThread, 
+      inpChamfer, inpDrill, inpDepth
+    ].forEach(el => {
       el.addEventListener('input', recalc);
+      el.addEventListener('change', recalc);
     });
 
     function formatNum(num, decimals = 2) {
@@ -1514,8 +1391,9 @@
       recalc();
     }
 
+    let calculatedData = {}; // Global state for export
+
     function recalc() {
-      // Dynamic Max Spindle Limit
       const maxSpindleLimit = Math.max(1000, parseInt(inpMaxSpindle.value) || 18000);
       inpSpindle.max = maxSpindleLimit;
 
@@ -1526,15 +1404,44 @@
       }
 
       const D = parseFloat(inpToolDia.value);
+      const ld = parseFloat(inpOverhang.value);
       const z = selectedFlutes;
       const mat = MATERIALS[selectedMaterialIndex];
       const comp = inpComp.checked;
+      const accel = parseFloat(inpAccel.value) || 1000;
 
-      const boreDia = parseFloat(inpBore.value) || 0;
-      const threadDia = parseFloat(inpThread.value) || 0;
-      const chamferW = parseFloat(inpChamfer.value) || 0;
-      const drillDia = parseFloat(inpDrill.value) || 0;
-      const holeDepth = parseFloat(inpDepth.value) || 0;
+      // 1. Tool Stickout Penalty Factor
+      let ldPenalty = 1.0;
+      if (ld > 3.0) {
+        ldPenalty = Math.pow(3.0 / ld, 3);
+      }
+      valOverhang.textContent = `${formatNum(ld, 1)} × D`;
+      if (ld > 3.0) {
+        overhangNote.textContent = lang === 'DE' 
+          ? `⚠️ L/D > 3: Vorschub & ap auf ${(ldPenalty * 100).toFixed(0)}% skaliert (Steifigkeit)`
+          : `⚠️ L/D > 3: Feed & ap capped to ${(ldPenalty * 100).toFixed(0)}% (Rigidity)`;
+        overhangNote.style.color = 'var(--warning)';
+      } else {
+        overhangNote.textContent = lang === 'DE' ? 'L/D ≤ 3.0: Standard Steifigkeit (100%)' : 'L/D ≤ 3.0: Full Rigidity (100%)';
+        overhangNote.style.color = 'var(--secondary)';
+      }
+
+      // 2. Coating & Coolant Vc Multipliers
+      let coatingMult = 1.0;
+      if (inpCoating.value === 'tialn') coatingMult = 1.25;
+      else if (inpCoating.value === 'dlc') coatingMult = 1.50;
+
+      let coolantMult = 1.0;
+      if (inpCoolant.value === 'mql') coolantMult = 1.15;
+      else if (inpCoolant.value === 'flood') coolantMult = 1.30;
+
+      const baseFz = D * PCT_Z[z] * mat.ff * ldPenalty;
+      const vc = (Math.PI * D * n) / 1000;
+      const targetVcMean = ((mat.vcMin + mat.vcMax) / 2) * coatingMult * coolantMult;
+
+      let axCap = 1.0 * Math.min(1.0, Math.sqrt(ldPenalty));
+      if (mat.ff <= 0.4) axCap = 0.35 * Math.min(1.0, Math.sqrt(ldPenalty));
+      else if (mat.ff <= 0.5) axCap = 0.50 * Math.min(1.0, Math.sqrt(ldPenalty));
 
       // Active preset toggle state
       document.querySelectorAll('.preset-btn').forEach(btn => {
@@ -1547,41 +1454,40 @@
       valSpindle.textContent = `${n.toLocaleString()} min⁻¹`;
       matNote.textContent = lang === 'DE' ? mat.noteDE : mat.noteEN;
 
-      // Spindle limit check
       const isAtMaxLimit = n >= maxSpindleLimit;
       if (isAtMaxLimit) {
         spindleWarn.style.display = 'block';
         spindleWarn.textContent = lang === 'DE' 
-          ? `⚠️ MAX Spindellimit erreicht (${maxSpindleLimit.toLocaleString()} min⁻¹)`
+          ? `⚠️ MAX Spindellimit reached (${maxSpindleLimit.toLocaleString()} min⁻¹)`
           : `⚠️ MAX spindle limit reached (${maxSpindleLimit.toLocaleString()} rpm)`;
       } else {
         spindleWarn.style.display = 'none';
       }
 
-      const fz = D * PCT_Z[z] * mat.ff;
-      const vc = (Math.PI * D * n) / 1000;
-      const targetVcMean = (mat.vcMin + mat.vcMax) / 2;
-
-      let axCap = 1.0;
-      if (mat.ff <= 0.4) axCap = 0.35;
-      else if (mat.ff <= 0.5) axCap = 0.50;
+      // Dynamic User Custom Overrides (Handling Auto Mode Checkboxes)
+      const isAeAuto = chkAutoAe.checked || inpCustomAe.value === '';
+      const isApAuto = chkAutoAp.checked || inpCustomAp.value === '';
+      const customAe = !isAeAuto ? parseFloat(inpCustomAe.value) : NaN;
+      const customAp = !isApAuto ? parseFloat(inpCustomAp.value) : NaN;
 
       const opsConfig = [
-        { name: 'Adaptive / Trochoidal', ae: 0.20 * D, ap: 1.00 * D, factor: 1.00 },
-        { name: 'Full Slot', ae: 1.00 * D, ap: 0.45 * D, factor: 0.60 },
-        { name: 'Contour (Side Wall)', ae: 0.50 * D, ap: 0.45 * D, factor: 0.75 },
-        { name: 'Finishing', ae: 0.05 * D, ap: 1.00 * D, factor: 1.10 },
+        { name: 'Adaptive / Trochoidal', ae: !isNaN(customAe) ? customAe : 0.20 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.00 },
+        { name: 'Full Slot', ae: 1.00 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.60 },
+        { name: 'Contour (Side Wall)', ae: 0.50 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.75 },
+        { name: 'Finishing', ae: 0.05 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.10 },
         { name: 'Freeing Pass (Last)', ae: 1.00 * D, ap: Math.min(0.20 * D, 0.15), factor: 0.50 },
-        { name: 'Helical Interp.', ae: 0.10 * D, ap: 1.00 * D, factor: 0.45 }
+        { name: 'Helical Interp.', ae: 0.10 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 0.45 }
       ];
 
       let millingHTML = '';
       let adaptiveEffectiveH = 0;
       let adaptiveFeed = 0;
+      let adaptiveAe = 0;
+      let adaptiveAp = 0;
 
       opsConfig.forEach((op, idx) => {
         const uncappedAp = op.ap;
-        const ap = Math.min(uncappedAp, axCap * D);
+        const ap = isNaN(customAp) ? Math.min(uncappedAp, axCap * D) : customAp;
         const ae = op.ae;
 
         let k = 1;
@@ -1590,31 +1496,48 @@
           k = Math.sqrt(1 - (r * r));
         }
 
-        const fzProg = comp ? fz / k : fz;
+        const fzProg = comp ? baseFz / k : baseFz;
         const effectiveH = fzProg * k;
         const vf = n * z * fzProg * op.factor;
 
         if (idx === 0) {
           adaptiveEffectiveH = effectiveH;
           adaptiveFeed = vf;
+          adaptiveAe = ae;
+          adaptiveAp = ap;
         }
 
         millingHTML += `
           <tr>
             <td><strong>${op.name}</strong></td>
             <td class="num">${formatNum(ae, 2)}</td>
-            <td class="num">${formatNum(ap, 2)}${ap < uncappedAp ? '*' : ''}</td>
+            <td class="num">${formatNum(ap, 2)}${ap < uncappedAp && isNaN(customAp) ? '*' : ''}</td>
             <td class="num" style="font-weight:700; color:var(--accent); font-size:14px;">${Math.round(vf)}</td>
           </tr>
         `;
       });
       document.getElementById('millingTbody').innerHTML = millingHTML;
 
-      const rampFeed = adaptiveFeed * 0.35;
-      const plungeFeed = n * z * fz * 0.12;
+      // 3. Material Removal Rate (MRR) & Power Calculation
+      const mrr = (adaptiveAe * adaptiveAp * adaptiveFeed) / 1000; // cm³/min
+      const powerW = (mrr * mat.kc) / 60; // Watts
+      document.getElementById('val_mrr').textContent = `${formatNum(mrr, 2)} cm³/min`;
+      document.getElementById('val_power').textContent = `${formatNum(powerW, 1)} W (${formatNum(powerW/735.5, 2)} HP)`;
+
+      // 4. Ramp Physics Calculation
+      const rampDeg = parseFloat(inpRampAngle.value) || 2.0;
+      const rampRad = (rampDeg * Math.PI) / 180;
+      const isHelicalRamp = inpRampType.value === 'helical';
+      const slotFeed = n * z * baseFz * 0.60;
+      const rampFactor = (Math.cos(rampRad) + 0.5 * Math.sin(rampRad)) * (isHelicalRamp ? 0.85 : 1.0);
+      const rampFeed = slotFeed * rampFactor;
+      const plungeFeed = n * z * baseFz * 0.12;
+
+      document.getElementById('lbl_rampFeed').textContent = `${isHelicalRamp ? 'Helical' : 'Linear'} Ramp (${rampDeg}°)`;
       document.getElementById('val_rampFeed').textContent = `${Math.round(rampFeed)} mm/min`;
       document.getElementById('val_plungeFeed').textContent = `${Math.round(plungeFeed)} mm/min`;
 
+      // Gauge Calculations
       const hMicrons = adaptiveEffectiveH * 1000;
       const maxMicrons = 0.03 * D * 1000;
       const gaugePercent = Math.min(100, Math.max(0, (hMicrons / maxMicrons) * 100));
@@ -1637,6 +1560,14 @@
         zoneLabel.style.color = 'var(--ok)';
       }
 
+      // Feature Geometries & Special Ops
+      const boreDia = parseFloat(inpBore.value) || 0;
+      const threadDia = parseFloat(inpThread.value) || 0;
+      const chamferW = parseFloat(inpChamfer.value) || 0;
+      const drillDia = parseFloat(inpDrill.value) || 0;
+      const holeDepth = parseFloat(inpDepth.value) || 0;
+      const isExternalThread = inpThreadMode.value === 'external';
+
       let specialHTML = '';
 
       // Helical Bore
@@ -1644,7 +1575,6 @@
       if (boreDia > D) {
         const pathDia = boreDia - D;
         const factor = pathDia / boreDia;
-        const slotFeed = n * z * fz * 0.60;
         boreFeed = slotFeed * factor;
       }
       specialHTML += `
@@ -1655,17 +1585,23 @@
         </tr>
       `;
 
-      // Thread Milling
+      // Thread Milling (Internal vs External Logic)
       let threadFeed = 0;
       if (threadDia > D) {
-        const fzThread = fz * 0.60;
-        const factor = (threadDia - D) / threadDia;
+        const fzThread = baseFz * 0.60;
         const edgeFeed = n * z * fzThread;
+        const factor = isExternalThread 
+          ? (threadDia + D) / threadDia 
+          : (threadDia - D) / threadDia;
         threadFeed = edgeFeed * factor;
       }
+      const threadLabel = isExternalThread 
+        ? (lang === 'DE' ? 'Aussen' : 'Ext') 
+        : (lang === 'DE' ? 'Innen' : 'Int');
+
       specialHTML += `
         <tr>
-          <td><strong>Thread Mill</strong></td>
+          <td><strong>Thread Mill (${threadLabel})</strong></td>
           <td>Thread Ø ${formatNum(threadDia, 2)} mm</td>
           <td class="num" style="font-weight:700;">${Math.round(threadFeed)}</td>
         </tr>
@@ -1673,7 +1609,7 @@
 
       // Chamfering
       const effChamferDia = D + chamferW;
-      const fzCham = fz * 1.4142;
+      const fzCham = baseFz * 1.4142;
       const chamferFeed = n * z * fzCham;
       specialHTML += `
         <tr>
@@ -1683,13 +1619,19 @@
         </tr>
       `;
 
-      // Drilling
+      // Drilling & Pecking Schedule Generator
       const drillVc = targetVcMean * 0.70;
       const nDrill = Math.min(maxSpindleLimit, (drillVc * 1000) / (Math.PI * drillDia));
-      const feedPerRev = drillDia * 0.02 * mat.ff;
+      const feedPerRev = drillDia * 0.02 * mat.ff * ldPenalty;
       const depthRatio = holeDepth / drillDia;
       const depthFactor = depthRatio <= 3 ? 1.00 : (depthRatio <= 5 ? 0.85 : 0.70);
       const drillFeed = nDrill * feedPerRev * depthFactor;
+      
+      const firstPeck = 1.0 * drillDia;
+      const subPeck = 0.5 * drillDia;
+      const peckText = `1st Peck: ${formatNum(firstPeck, 2)} mm | Sub Pecks: ${formatNum(subPeck, 2)} mm ${depthRatio > 3 ? '(Full Retract Out)' : '(Chip Break)'}`;
+      document.getElementById('val_peckSchedule').textContent = peckText;
+
       specialHTML += `
         <tr>
           <td><strong>Drilling</strong></td>
@@ -1700,19 +1642,29 @@
 
       document.getElementById('specialTbody').innerHTML = specialHTML;
 
+      // 5. Machine Acceleration Feasibility Check
+      const v_mm_s = adaptiveFeed / 60; // mm/sec
+      const distToAccel = (v_mm_s * v_mm_s) / (2 * accel); // distance in mm to accelerate
+      const minCornerDist = Math.PI * (boreDia - D); // approximate path distance
+
+      // Checks & Safety Plausibility
       const checks = [];
 
       if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Effektive Spanungsdicke < 3 µm: Werkzeug reibt und überhitzt.' : 'Effective chip thickness < 3 µm: tool rubs and overheats.' });
-      if (fz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% des Durchmessers: Hohes Bruchrisiko!' : 'fz > 2% of diameter: high breakage risk!' });
+      if (baseFz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% des Durchmessers: Hohes Bruchrisiko!' : 'fz > 2% of diameter: high breakage risk!' });
       if (boreDia <= D) checks.push({ type: 'critical', text: lang === 'DE' ? 'Bohrung Ø ≤ Werkzeug Ø: Helisches Einfahren unmöglich.' : 'Bore Ø ≤ tool Ø: helical entry impossible.' });
       if (D > (0.70 * threadDia)) checks.push({ type: 'critical', text: lang === 'DE' ? 'Werkzeug Ø > 70% Gewinde Ø: Gewindeprofil verzerrt.' : 'Tool Ø > 70% of thread Ø: thread profile distorts.' });
 
-      if (vc < (mat.vcMin * 0.7)) checks.push({ type: 'warning', text: lang === 'DE' ? `Schnittgeschwindigkeit Vc (${formatNum(vc,1)} m/min) unter 70% des Zielbereichs (${mat.vcMin} m/min).` : `Cutting speed Vc (${formatNum(vc,1)} m/min) below 70% of target (${mat.vcMin} m/min).` });
-      if (isAtMaxLimit) checks.push({ type: 'warning', text: lang === 'DE' ? `Drehzahl ist am eingestellten Spindellimit (${maxSpindleLimit.toLocaleString()} min⁻¹).` : `Spindle speed is at configured max limit (${maxSpindleLimit.toLocaleString()} rpm).` });
-      if (boreDia < (1.15 * D) && boreDia > D) checks.push({ type: 'warning', text: lang === 'DE' ? 'Bohrung Ø < 1.15× Werkzeug Ø: Kein Spanraum; Druckluft nutzen.' : 'Bore Ø < 1.15 × tool Ø: no chip room; air into bore.' });
-      if (z >= 3 && D < 0.8) checks.push({ type: 'warning', text: lang === 'DE' ? '3+ Schneiden bei Ø < 0,8 mm: Spanraummangel; 2Z bevorzugen.' : '3+ flutes below Ø0.8 mm: lack of chip room, prefer 2 flutes.' });
-      if (depthRatio > 3) checks.push({ type: 'warning', text: lang === 'DE' ? 'Lochtiefe > 3×Ø: Vorschub reduziert, Entspan-Zyklen (Pecking) wählen.' : 'Hole depth > 3×Ø: feed cut to depth factor, peck in 1×Ø steps.' });
-      if (axCap < 1.0) checks.push({ type: 'warning', text: lang === 'DE' ? `Werkstoff-Axialkappung aktiv (ap auf max ${axCap}×D begrenzt).` : `Material axial cap applied (ap capped to max ${axCap}×D).` });
+      if (distToAccel > 0.5 && distToAccel > (minCornerDist / 2)) {
+        checks.push({ type: 'warning', text: lang === 'DE' 
+          ? `Maschinenbeschleunigung (${accel} mm/s²) zu gering: V_f (${Math.round(adaptiveFeed)} mm/min) wird auf Kurzen Wegen nicht erreicht (${formatNum(distToAccel,2)}mm Beschleunigungsweg).` 
+          : `Machine acceleration (${accel} mm/s²) low: Feed rate (${Math.round(adaptiveFeed)} mm/min) won't be reached in small paths (${formatNum(distToAccel,2)}mm ramp-up dist).` });
+      }
+
+      if (ld > 3.0) checks.push({ type: 'warning', text: lang === 'DE' ? `L/D Auskragung ist ${ld}×D. Schnittdaten wurden wegen Werkzeugbiegung reduziert.` : `L/D Tool Stickout is ${ld}×D. Parameters adjusted for deflection.` });
+      if (vc < (mat.vcMin * 0.7)) checks.push({ type: 'warning', text: lang === 'DE' ? `Schnittgeschwindigkeit Vc (${formatNum(vc,1)} m/min) unter 70% des Zielbereichs.` : `Cutting speed Vc (${formatNum(vc,1)} m/min) below 70% of target.` });
+      if (isAtMaxLimit) checks.push({ type: 'warning', text: lang === 'DE' ? `Drehzahl am eingestellten Spindellimit (${maxSpindleLimit.toLocaleString()} min⁻¹).` : `Spindle speed is at configured max limit (${maxSpindleLimit.toLocaleString()} rpm).` });
+      if (depthRatio > 3) checks.push({ type: 'warning', text: lang === 'DE' ? 'Lochtiefe > 3×Ø: Vorschub reduziert, Entspan-Zyklen (Pecking) zwingend.' : 'Hole depth > 3×Ø: feed reduced, pecking cycles mandatory.' });
 
       const checksContainer = document.getElementById('checksContainer');
       if (checks.length === 0) {
@@ -1721,28 +1673,93 @@
         checksContainer.innerHTML = checks.map(c => `<div class="check-item ${c.type}">${c.text}</div>`).join('');
       }
 
+      // Save calculation state for Export Action
+      calculatedData = {
+        D, ld, z, mat, n, vc, baseFz, comp, mrr, powerW,
+        adaptiveFeed, adaptiveAe, adaptiveAp, rampFeed, plungeFeed,
+        boreDia, boreFeed, threadDia, threadFeed, isExternalThread,
+        chamferFeed, drillDia, drillFeed, nDrill, firstPeck, subPeck, maxSpindleLimit
+      };
+
       copyBtn.onclick = () => {
         triggerHaptic();
-        const copyPayload = `FEEDS & SPEEDS CALCULATOR
-Configured Max Spindle: ${maxSpindleLimit.toLocaleString()} rpm
-Tool: Ø${formatNum(D, 2)} mm | ${z}Z | Material: ${mat.name}
-Spindle Speed: ${n} rpm | vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(fz, 4)} mm
-Thinning Comp: ${comp ? 'ON' : 'OFF'}
+        const copyPayload = `CNC FEEDS & SPEEDS CALCULATOR
+Tool: Ø${formatNum(D, 2)} mm | Tool Stickout L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
+Material: ${mat.name} | Coolant: ${inpCoolant.value.toUpperCase()}
+Spindle Speed: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
+MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
 
 CAM OPERATIONS:
-- Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(0.2*D,2)}, ap=${formatNum(Math.min(1.0*D, axCap*D),2)})
-- Ramp Feed: ${Math.round(rampFeed)} mm/min
+- Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(adaptiveAe,2)}, ap=${formatNum(adaptiveAp,2)})
+- Ramp Feed (${inpRampType.value}): ${Math.round(rampFeed)} mm/min
 - Plunge Feed: ${Math.round(plungeFeed)} mm/min
 - Helical Bore (Ø${boreDia}mm): ${Math.round(boreFeed)} mm/min
-- Thread Mill (Ø${threadDia}mm): ${Math.round(threadFeed)} mm/min
-- Chamfer: ${Math.round(chamferFeed)} mm/min
-- Drilling (Ø${drillDia}mm): ${Math.round(drillFeed)} mm/min (${Math.round(nDrill)} rpm)`;
+- Thread Mill (${isExternalThread ? 'Ext':'Int'} Ø${threadDia}mm): ${Math.round(threadFeed)} mm/min
+- Drilling (Ø${drillDia}mm): ${Math.round(drillFeed)} mm/min (${Math.round(nDrill)} rpm) | Peck 1: ${formatNum(firstPeck,2)}mm`;
 
         navigator.clipboard.writeText(copyPayload).then(() => {
           copyBtn.textContent = 'COPIED!';
-          setTimeout(() => copyBtn.textContent = 'COPY', 1500);
+          setTimeout(() => copyBtn.textContent = 'COPY TXT', 1500);
         });
       };
+
+      exportJsonBtn.onclick = () => {
+        triggerHaptic();
+        exportFusion360Json(calculatedData);
+      };
+    }
+
+    // Direct Fusion 360 Tool Library JSON Exporter
+    function exportFusion360Json(d) {
+      const toolJson = {
+        "version": 1,
+        "data": [
+          {
+            "type": "endMill",
+            "description": `Micro EndMill Ø${d.D}mm ${d.z}Z (${d.mat.name})`,
+            "vendor": "CNC Calculator Generated",
+            "geometry": {
+              "DC": d.D,
+              "LB": d.D * d.ld,
+              "LC": d.adaptiveAp,
+              "NOF": d.z,
+              "HAND": true
+            },
+            "post-process": {
+              "number": 1,
+              "diameter-offset": 1,
+              "length-offset": 1
+            },
+            "start-values": {
+              "presets": [
+                {
+                  "name": `${d.mat.name} - Optimal`,
+                  "n": d.n,
+                  "n-ramp": d.n,
+                  "v_f": d.adaptiveFeed,
+                  "v_f_lead_in": d.adaptiveFeed,
+                  "v_f_lead_out": d.adaptiveFeed,
+                  "v_f_ramp": d.rampFeed,
+                  "v_f_plunge": d.plungeFeed,
+                  "f_z": d.baseFz,
+                  "f_p": d.baseFz * d.z
+                }
+              ]
+            }
+          }
+        ]
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(toolJson, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `tool_Ø${d.D}mm_${d.mat.id}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      exportJsonBtn.textContent = 'EXPORTED!';
+      setTimeout(() => exportJsonBtn.textContent = 'EXPORT JSON', 1500);
     }
 
     // On Load Initialization
