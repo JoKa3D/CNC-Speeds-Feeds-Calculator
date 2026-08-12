@@ -670,6 +670,7 @@
     </div>
     
     <!-- iOS Theme Picker Segmented Bar -->
+    <label for="themeSelector" class="header-input-label" data-i18n="theme_label" style="margin-bottom: 6px;">Themes</label>
     <div class="theme-segmented-wrapper">
       <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)"></select>
     </div>
@@ -838,7 +839,7 @@
   <!-- iOS Bottom Toolbar -->
   <div class="ios-toolbar">
     <div class="ios-toolbar-inner">
-      <button class="btn-action" id="langToggle">DE</button>
+      <button class="btn-action" id="langToggle">EN</button>
       <button class="btn-action btn-accent" id="copyBtn">COPY</button>
     </div>
   </div>
@@ -1355,7 +1356,7 @@
     const I18N = {
       DE: {
         max_spindle: "MAX U/MIN:",
-        theme_label: "Design:",
+        theme_label: "Themes",
         tool_material: "Werkzeug & Werkstoff",
         presets: "Tool-Presets",
         tool_dia: "Fräserdurchmesser (D)",
@@ -1385,7 +1386,7 @@
       },
       EN: {
         max_spindle: "MAX RPM:",
-        theme_label: "Theme:",
+        theme_label: "Themes",
         tool_material: "Tool & Material",
         presets: "Tool Presets",
         tool_dia: "Tool Diameter (D)",
@@ -1415,7 +1416,7 @@
       }
     };
 
-    let lang = 'DE';
+    let lang = 'EN';
     let selectedFlutes = 2;
     let selectedMaterialIndex = 0;
 
@@ -1748,7 +1749,7 @@ CAM OPERATIONS:
     populateThemeSelector();
     applyTheme('neumorphismLight');
     document.getElementById('materialTriggerText').textContent = MATERIALS[0].name;
-    recalc();
+    updateUI();
   </script>
 </body>
 </html>
