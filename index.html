@@ -293,44 +293,6 @@
       cursor: not-allowed;
     }
 
-    /* Presets Bar */
-    .preset-scroll-container {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .preset-scroll-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .preset-btn, .option-btn {
-      flex: 0 0 auto;
-      height: 34px;
-      padding: 0 12px;
-      background: var(--ground);
-      box-shadow: var(--shadow-btn);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--ink);
-      font-family: "SF Mono", ui-monospace, monospace;
-      font-size: 12px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .preset-btn:active, .preset-btn.active, .option-btn.active {
-      box-shadow: var(--shadow-btn-active);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
     /* Flute Segmented Control */
     .flute-segmented-control {
       display: flex;
@@ -381,8 +343,9 @@
       cursor: pointer;
     }
 
+    /* Matched to 13px select font size */
     .material-trigger-text {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--ink);
     }
@@ -414,7 +377,7 @@
 
     .modal-sheet {
       width: 100%;
-      max-height: 70vh;
+      max-height: 75vh;
       background: var(--panel);
       border-radius: 20px 20px 0 0;
       padding: 20px 16px max(20px, env(safe-area-inset-bottom));
@@ -455,24 +418,38 @@
       font-weight: bold;
     }
 
+    .material-category-header {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin: 12px 0 6px 4px;
+    }
+
+    .material-category-header:first-child {
+      margin-top: 0;
+    }
+
     .material-option-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .material-option-item {
-      padding: 12px 14px;
+      padding: 10px 14px;
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-sm);
       color: var(--ink);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
     }
 
     .material-option-item.selected {
@@ -696,10 +673,6 @@
     .btn-accent {
       color: var(--accent);
     }
-
-    .btn-json {
-      color: var(--ok);
-    }
   </style>
 </head>
 <body>
@@ -726,18 +699,6 @@
   <!-- INPUTS PANEL -->
   <section class="panel">
     <div class="section-title" data-i18n="tool_material">Werkzeug & Werkstoff</div>
-
-    <!-- Tool Presets -->
-    <div class="control-group">
-      <label data-i18n="presets">Tool Presets</label>
-      <div class="preset-scroll-container" id="presetGrid">
-        <button class="preset-btn" data-dia="0.5" data-flutes="1" onclick="applyPreset(0.5, 1)">Ø0.5·1Z</button>
-        <button class="preset-btn" data-dia="0.6" data-flutes="2" onclick="applyPreset(0.6, 2)">Ø0.6·2Z</button>
-        <button class="preset-btn" data-dia="0.8" data-flutes="2" onclick="applyPreset(0.8, 2)">Ø0.8·2Z</button>
-        <button class="preset-btn" data-dia="1.0" data-flutes="2" onclick="applyPreset(1.0, 2)">Ø1.0·2Z</button>
-        <button class="preset-btn" data-dia="2.0" data-flutes="2" onclick="applyPreset(2.0, 2)">Ø2.0·2Z</button>
-      </div>
-    </div>
 
     <!-- Tool Diameter -->
     <div class="control-group">
@@ -817,16 +778,22 @@
       <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
     </div>
 
-    <!-- Machine Acceleration Limit (CAM Feed Feasibility) -->
-    <div class="control-group">
-      <label data-i18n="machine_accel">Maschinen-Beschleunigung (mm/s²)</label>
-      <input type="number" id="inp_accel" value="1000" step="100" min="100" max="20000">
+    <!-- Machine Acceleration Limit & Max Feed Rate -->
+    <div class="form-grid-2">
+      <div class="control-group">
+        <label data-i18n="machine_accel">Maschinen-Beschleunigung (mm/s²)</label>
+        <input type="number" id="inp_accel" value="5000" step="100" min="100" max="20000">
+      </div>
+      <div class="control-group">
+        <label data-i18n="max_feed">Max Vorschub (mm/min)</label>
+        <input type="number" id="inp_maxFeed" value="8000" step="500" min="100" max="100000">
+      </div>
     </div>
 
-    <!-- Chip Thinning Checkbox -->
+    <!-- Chip Thinning Checkbox (Checked by Default) -->
     <div class="control-group">
       <label class="checkbox-group">
-        <input type="checkbox" id="inp_comp">
+        <input type="checkbox" id="inp_comp" checked>
         <span class="checkbox-label" data-i18n="chip_thinning">Spanausdünnung kompensieren</span>
       </label>
     </div>
@@ -857,7 +824,7 @@
       </div>
     </div>
 
-    <!-- Ramp Configuration -->
+    <!-- Ramp Configuration (Helical Default) -->
     <div class="form-grid-2">
       <div class="control-group">
         <label data-i18n="ramp_angle">Rampen-Winkel (°)</label>
@@ -867,8 +834,8 @@
         <label data-i18n="ramp_type">Rampen-Typ</label>
         <div class="segmented-wrapper">
           <select id="inp_rampType" class="select-input">
+            <option value="helical" selected>Helical Ramp</option>
             <option value="linear">Linear ZigZag</option>
-            <option value="helical">Helical Ramp</option>
           </select>
         </div>
       </div>
@@ -998,7 +965,6 @@
     <div class="ios-toolbar-inner">
       <button class="btn-action" id="langToggle">EN</button>
       <button class="btn-action btn-accent" id="copyBtn">COPY TXT</button>
-      <button class="btn-action btn-json" id="exportJsonBtn">EXPORT JSON</button>
     </div>
   </div>
 
@@ -1009,7 +975,7 @@
         <div class="modal-title" data-i18n="material">Werkstoff</div>
         <button class="modal-close" onclick="closeMaterialModal()">✕</button>
       </div>
-      <div class="material-option-list" id="materialOptionList"></div>
+      <div id="materialOptionList"></div>
     </div>
   </div>
 
@@ -1154,17 +1120,32 @@
       }
     }
 
-    // Material Database with specific cutting force Kc (N/mm²)
+    // Extended Material Database categorized with accurate Vc (m/min), ff (feed factor), Kc (N/mm²)
     const MATERIALS = [
-      { id: 'ms58', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
-      { id: 'ms63', name: 'Brass MS63 (CuZn37, sheet)', vcMin: 120, vcMax: 200, ff: 0.85, kc: 750, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
-      { id: 'mail', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, kc: 900, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
-      { id: 'cu',   name: 'Copper', vcMin: 120, vcMax: 200, ff: 0.80, kc: 650, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
-      { id: 'alu',  name: 'Aluminium', vcMin: 200, vcMax: 400, ff: 1.10, kc: 800, noteDE: 'Aufbauschneide beachten.', noteEN: 'Watch for built-up edge.' },
-      { id: 'steel',name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, kc: 1900, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
-      { id: 'ino',  name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, kc: 2200, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
-      { id: 'ti',   name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, kc: 1400, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
-      { id: 'pom',  name: 'POM / plastics', vcMin: 200, vcMax: 500, ff: 1.30, kc: 250, noteDE: 'Schmilzt bei geringem Vorschub.', noteEN: 'Melts if feed too low.' }
+      // Non-Ferrous & Metals
+      { id: 'ms58', category: 'Metals / Metalle', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
+      { id: 'ms63', category: 'Metals / Metalle', name: 'Brass MS63 (CuZn37)', vcMin: 120, vcMax: 200, ff: 0.85, kc: 750, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
+      { id: 'mail', category: 'Metals / Metalle', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, kc: 900, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
+      { id: 'cu',   category: 'Metals / Metalle', name: 'Copper (Kupfer)', vcMin: 120, vcMax: 200, ff: 0.80, kc: 650, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
+      { id: 'alu_cast', category: 'Metals / Metalle', name: 'Aluminum (Cast / Guss)', vcMin: 180, vcMax: 350, ff: 0.90, kc: 700, noteDE: 'Kurzspanend, Kühlung empfohlen.', noteEN: 'Short chips, coolant recommended.' },
+      { id: 'alu_alloy', category: 'Metals / Metalle', name: 'Aluminum (Alloy / Legierung)', vcMin: 200, vcMax: 500, ff: 1.10, kc: 800, noteDE: 'Hohe Schnittwerte, Aufbauschneide meiden.', noteEN: 'High speeds, prevent built-up edge.' },
+      { id: 'bronze', category: 'Metals / Metalle', name: 'Bronze', vcMin: 80, vcMax: 150, ff: 0.75, kc: 1100, noteDE: 'Zähes Material, scharfe Schneide nötig.', noteEN: 'Tough material, sharp edges needed.' },
+      { id: 'steel',category: 'Metals / Metalle', name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, kc: 1900, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
+      { id: 'ino',  category: 'Metals / Metalle', name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, kc: 2200, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
+      { id: 'ti',   category: 'Metals / Metalle', name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, kc: 1400, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
+
+      // Wood & Composites
+      { id: 'wood_soft', category: 'Wood & Composites / Holz & CFK', name: 'Softwood / Standard Wood', vcMin: 300, vcMax: 800, ff: 1.40, kc: 100, noteDE: 'Faserrichtung beachten, hohe Drehzahlen.', noteEN: 'Mind grain direction, high RPM.' },
+      { id: 'wood_hard', category: 'Wood & Composites / Holz & CFK', name: 'Hardwood (Hartholz)', vcMin: 250, vcMax: 600, ff: 1.20, kc: 180, noteDE: 'Dichte Holzstruktur, Brandspuren vermeiden.', noteEN: 'Dense structure, avoid burn marks.' },
+      { id: 'mdf', category: 'Wood & Composites / Holz & CFK', name: 'MDF', vcMin: 250, vcMax: 500, ff: 1.30, kc: 120, noteDE: 'Stark abrasiv, Absaugung zwingend.', noteEN: 'Highly abrasive, dust extraction essential.' },
+      { id: 'cfk', category: 'Wood & Composites / Holz & CFK', name: 'CFK (Carbon Fiber)', vcMin: 100, vcMax: 250, ff: 0.60, kc: 350, noteDE: 'Abrasiv, Vollhartmetall mit Spezialverzahnung.', noteEN: 'Abrasive, carbide with diamond/special geometry.' },
+      { id: 'gfk', category: 'Wood & Composites / Holz & CFK', name: 'GFK (Fiberglass)', vcMin: 120, vcMax: 300, ff: 0.70, kc: 300, noteDE: 'Glasfaser-Abrieb, Schutzbrille & Absaugung.', noteEN: 'Glass fiber wear, safety gear & extraction required.' },
+      { id: 'foam', category: 'Wood & Composites / Holz & CFK', name: 'Foam / Schaumstoff', vcMin: 400, vcMax: 1000, ff: 2.00, kc: 30, noteDE: 'Scharfe Einzahnfräser, sehr hohe Vorschübe.', noteEN: 'Sharp single-flute cutters, very high feeds.' },
+
+      // Plastics
+      { id: 'pmma', category: 'Plastics / Kunststoffe', name: 'Acrylic / Acrylglas (PMMA)', vcMin: 150, vcMax: 350, ff: 1.00, kc: 200, noteDE: 'Polier-Schnitt, Schmelzen durch Kühlung verhindern.', noteEN: 'Polished cut, prevent melting with air/coolant.' },
+      { id: 'plastic_soft', category: 'Plastics / Kunststoffe', name: 'Soft Plastics (PE/PP/PTFE)', vcMin: 150, vcMax: 400, ff: 1.20, kc: 150, noteDE: 'Sehr scharfe Schneiden, neigt zum Schmieren.', noteEN: 'Sharp flutes, tends to smear.' },
+      { id: 'plastic_hard', category: 'Plastics / Kunststoffe', name: 'Hard Plastics (POM/Nylon/ABS)', vcMin: 200, vcMax: 500, ff: 1.30, kc: 250, noteDE: 'Sehr gute Spanbildung, hohe Vorschübe.', noteEN: 'Excellent chip formation, high feeds.' }
     ];
 
     const PCT_Z = { 1: 0.012, 2: 0.010, 3: 0.008, 4: 0.007, 5: 0.006, 6: 0.0055, 7: 0.005, 8: 0.0045 };
@@ -1174,7 +1155,6 @@
         max_spindle: "MAX U/MIN:",
         theme_label: "Themes",
         tool_material: "Werkzeug & Werkstoff",
-        presets: "Tool-Presets",
         tool_dia: "Fräserdurchmesser (D)",
         overhang: "Werkzeug-Auskragung (L/D)",
         flutes: "Schneidenanzahl (Z)",
@@ -1183,6 +1163,7 @@
         coolant: "Kühlung",
         spindle: "Spindeldrehzahl (n)",
         machine_accel: "Maschinen-Beschleunigung (mm/s²)",
+        max_feed: "Max Vorschub (mm/min)",
         chip_thinning: "Spanausdünnung kompensieren",
         feature_dims: "Form-Geometrien & CAM Parameter",
         custom_ae: "Custom ae (mm)",
@@ -1219,7 +1200,6 @@
         max_spindle: "MAX RPM:",
         theme_label: "Themes",
         tool_material: "Tool & Material",
-        presets: "Tool Presets",
         tool_dia: "Tool Diameter (D)",
         overhang: "Tool Stickout (L/D)",
         flutes: "Flute Count (Z)",
@@ -1228,6 +1208,7 @@
         coolant: "Coolant",
         spindle: "Spindle Speed (n)",
         machine_accel: "Machine Accel (mm/s²)",
+        max_feed: "Max Feed Rate (mm/min)",
         chip_thinning: "Chip thinning compensation",
         feature_dims: "Feature Dims & CAM Params",
         custom_ae: "Custom ae (mm)",
@@ -1265,6 +1246,8 @@
     let lang = 'EN';
     let selectedFlutes = 2;
     let selectedMaterialIndex = 0;
+    let lastAutoCalculatedAe = 0;
+    let lastAutoCalculatedAp = 0;
 
     const inpMaxSpindle = document.getElementById('inp_maxSpindle');
     const inpToolDia = document.getElementById('inp_toolDia');
@@ -1279,6 +1262,7 @@
     const valSpindle = document.getElementById('val_spindle');
     const spindleWarn = document.getElementById('spindleWarn');
     const inpAccel = document.getElementById('inp_accel');
+    const inpMaxFeed = document.getElementById('inp_maxFeed');
     const inpComp = document.getElementById('inp_comp');
     const inpCustomAe = document.getElementById('inp_customAe');
     const inpCustomAp = document.getElementById('inp_customAp');
@@ -1294,7 +1278,6 @@
     const inpDepth = document.getElementById('inp_depth');
     const langToggle = document.getElementById('langToggle');
     const copyBtn = document.getElementById('copyBtn');
-    const exportJsonBtn = document.getElementById('exportJsonBtn');
 
     function triggerHaptic() {
       if (window.navigator && window.navigator.vibrate) {
@@ -1316,7 +1299,18 @@
     function populateMaterialModal() {
       const list = document.getElementById('materialOptionList');
       list.innerHTML = '';
+      
+      let currentCategory = '';
+
       MATERIALS.forEach((m, idx) => {
+        if (m.category !== currentCategory) {
+          currentCategory = m.category;
+          const catHeader = document.createElement('div');
+          catHeader.className = 'material-category-header';
+          catHeader.textContent = currentCategory;
+          list.appendChild(catHeader);
+        }
+
         const item = document.createElement('div');
         item.className = `material-option-item ${idx === selectedMaterialIndex ? 'selected' : ''}`;
         item.innerHTML = `<span>${m.name}</span> ${idx === selectedMaterialIndex ? '✓' : ''}`;
@@ -1338,22 +1332,30 @@
       updateUI();
     });
 
+    // Dynamic ae / ap auto-override persistence behavior
     window.toggleAutoMode = function(type) {
       triggerHaptic();
       if (type === 'ae') {
-        inpCustomAe.disabled = chkAutoAe.checked;
-        if (chkAutoAe.checked) inpCustomAe.value = '';
+        if (chkAutoAe.checked) {
+          inpCustomAe.disabled = true;
+          inpCustomAe.value = '';
+          inpCustomAe.placeholder = 'Auto';
+        } else {
+          inpCustomAe.disabled = false;
+          // Populate with last calculated auto ae value
+          inpCustomAe.value = lastAutoCalculatedAe.toFixed(2);
+        }
       } else if (type === 'ap') {
-        inpCustomAp.disabled = chkAutoAp.checked;
-        if (chkAutoAp.checked) inpCustomAp.value = '';
+        if (chkAutoAp.checked) {
+          inpCustomAp.disabled = true;
+          inpCustomAp.value = '';
+          inpCustomAp.placeholder = 'Auto';
+        } else {
+          inpCustomAp.disabled = false;
+          // Populate with last calculated auto ap value
+          inpCustomAp.value = lastAutoCalculatedAp.toFixed(2);
+        }
       }
-      recalc();
-    };
-
-    window.applyPreset = function(dia, flutes) {
-      triggerHaptic();
-      inpToolDia.value = dia;
-      setFlutes(flutes);
       recalc();
     };
 
@@ -1368,7 +1370,7 @@
 
     [
       inpMaxSpindle, inpToolDia, inpOverhang, inpCoating, inpCoolant, 
-      inpSpindle, inpAccel, inpComp, inpCustomAe, inpCustomAp, 
+      inpSpindle, inpAccel, inpMaxFeed, inpComp, inpCustomAe, inpCustomAp, 
       inpRampAngle, inpRampType, inpThreadMode, inpBore, inpThread, 
       inpChamfer, inpDrill, inpDepth
     ].forEach(el => {
@@ -1391,8 +1393,6 @@
       recalc();
     }
 
-    let calculatedData = {}; // Global state for export
-
     function recalc() {
       const maxSpindleLimit = Math.max(1000, parseInt(inpMaxSpindle.value) || 18000);
       inpSpindle.max = maxSpindleLimit;
@@ -1408,7 +1408,8 @@
       const z = selectedFlutes;
       const mat = MATERIALS[selectedMaterialIndex];
       const comp = inpComp.checked;
-      const accel = parseFloat(inpAccel.value) || 1000;
+      const accel = parseFloat(inpAccel.value) || 5000;
+      const maxFeed = parseFloat(inpMaxFeed.value) || 8000;
 
       // 1. Tool Stickout Penalty Factor
       let ldPenalty = 1.0;
@@ -1443,13 +1444,6 @@
       if (mat.ff <= 0.4) axCap = 0.35 * Math.min(1.0, Math.sqrt(ldPenalty));
       else if (mat.ff <= 0.5) axCap = 0.50 * Math.min(1.0, Math.sqrt(ldPenalty));
 
-      // Active preset toggle state
-      document.querySelectorAll('.preset-btn').forEach(btn => {
-        const pDia = parseFloat(btn.getAttribute('data-dia'));
-        const pZ = parseInt(btn.getAttribute('data-flutes'), 10);
-        btn.classList.toggle('active', Math.abs(pDia - D) < 0.01 && pZ === z);
-      });
-
       valToolDia.textContent = `${formatNum(D, 2)} mm`;
       valSpindle.textContent = `${n.toLocaleString()} min⁻¹`;
       matNote.textContent = lang === 'DE' ? mat.noteDE : mat.noteEN;
@@ -1464,7 +1458,11 @@
         spindleWarn.style.display = 'none';
       }
 
-      // Dynamic User Custom Overrides (Handling Auto Mode Checkboxes)
+      // Track Last Auto Computed values for Persistence Override
+      lastAutoCalculatedAe = 0.20 * D; // Trochoidal / Adaptive baseline
+      lastAutoCalculatedAp = Math.min(1.00 * D, axCap * D);
+
+      // Dynamic User Custom Overrides
       const isAeAuto = chkAutoAe.checked || inpCustomAe.value === '';
       const isApAuto = chkAutoAp.checked || inpCustomAp.value === '';
       const customAe = !isAeAuto ? parseFloat(inpCustomAe.value) : NaN;
@@ -1484,6 +1482,7 @@
       let adaptiveFeed = 0;
       let adaptiveAe = 0;
       let adaptiveAp = 0;
+      let isFeedCapped = false;
 
       opsConfig.forEach((op, idx) => {
         const uncappedAp = op.ap;
@@ -1498,7 +1497,13 @@
 
         const fzProg = comp ? baseFz / k : baseFz;
         const effectiveH = fzProg * k;
-        const vf = n * z * fzProg * op.factor;
+        let vf = n * z * fzProg * op.factor;
+
+        // Enforce Max Feed Limit
+        if (vf > maxFeed) {
+          vf = maxFeed;
+          isFeedCapped = true;
+        }
 
         if (idx === 0) {
           adaptiveEffectiveH = effectiveH;
@@ -1524,14 +1529,14 @@
       document.getElementById('val_mrr').textContent = `${formatNum(mrr, 2)} cm³/min`;
       document.getElementById('val_power').textContent = `${formatNum(powerW, 1)} W (${formatNum(powerW/735.5, 2)} HP)`;
 
-      // 4. Ramp Physics Calculation
+      // 4. Ramp Physics Calculation (Enforce Max Feed)
       const rampDeg = parseFloat(inpRampAngle.value) || 2.0;
       const rampRad = (rampDeg * Math.PI) / 180;
       const isHelicalRamp = inpRampType.value === 'helical';
       const slotFeed = n * z * baseFz * 0.60;
       const rampFactor = (Math.cos(rampRad) + 0.5 * Math.sin(rampRad)) * (isHelicalRamp ? 0.85 : 1.0);
-      const rampFeed = slotFeed * rampFactor;
-      const plungeFeed = n * z * baseFz * 0.12;
+      const rampFeed = Math.min(slotFeed * rampFactor, maxFeed);
+      const plungeFeed = Math.min(n * z * baseFz * 0.12, maxFeed);
 
       document.getElementById('lbl_rampFeed').textContent = `${isHelicalRamp ? 'Helical' : 'Linear'} Ramp (${rampDeg}°)`;
       document.getElementById('val_rampFeed').textContent = `${Math.round(rampFeed)} mm/min`;
@@ -1560,7 +1565,7 @@
         zoneLabel.style.color = 'var(--ok)';
       }
 
-      // Feature Geometries & Special Ops
+      // Feature Geometries & Special Ops (Enforce Max Feed)
       const boreDia = parseFloat(inpBore.value) || 0;
       const threadDia = parseFloat(inpThread.value) || 0;
       const chamferW = parseFloat(inpChamfer.value) || 0;
@@ -1575,7 +1580,7 @@
       if (boreDia > D) {
         const pathDia = boreDia - D;
         const factor = pathDia / boreDia;
-        boreFeed = slotFeed * factor;
+        boreFeed = Math.min(slotFeed * factor, maxFeed);
       }
       specialHTML += `
         <tr>
@@ -1585,7 +1590,7 @@
         </tr>
       `;
 
-      // Thread Milling (Internal vs External Logic)
+      // Thread Milling
       let threadFeed = 0;
       if (threadDia > D) {
         const fzThread = baseFz * 0.60;
@@ -1593,7 +1598,7 @@
         const factor = isExternalThread 
           ? (threadDia + D) / threadDia 
           : (threadDia - D) / threadDia;
-        threadFeed = edgeFeed * factor;
+        threadFeed = Math.min(edgeFeed * factor, maxFeed);
       }
       const threadLabel = isExternalThread 
         ? (lang === 'DE' ? 'Aussen' : 'Ext') 
@@ -1610,7 +1615,7 @@
       // Chamfering
       const effChamferDia = D + chamferW;
       const fzCham = baseFz * 1.4142;
-      const chamferFeed = n * z * fzCham;
+      const chamferFeed = Math.min(n * z * fzCham, maxFeed);
       specialHTML += `
         <tr>
           <td><strong>Chamfer (45°)</strong></td>
@@ -1625,7 +1630,7 @@
       const feedPerRev = drillDia * 0.02 * mat.ff * ldPenalty;
       const depthRatio = holeDepth / drillDia;
       const depthFactor = depthRatio <= 3 ? 1.00 : (depthRatio <= 5 ? 0.85 : 0.70);
-      const drillFeed = nDrill * feedPerRev * depthFactor;
+      const drillFeed = Math.min(nDrill * feedPerRev * depthFactor, maxFeed);
       
       const firstPeck = 1.0 * drillDia;
       const subPeck = 0.5 * drillDia;
@@ -1644,12 +1649,15 @@
 
       // 5. Machine Acceleration Feasibility Check
       const v_mm_s = adaptiveFeed / 60; // mm/sec
-      const distToAccel = (v_mm_s * v_mm_s) / (2 * accel); // distance in mm to accelerate
-      const minCornerDist = Math.PI * (boreDia - D); // approximate path distance
+      const distToAccel = (v_mm_s * v_mm_s) / (2 * accel);
+      const minCornerDist = Math.PI * (boreDia - D);
 
       // Checks & Safety Plausibility
       const checks = [];
 
+      if (isFeedCapped) {
+        checks.push({ type: 'warning', text: lang === 'DE' ? `Vorschubwerte wurden durch das Max-Vorschub-Limit (${maxFeed} mm/min) begrenzt.` : `Feed rates capped by Max Feed Rate limit (${maxFeed} mm/min).` });
+      }
       if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Effektive Spanungsdicke < 3 µm: Werkzeug reibt und überhitzt.' : 'Effective chip thickness < 3 µm: tool rubs and overheats.' });
       if (baseFz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% des Durchmessers: Hohes Bruchrisiko!' : 'fz > 2% of diameter: high breakage risk!' });
       if (boreDia <= D) checks.push({ type: 'critical', text: lang === 'DE' ? 'Bohrung Ø ≤ Werkzeug Ø: Helisches Einfahren unmöglich.' : 'Bore Ø ≤ tool Ø: helical entry impossible.' });
@@ -1673,21 +1681,13 @@
         checksContainer.innerHTML = checks.map(c => `<div class="check-item ${c.type}">${c.text}</div>`).join('');
       }
 
-      // Save calculation state for Export Action
-      calculatedData = {
-        D, ld, z, mat, n, vc, baseFz, comp, mrr, powerW,
-        adaptiveFeed, adaptiveAe, adaptiveAp, rampFeed, plungeFeed,
-        boreDia, boreFeed, threadDia, threadFeed, isExternalThread,
-        chamferFeed, drillDia, drillFeed, nDrill, firstPeck, subPeck, maxSpindleLimit
-      };
-
       copyBtn.onclick = () => {
         triggerHaptic();
         const copyPayload = `CNC FEEDS & SPEEDS CALCULATOR
 Tool: Ø${formatNum(D, 2)} mm | Tool Stickout L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
 Material: ${mat.name} | Coolant: ${inpCoolant.value.toUpperCase()}
 Spindle Speed: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
-MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
+Max Feed Limit: ${maxFeed} mm/min | MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
 
 CAM OPERATIONS:
 - Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(adaptiveAe,2)}, ap=${formatNum(adaptiveAp,2)})
@@ -1702,64 +1702,6 @@ CAM OPERATIONS:
           setTimeout(() => copyBtn.textContent = 'COPY TXT', 1500);
         });
       };
-
-      exportJsonBtn.onclick = () => {
-        triggerHaptic();
-        exportFusion360Json(calculatedData);
-      };
-    }
-
-    // Direct Fusion 360 Tool Library JSON Exporter
-    function exportFusion360Json(d) {
-      const toolJson = {
-        "version": 1,
-        "data": [
-          {
-            "type": "endMill",
-            "description": `Micro EndMill Ø${d.D}mm ${d.z}Z (${d.mat.name})`,
-            "vendor": "CNC Calculator Generated",
-            "geometry": {
-              "DC": d.D,
-              "LB": d.D * d.ld,
-              "LC": d.adaptiveAp,
-              "NOF": d.z,
-              "HAND": true
-            },
-            "post-process": {
-              "number": 1,
-              "diameter-offset": 1,
-              "length-offset": 1
-            },
-            "start-values": {
-              "presets": [
-                {
-                  "name": `${d.mat.name} - Optimal`,
-                  "n": d.n,
-                  "n-ramp": d.n,
-                  "v_f": d.adaptiveFeed,
-                  "v_f_lead_in": d.adaptiveFeed,
-                  "v_f_lead_out": d.adaptiveFeed,
-                  "v_f_ramp": d.rampFeed,
-                  "v_f_plunge": d.plungeFeed,
-                  "f_z": d.baseFz,
-                  "f_p": d.baseFz * d.z
-                }
-              ]
-            }
-          }
-        ]
-      };
-
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(toolJson, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `tool_Ø${d.D}mm_${d.mat.id}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-
-      exportJsonBtn.textContent = 'EXPORTED!';
-      setTimeout(() => exportJsonBtn.textContent = 'EXPORT JSON', 1500);
     }
 
     // On Load Initialization
