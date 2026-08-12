@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Feeds&Speeds">
   <meta name="theme-color" content="#e0e5ec">
-  <title>CNC Feeds & Speeds Calculator</title>
+  <title>CNC Feeds and Speeds Calculator</title>
   <style>
     :root {
       /* Theme Defaults (Neumorphism Light) */
@@ -56,14 +56,14 @@
       -webkit-touch-callout: none;
     }
 
-    /* iOS Navigation Header */
+    /* Header Area */
     .ios-header {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-bottom: 12px;
       background: var(--panel);
-      padding: 12px;
+      padding: 12px 16px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-out);
       border: var(--border);
@@ -74,8 +74,8 @@
     .ios-title-bar {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
+      gap: 12px;
     }
 
     .app-title {
@@ -84,7 +84,6 @@
       letter-spacing: -0.2px;
       line-height: 1.2;
       color: var(--ink);
-      padding-top: 2px;
       min-width: 0;
       flex-shrink: 1;
     }
@@ -104,11 +103,6 @@
       font-weight: 700;
     }
 
-    .header-input-label.stacked {
-      display: block;
-      margin-bottom: 6px;
-    }
-
     .header-input-wrapper {
       display: flex;
       align-items: center;
@@ -117,23 +111,28 @@
       border: var(--border);
       border-radius: var(--radius-sm);
       padding: 0 8px;
-      height: 36px;
-      flex-shrink: 0;
+      height: 38px;
+      width: 100%;
     }
 
-    input[type="number"].header-num-input {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      color: var(--accent);
-      font-size: 13px;
+    .input-unit-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-unit-wrapper input {
+      padding-right: 65px;
+    }
+
+    .input-unit-label {
+      position: absolute;
+      right: 12px;
+      font-size: 12px;
       font-weight: 700;
-      height: 36px;
-      width: 84px;
-      padding: 0;
-      outline: none;
-      font-family: "SF Mono", ui-monospace, monospace;
-      text-align: center;
+      color: var(--secondary);
+      pointer-events: none;
     }
 
     /* Standard Segmented Wrapper & Select Dropdowns */
@@ -147,26 +146,31 @@
       position: relative;
     }
 
+    .header-theme-wrapper {
+      min-width: 130px;
+    }
+
     .select-input {
       width: 100%;
       background: transparent;
       border: none;
       color: var(--ink);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      height: 32px;
+      height: 30px;
       outline: none;
       appearance: none;
       -webkit-appearance: none;
       font-family: var(--font-family);
       padding-left: 8px;
-      padding-right: 24px;
+      padding-right: 20px;
+      cursor: pointer;
     }
 
     .segmented-wrapper::after {
       content: "⌵";
       position: absolute;
-      right: 12px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
       font-weight: bold;
@@ -228,6 +232,10 @@
     /* Form Controls & Groups */
     .control-group {
       margin-bottom: 12px;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
     }
 
     .control-header {
@@ -343,10 +351,9 @@
       cursor: pointer;
     }
 
-    /* Matched to 13px select font size */
     .material-trigger-text {
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       color: var(--ink);
     }
 
@@ -539,7 +546,7 @@
       transform: translateX(-50%);
     }
 
-    /* iOS Data Tables */
+    /* Data Tables */
     .data-table {
       width: 100%;
       border-collapse: separate;
@@ -677,26 +684,65 @@
 </head>
 <body>
 
-  <!-- Navigation Header Bar -->
+  <!-- 1. Header Area -->
   <header class="ios-header">
     <div class="ios-title-bar">
-      <div class="app-title">CNC Feeds &amp; Speeds Calculator</div>
+      <!-- Main Headline -->
+      <div class="app-title">CNC Feeds and Speeds Calculator</div>
+      <!-- Theme Input with adjacent label -->
       <div class="header-field-inline">
-        <label for="inp_maxSpindle" class="header-input-label" data-i18n="max_spindle">MAX RPM:</label>
-        <div class="header-input-wrapper">
-          <input type="number" id="inp_maxSpindle" value="18000" min="1000" max="100000" step="500" class="header-num-input">
+        <label for="themeSelector" class="header-input-label" data-i18n="theme_label">Theme</label>
+        <div class="segmented-wrapper header-theme-wrapper">
+          <select id="themeSelector" class="select-input" onchange="applyTheme(this.value)"></select>
         </div>
       </div>
     </div>
-    
-    <!-- Theme Picker Segmented Bar -->
-    <label for="themeSelector" class="header-input-label stacked" data-i18n="theme_label">Themes</label>
-    <div class="segmented-wrapper">
-      <select id="themeSelector" class="select-input" onchange="applyTheme(this.value)"></select>
-    </div>
   </header>
 
-  <!-- INPUTS PANEL -->
+  <!-- 2. Machine Parameters Section (Combined with Top Controls) -->
+  <section class="panel">
+    <div class="section-title" data-i18n="machine_params">Machine Parameters</div>
+
+    <!-- Max RPM -->
+    <div class="control-group">
+      <label for="inp_maxSpindle" data-i18n="max_spindle">Max RPM</label>
+      <div class="input-unit-wrapper">
+        <input type="number" id="inp_maxSpindle" value="18000" min="1000" max="100000" step="500">
+        <span class="input-unit-label">RPM</span>
+      </div>
+    </div>
+
+    <!-- Spindle Speed: Interactive input slider with live numerical feedback -->
+    <div class="control-group">
+      <div class="control-header">
+        <label data-i18n="spindle">Spindle Speed (n)</label>
+        <span class="num" id="val_spindle" style="font-size: 15px;">16,000 min⁻¹</span>
+      </div>
+      <input type="range" id="inp_spindle" min="1000" max="18000" step="500" value="16000">
+      <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
+    </div>
+
+    <div class="form-grid-2">
+      <!-- Max Machine Acceleration with units -->
+      <div class="control-group">
+        <label data-i18n="machine_accel">Max Machine Acceleration</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_accel" value="5000" step="100" min="100" max="20000">
+          <span class="input-unit-label">mm/s²</span>
+        </div>
+      </div>
+      <!-- Max Feed Rate with units -->
+      <div class="control-group">
+        <label data-i18n="max_feed">Max Feed Rate</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_maxFeed" value="8000" step="500" min="100" max="100000">
+          <span class="input-unit-label">mm/min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL & MATERIAL INPUTS PANEL -->
   <section class="panel">
     <div class="section-title" data-i18n="tool_material">Werkzeug & Werkstoff</div>
 
@@ -704,9 +750,9 @@
     <div class="control-group">
       <div class="control-header">
         <label data-i18n="tool_dia">Fräserdurchmesser (D)</label>
-        <span class="num" id="val_toolDia" style="font-size: 15px;">0.60 mm</span>
+        <span class="num" id="val_toolDia" style="font-size: 15px;">4.0 mm</span>
       </div>
-      <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="0.6">
+      <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="4.0">
     </div>
 
     <!-- Tool Stickout (L/D) Penalty Slider -->
@@ -765,28 +811,6 @@
             <option value="flood">Flood (+30% Vc)</option>
           </select>
         </div>
-      </div>
-    </div>
-
-    <!-- Spindle Speed Slider -->
-    <div class="control-group">
-      <div class="control-header">
-        <label data-i18n="spindle">Spindeldrehzahl (n)</label>
-        <span class="num" id="val_spindle" style="font-size: 15px;">16,000 min⁻¹</span>
-      </div>
-      <input type="range" id="inp_spindle" min="1000" max="18000" step="500" value="16000">
-      <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
-    </div>
-
-    <!-- Machine Acceleration Limit & Max Feed Rate -->
-    <div class="form-grid-2">
-      <div class="control-group">
-        <label data-i18n="machine_accel">Maschinen-Beschleunigung (mm/s²)</label>
-        <input type="number" id="inp_accel" value="5000" step="100" min="100" max="20000">
-      </div>
-      <div class="control-group">
-        <label data-i18n="max_feed">Max Vorschub (mm/min)</label>
-        <input type="number" id="inp_maxFeed" value="8000" step="500" min="100" max="100000">
       </div>
     </div>
 
@@ -1120,7 +1144,7 @@
       }
     }
 
-    // Extended Material Database categorized with accurate Vc (m/min), ff (feed factor), Kc (N/mm²)
+    // Extended Material Database
     const MATERIALS = [
       // Non-Ferrous & Metals
       { id: 'ms58', category: 'Metals / Metalle', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
@@ -1152,8 +1176,9 @@
 
     const I18N = {
       DE: {
-        max_spindle: "MAX U/MIN:",
-        theme_label: "Themes",
+        max_spindle: "Max RPM",
+        machine_params: "Maschinenparameter",
+        theme_label: "Theme",
         tool_material: "Werkzeug & Werkstoff",
         tool_dia: "Fräserdurchmesser (D)",
         overhang: "Werkzeug-Auskragung (L/D)",
@@ -1162,8 +1187,8 @@
         coating: "Beschichtung",
         coolant: "Kühlung",
         spindle: "Spindeldrehzahl (n)",
-        machine_accel: "Maschinen-Beschleunigung (mm/s²)",
-        max_feed: "Max Vorschub (mm/min)",
+        machine_accel: "Max Maschinen-Beschleunigung",
+        max_feed: "Max Vorschub",
         chip_thinning: "Spanausdünnung kompensieren",
         feature_dims: "Form-Geometrien & CAM Parameter",
         custom_ae: "Custom ae (mm)",
@@ -1197,8 +1222,9 @@
         all_ok: "Keine Auffälligkeiten – Werte liegen im grünen Bereich."
       },
       EN: {
-        max_spindle: "MAX RPM:",
-        theme_label: "Themes",
+        max_spindle: "Max RPM",
+        machine_params: "Machine Parameters",
+        theme_label: "Theme",
         tool_material: "Tool & Material",
         tool_dia: "Tool Diameter (D)",
         overhang: "Tool Stickout (L/D)",
@@ -1207,8 +1233,8 @@
         coating: "Coating",
         coolant: "Coolant",
         spindle: "Spindle Speed (n)",
-        machine_accel: "Machine Accel (mm/s²)",
-        max_feed: "Max Feed Rate (mm/min)",
+        machine_accel: "Max Machine Acceleration",
+        max_feed: "Max Feed Rate",
         chip_thinning: "Chip thinning compensation",
         feature_dims: "Feature Dims & CAM Params",
         custom_ae: "Custom ae (mm)",
@@ -1332,7 +1358,6 @@
       updateUI();
     });
 
-    // Dynamic ae / ap auto-override persistence behavior
     window.toggleAutoMode = function(type) {
       triggerHaptic();
       if (type === 'ae') {
@@ -1342,7 +1367,6 @@
           inpCustomAe.placeholder = 'Auto';
         } else {
           inpCustomAe.disabled = false;
-          // Populate with last calculated auto ae value
           inpCustomAe.value = lastAutoCalculatedAe.toFixed(2);
         }
       } else if (type === 'ap') {
@@ -1352,7 +1376,6 @@
           inpCustomAp.placeholder = 'Auto';
         } else {
           inpCustomAp.disabled = false;
-          // Populate with last calculated auto ap value
           inpCustomAp.value = lastAutoCalculatedAp.toFixed(2);
         }
       }
@@ -1459,7 +1482,7 @@
       }
 
       // Track Last Auto Computed values for Persistence Override
-      lastAutoCalculatedAe = 0.20 * D; // Trochoidal / Adaptive baseline
+      lastAutoCalculatedAe = 0.20 * D;
       lastAutoCalculatedAp = Math.min(1.00 * D, axCap * D);
 
       // Dynamic User Custom Overrides
@@ -1683,11 +1706,12 @@
 
       copyBtn.onclick = () => {
         triggerHaptic();
-        const copyPayload = `CNC FEEDS & SPEEDS CALCULATOR
+        const copyPayload = `CNC FEEDS AND SPEEDS CALCULATOR
 Tool: Ø${formatNum(D, 2)} mm | Tool Stickout L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
 Material: ${mat.name} | Coolant: ${inpCoolant.value.toUpperCase()}
 Spindle Speed: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
-Max Feed Limit: ${maxFeed} mm/min | MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
+Max Feed Limit: ${maxFeed} mm/min | Acceleration: ${accel} mm/s²
+MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
 
 CAM OPERATIONS:
 - Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(adaptiveAe,2)}, ap=${formatNum(adaptiveAp,2)})
