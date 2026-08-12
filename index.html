@@ -4,19 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Feeds&Speeds">
   <meta name="theme-color" content="#e0e5ec">
   <title>Feeds & Speeds — Micro End Mill Calculator</title>
   <style>
     :root {
+      /* Theme Defaults (Neumorphism Light) */
       --ground: #e0e5ec;
       --panel: #e0e5ec;
-      --shadow-out: 6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff;
-      --shadow-out-sm: 4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff;
-      --shadow-in: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
-      --shadow-btn: 4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff;
-      --shadow-btn-active: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+      --shadow-out: 9px 9px 18px #a3b1c6, -9px -9px 18px #ffffff;
+      --shadow-out-sm: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      --shadow-in: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff;
+      --shadow-btn: 6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff;
+      --shadow-btn-active: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff;
       --accent: #3182ce;
       --secondary: #718096;
       --warning: #dd6b20;
@@ -26,14 +27,10 @@
       --border: 1px solid transparent;
       --blur: none;
 
-      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Roboto, sans-serif;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
       --radius-lg: 20px;
       --radius-md: 14px;
       --radius-sm: 10px;
-
-      /* iPhone Safe Areas */
-      --sat: env(safe-area-inset-top, 20px);
-      --sab: env(safe-area-inset-bottom, 28px);
     }
 
     * {
@@ -41,23 +38,135 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
     body {
       background-color: var(--ground);
       color: var(--ink);
       font-family: var(--font-family);
-      padding-top: max(16px, var(--sat));
-      padding-bottom: max(24px, var(--sab));
-      padding-left: 16px;
-      padding-right: 16px;
-      width: 100%;
-      max-width: 390px; /* iPhone 13 Pro Viewport Width */
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-bottom: max(80px, calc(env(safe-area-inset-bottom) + 60px));
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+      max-width: 600px;
       margin: 0 auto;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
+    /* iOS Navigation Header */
+    .ios-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      background: var(--panel);
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-out);
+      border: var(--border);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+    }
+
+    .ios-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .header-field-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-input-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--secondary);
+      font-weight: 700;
+    }
+
+    .header-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 8px;
+      height: 36px;
+    }
+
+    input[type="number"].header-num-input {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      height: 36px;
+      width: 70px;
+      outline: none;
+      font-family: "SF Mono", ui-monospace, monospace;
+      text-align: center;
+    }
+
+    /* iOS Segmented Control for Theme Picker */
+    .theme-segmented-wrapper {
+      width: 100%;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      position: relative;
+    }
+
+    .theme-select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      height: 32px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      font-family: var(--font-family);
+      padding-left: 8px;
+      padding-right: 24px;
+    }
+
+    .theme-segmented-wrapper::after {
+      content: "⌵";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: bold;
+      color: var(--accent);
+      pointer-events: none;
+    }
+
+    .theme-select option {
+      background: var(--ground);
+      color: var(--ink);
+    }
+
+    /* Typography */
     .num {
       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
       font-variant-numeric: tabular-nums;
@@ -68,180 +177,37 @@
     label, .label-style {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       color: var(--secondary);
       display: block;
       margin-bottom: 6px;
       font-weight: 700;
     }
 
-    .app-header {
-      display: flex;
-      flex-direction: column;
-      padding: 14px 16px;
-      background: var(--panel);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-out);
-      border: var(--border);
-      margin-bottom: 16px;
-      gap: 12px;
-    }
-
-    .app-header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-
-    .app-title {
-      font-size: 13px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .header-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .header-field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .btn-action {
-      background: var(--ground);
-      box-shadow: var(--shadow-btn);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--ink);
-      font-size: 12px;
-      font-weight: 700;
-      height: 44px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      outline: none;
-    }
-
-    .btn-action:active {
-      box-shadow: var(--shadow-btn-active);
-    }
-
-    .btn-accent {
-      color: var(--accent);
-    }
-
-    .header-input-wrapper, .material-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--ground);
-      box-shadow: var(--shadow-in);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0 10px;
-      height: 44px;
-      width: 100%;
-    }
-
-    .header-input-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--secondary);
-      font-weight: 700;
-      margin-bottom: 0;
-    }
-
-    input[type="number"].header-num-input {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      color: var(--ink);
-      font-size: 13px;
-      font-weight: 700;
-      height: 44px;
-      width: 100%;
-      outline: none;
-      font-family: "SF Mono", ui-monospace, monospace;
-      text-align: center;
-      padding: 0;
-    }
-
-    .theme-select-container, .material-select-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-
-    .theme-select, .material-select {
-      width: 100%;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      color: var(--ink);
-      font-size: 12px;
-      font-weight: 700;
-      height: 44px;
-      padding-right: 16px;
-      cursor: pointer;
-      outline: none;
-      -webkit-appearance: none;
-      appearance: none;
-      font-family: var(--font-family);
-    }
-
-    .theme-select-container::after, .material-select-container::after {
-      content: "";
-      position: absolute;
-      right: 2px;
-      pointer-events: none;
-      width: 0;
-      height: 0;
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      border-top: 5px solid var(--accent);
-    }
-
-    .theme-select option, .material-select option {
-      background: var(--ground);
-      color: var(--ink);
-    }
-
-    .grid-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
+    /* Card Panels */
     .panel {
       background: var(--panel);
       box-shadow: var(--shadow-out);
       border: var(--border);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
       border-radius: var(--radius-lg);
       padding: 16px;
-      width: 100%;
+      margin-bottom: 16px;
     }
 
     .section-title {
       font-size: 11px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--secondary);
       padding-bottom: 6px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       font-weight: 800;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(128, 128, 128, 0.15);
     }
 
+    /* Form Controls & Groups */
     .control-group {
       margin-bottom: 16px;
     }
@@ -253,6 +219,7 @@
       margin-bottom: 6px;
     }
 
+    /* Touch Sliders */
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
@@ -261,21 +228,27 @@
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       outline: none;
-      cursor: pointer;
       margin: 8px 0;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      height: 24px;
-      width: 24px;
+      height: 28px;
+      width: 28px;
       border-radius: 50%;
       background: var(--ground);
       box-shadow: var(--shadow-btn);
+      cursor: pointer;
       border: 2px solid var(--accent);
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-btn-active);
     }
 
     input[type="number"] {
@@ -287,75 +260,30 @@
       border-radius: var(--radius-sm);
       color: var(--ink);
       padding: 0 12px;
-      font-size: 14px;
+      font-size: 15px;
       font-family: "SF Mono", ui-monospace, monospace;
       outline: none;
       font-weight: 600;
     }
 
-    .checkbox-group {
+    /* Horizontal Scroll Presets Bar */
+    .preset-scroll-container {
       display: flex;
-      align-items: center;
-      min-height: 44px;
-      gap: 10px;
-      cursor: pointer;
-      background: var(--ground);
-      box-shadow: var(--shadow-in);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0 12px;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
 
-    .checkbox-group input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-    }
-
-    .checkbox-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    .preset-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+    .preset-scroll-container::-webkit-scrollbar {
+      display: none;
     }
 
     .preset-btn {
+      flex: 0 0 auto;
       height: 38px;
-      background: var(--ground);
-      box-shadow: var(--shadow-btn);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--ink);
-      font-family: "SF Mono", ui-monospace, monospace;
-      font-size: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .preset-btn.active {
-      box-shadow: var(--shadow-btn-active);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .flute-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
-    .flute-btn {
-      height: 38px;
+      padding: 0 14px;
       background: var(--ground);
       box-shadow: var(--shadow-btn);
       border: var(--border);
@@ -364,21 +292,204 @@
       font-family: "SF Mono", ui-monospace, monospace;
       font-size: 12px;
       font-weight: 700;
-      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .flute-btn.active {
+    .preset-btn:active, .preset-btn.active {
       box-shadow: var(--shadow-btn-active);
       color: var(--accent);
       border-color: var(--accent);
     }
 
+    /* iOS Segmented Control for Flutes */
+    .flute-segmented-control {
+      display: flex;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      gap: 2px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .flute-btn {
+      flex: 1;
+      min-width: 32px;
+      height: 36px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: var(--ink);
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flute-btn.active {
+      background: var(--panel);
+      box-shadow: var(--shadow-out-sm);
+      color: var(--accent);
+    }
+
+    /* iOS Modal Trigger for Material */
+    .material-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      height: 44px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .material-trigger-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .material-trigger-arrow {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* iOS Sheet Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-height: 70vh;
+      background: var(--panel);
+      border-radius: 20px 20px 0 0;
+      padding: 20px 16px max(20px, env(safe-area-inset-bottom));
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .modal-close {
+      background: var(--ground);
+      box-shadow: var(--shadow-btn);
+      border: var(--border);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      font-weight: bold;
+    }
+
+    .material-option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .material-option-item {
+      padding: 12px 14px;
+      background: var(--ground);
+      box-shadow: var(--shadow-out-sm);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .material-option-item.selected {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      gap: 12px;
+      cursor: pointer;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 14px;
+    }
+
+    .checkbox-group input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .checkbox-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* Gauge Card */
     .gauge-card {
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-md);
-      padding: 14px;
+      padding: 16px;
       margin-bottom: 16px;
     }
 
@@ -388,44 +499,45 @@
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       margin: 12px 0 8px 0;
       display: flex;
       overflow: hidden;
       padding: 2px;
     }
 
-    .gauge-zone-rub { width: 10%; background: var(--critical); opacity: 0.8; border-radius: 4px 0 0 4px; }
+    .gauge-zone-rub { width: 10%; background: var(--critical); opacity: 0.8; border-radius: 6px 0 0 6px; }
     .gauge-zone-cut { width: 56.6%; background: var(--ok); opacity: 0.8; }
-    .gauge-zone-break { width: 33.4%; background: var(--critical); opacity: 0.8; border-radius: 0 4px 4px 0; }
+    .gauge-zone-break { width: 33.4%; background: var(--critical); opacity: 0.8; border-radius: 0 6px 6px 0; }
 
     .gauge-needle {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 5px;
+      width: 6px;
       background: var(--ink);
-      border-radius: 3px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+      border-radius: 4px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.5);
       transition: left 0.15s ease-out;
       transform: translateX(-50%);
     }
 
+    /* iOS Data Tables */
     .data-table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0 6px;
       margin-bottom: 16px;
-      font-size: 11px;
+      font-size: 13px;
     }
 
     .data-table th {
       color: var(--secondary);
       font-weight: 700;
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 2px 6px;
+      padding: 4px 8px;
       text-align: left;
     }
 
@@ -437,12 +549,17 @@
       text-align: left;
     }
 
-    .data-table tr td:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
-    .data-table tr td:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .data-table tr td:first-child {
+      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    }
+
+    .data-table tr td:last-child {
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
 
     .secondary-feeds-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -455,11 +572,12 @@
       padding: 12px;
     }
 
+    /* Checks Section */
     .check-item {
-      padding: 10px 12px;
+      padding: 10px 14px;
       margin-bottom: 8px;
-      font-size: 11px;
-      line-height: 1.3;
+      font-size: 12px;
+      line-height: 1.4;
       border-radius: var(--radius-sm);
       background: var(--ground);
       box-shadow: var(--shadow-in);
@@ -472,10 +590,10 @@
     .check-item.ok { color: var(--ok); }
 
     .note-text {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--secondary);
-      margin-top: 4px;
-      line-height: 1.2;
+      margin-top: 6px;
+      line-height: 1.3;
       font-weight: 500;
     }
 
@@ -484,465 +602,709 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+
+    /* iOS Sticky Bottom Toolbar */
+    .ios-toolbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--panel);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-top: var(--border);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+      display: flex;
+      gap: 12px;
+      z-index: 999;
+      justify-content: center;
+    }
+
+    .ios-toolbar-inner {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-action {
+      flex: 1;
+      background: var(--ground);
+      box-shadow: var(--shadow-btn);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+    }
+
+    .btn-action:active {
+      box-shadow: var(--shadow-btn-active);
+    }
+
+    .btn-accent {
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <div class="app-header-top">
+  <!-- iOS Header Title Bar -->
+  <header class="ios-header">
+    <div class="ios-title-bar">
       <div class="app-title">Feeds & Speeds</div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn-action" id="langToggle" style="width: 44px;">DE</button>
-        <button class="btn-action btn-accent" id="copyBtn" style="width: 60px;">COPY</button>
-      </div>
-    </div>
-    <div class="header-actions">
-      <div class="header-field-group">
-        <label for="inp_maxSpindle" class="header-input-label" data-i18n="max_spindle">MAX RPM</label>
+      <div class="header-field-inline">
+        <label for="inp_maxSpindle" class="header-input-label" data-i18n="max_spindle">MAX U/MIN:</label>
         <div class="header-input-wrapper">
           <input type="number" id="inp_maxSpindle" value="18000" min="1000" max="100000" step="500" class="header-num-input">
         </div>
       </div>
-      <div class="header-field-group">
-        <label for="themeSelector" class="header-input-label" data-i18n="theme_label">Design</label>
-        <div class="header-input-wrapper">
-          <div class="theme-select-container">
-            <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)"></select>
-          </div>
-        </div>
-      </div>
+    </div>
+    
+    <!-- iOS Theme Picker Segmented Bar -->
+    <div class="theme-segmented-wrapper">
+      <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)"></select>
     </div>
   </header>
 
-  <div class="grid-container">
-    <!-- INPUTS PANEL -->
-    <section class="panel">
-      <div class="section-title" data-i18n="tool_material">Werkzeug & Werkstoff</div>
+  <!-- INPUTS PANEL -->
+  <section class="panel">
+    <div class="section-title" data-i18n="tool_material">Werkzeug & Werkstoff</div>
 
-      <div class="control-group">
-        <label data-i18n="presets">Tool Presets</label>
-        <div class="preset-grid" id="presetGrid">
-          <button class="preset-btn" onclick="applyPreset(0.5, 1)">Ø0.5·1Z</button>
-          <button class="preset-btn" onclick="applyPreset(0.6, 2)">Ø0.6·2Z</button>
-          <button class="preset-btn" onclick="applyPreset(0.8, 2)">Ø0.8·2Z</button>
-          <button class="preset-btn" onclick="applyPreset(1.0, 2)">Ø1.0·2Z</button>
-          <button class="preset-btn" onclick="applyPreset(2.0, 2)">Ø2.0·2Z</button>
-        </div>
+    <!-- Tool Presets -->
+    <div class="control-group">
+      <label data-i18n="presets">Tool Presets</label>
+      <div class="preset-scroll-container" id="presetGrid">
+        <button class="preset-btn" data-dia="0.5" data-flutes="1" onclick="applyPreset(0.5, 1)">Ø0.5·1Z</button>
+        <button class="preset-btn" data-dia="0.6" data-flutes="2" onclick="applyPreset(0.6, 2)">Ø0.6·2Z</button>
+        <button class="preset-btn" data-dia="0.8" data-flutes="2" onclick="applyPreset(0.8, 2)">Ø0.8·2Z</button>
+        <button class="preset-btn" data-dia="1.0" data-flutes="2" onclick="applyPreset(1.0, 2)">Ø1.0·2Z</button>
+        <button class="preset-btn" data-dia="2.0" data-flutes="2" onclick="applyPreset(2.0, 2)">Ø2.0·2Z</button>
       </div>
+    </div>
 
-      <div class="control-group">
-        <div class="control-header">
-          <label data-i18n="tool_dia">Fräserdurchmesser (D)</label>
-          <span class="num" id="val_toolDia" style="font-size: 14px;">0.60 mm</span>
-        </div>
-        <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="0.6">
+    <!-- Tool Diameter -->
+    <div class="control-group">
+      <div class="control-header">
+        <label data-i18n="tool_dia">Fräserdurchmesser (D)</label>
+        <span class="num" id="val_toolDia" style="font-size: 15px;">0.60 mm</span>
       </div>
+      <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="0.6">
+    </div>
 
-      <div class="control-group">
-        <label data-i18n="flutes">Schneidenanzahl (Z)</label>
-        <div class="flute-grid" id="fluteGrid">
-          <button class="flute-btn" onclick="setFlutes(1)">1Z</button>
-          <button class="flute-btn active" onclick="setFlutes(2)">2Z</button>
-          <button class="flute-btn" onclick="setFlutes(3)">3Z</button>
-          <button class="flute-btn" onclick="setFlutes(4)">4Z</button>
-          <button class="flute-btn" onclick="setFlutes(5)">5Z</button>
-          <button class="flute-btn" onclick="setFlutes(6)">6Z</button>
-          <button class="flute-btn" onclick="setFlutes(7)">7Z</button>
-          <button class="flute-btn" onclick="setFlutes(8)">8Z</button>
-        </div>
+    <!-- Flutes (Z) iOS Segmented Control -->
+    <div class="control-group">
+      <label data-i18n="flutes">Schneidenanzahl (Z)</label>
+      <div class="flute-segmented-control" id="fluteGrid">
+        <button class="flute-btn" onclick="setFlutes(1)">1Z</button>
+        <button class="flute-btn active" onclick="setFlutes(2)">2Z</button>
+        <button class="flute-btn" onclick="setFlutes(3)">3Z</button>
+        <button class="flute-btn" onclick="setFlutes(4)">4Z</button>
+        <button class="flute-btn" onclick="setFlutes(5)">5Z</button>
+        <button class="flute-btn" onclick="setFlutes(6)">6Z</button>
+        <button class="flute-btn" onclick="setFlutes(7)">7Z</button>
+        <button class="flute-btn" onclick="setFlutes(8)">8Z</button>
       </div>
+    </div>
 
-      <div class="control-group">
-        <label data-i18n="material">Werkstoff</label>
-        <div class="material-wrapper">
-          <div class="material-select-container">
-            <select id="inp_material" class="material-select"></select>
-          </div>
-        </div>
-        <div class="note-text" id="matNote">---</div>
+    <!-- Material Select Modal Trigger -->
+    <div class="control-group">
+      <label data-i18n="material">Werkstoff</label>
+      <div class="material-trigger" id="materialTrigger" onclick="openMaterialModal()">
+        <span class="material-trigger-text" id="materialTriggerText">Brass MS58 (CuZn39Pb3)</span>
+        <span class="material-trigger-arrow">›</span>
       </div>
+      <div class="note-text" id="matNote">---</div>
+    </div>
 
-      <div class="control-group">
-        <div class="control-header">
-          <label data-i18n="spindle">Spindeldrehzahl (n)</label>
-          <span class="num" id="val_spindle" style="font-size: 14px;">16,000 min⁻¹</span>
-        </div>
-        <input type="range" id="inp_spindle" min="1000" max="18000" step="500" value="16000">
-        <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
+    <!-- Spindle Speed Slider -->
+    <div class="control-group">
+      <div class="control-header">
+        <label data-i18n="spindle">Spindeldrehzahl (n)</label>
+        <span class="num" id="val_spindle" style="font-size: 15px;">16,000 min⁻¹</span>
       </div>
+      <input type="range" id="inp_spindle" min="1000" max="18000" step="500" value="16000">
+      <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
+    </div>
 
+    <!-- Chip Thinning Checkbox -->
+    <div class="control-group">
+      <label class="checkbox-group">
+        <input type="checkbox" id="inp_comp">
+        <span class="checkbox-label" data-i18n="chip_thinning">Spanausdünnung kompensieren</span>
+      </label>
+    </div>
+
+    <div class="section-title" style="margin-top: 20px;" data-i18n="feature_dims">Form-Geometrien</div>
+
+    <!-- Feature Inputs -->
+    <div class="form-grid-2">
       <div class="control-group">
-        <label class="checkbox-group">
-          <input type="checkbox" id="inp_comp">
-          <span class="checkbox-label" data-i18n="chip_thinning">Spanausdünnung kompensieren</span>
-        </label>
-      </div>
-
-      <div class="section-title" style="margin-top: 18px;" data-i18n="feature_dims">Form-Geometrien</div>
-
-      <div class="form-grid-2">
-        <div class="control-group">
-          <label data-i18n="bore_dia">Bohrung Ø (mm)</label>
-          <input type="number" id="inp_bore" value="1.00" step="0.05">
-        </div>
-        <div class="control-group">
-          <label data-i18n="thread_dia">Gewinde Ø (mm)</label>
-          <input type="number" id="inp_thread" value="2.00" step="0.05">
-        </div>
-        <div class="control-group">
-          <label data-i18n="chamfer_w">Fasenbreite (mm)</label>
-          <input type="number" id="inp_chamfer" value="0.20" step="0.05">
-        </div>
-        <div class="control-group">
-          <label data-i18n="drill_dia">Bohrer Ø (mm)</label>
-          <input type="number" id="inp_drill" value="1.00" step="0.1">
-        </div>
+        <label data-i18n="bore_dia">Bohrung Ø (mm)</label>
+        <input type="number" id="inp_bore" value="1.00" step="0.05">
       </div>
       <div class="control-group">
-        <label data-i18n="hole_depth">Bohrtiefe (mm)</label>
-        <input type="number" id="inp_depth" value="2.00" step="0.1">
+        <label data-i18n="thread_dia">Gewinde Ø (mm)</label>
+        <input type="number" id="inp_thread" value="2.00" step="0.05">
       </div>
-    </section>
-
-    <!-- RESULTS PANEL -->
-    <section class="panel panel-results">
-      <div class="gauge-card">
-        <div class="control-header">
-          <label data-i18n="chip_load_gauge">Spanungsdicke h (Adaptive)</label>
-          <span class="num" id="gaugeVal" style="font-size: 16px;">0.0 µm</span>
-        </div>
-        <div class="gauge-bar-wrap">
-          <div class="gauge-zone-rub"></div>
-          <div class="gauge-zone-cut"></div>
-          <div class="gauge-zone-break"></div>
-          <div class="gauge-needle" id="gaugeNeedle"></div>
-        </div>
-        <div class="control-header" style="font-size: 9px; color: var(--secondary); font-weight: 600;">
-          <span>0 µm</span>
-          <span id="gaugeZoneLabel" style="font-weight: 800; color: var(--accent);">Optimal</span>
-          <span id="gaugeMaxLabel">3% D µm</span>
-        </div>
+      <div class="control-group">
+        <label data-i18n="chamfer_w">Fasenbreite (mm)</label>
+        <input type="number" id="inp_chamfer" value="0.20" step="0.05">
       </div>
-
-      <div class="section-title" data-i18n="milling_ops">Fräsoperationen (CAM)</div>
-      
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th data-i18n="op">Op</th>
-            <th>ae</th>
-            <th>ap</th>
-            <th>vf</th>
-          </tr>
-        </thead>
-        <tbody id="millingTbody"></tbody>
-      </table>
-
-      <div class="secondary-feeds-grid">
-        <div class="feed-card">
-          <label data-i18n="ramp_feed">Rampe (0.7×D, 1.5-2°)</label>
-          <div class="num" id="val_rampFeed" style="font-size: 14px;">0 mm/min</div>
-        </div>
-        <div class="feed-card">
-          <label data-i18n="plunge_feed">Eintauchen (Plunge)</label>
-          <div class="num" id="val_plungeFeed" style="font-size: 14px;">0 mm/min</div>
-        </div>
+      <div class="control-group">
+        <label data-i18n="drill_dia">Bohrer Ø (mm)</label>
+        <input type="number" id="inp_drill" value="1.00" step="0.1">
       </div>
+    </div>
+    <div class="control-group">
+      <label data-i18n="hole_depth">Bohrtiefe (mm)</label>
+      <input type="number" id="inp_depth" value="2.00" step="0.1">
+    </div>
+  </section>
 
-      <div class="section-title" data-i18n="special_ops">Spezialoperationen</div>
+  <!-- RESULTS PANEL -->
+  <section class="panel">
+    <!-- Chip Load Gauge -->
+    <div class="gauge-card">
+      <div class="control-header">
+        <label data-i18n="chip_load_gauge">Spanungsdicke h (Adaptive)</label>
+        <span class="num" id="gaugeVal" style="font-size: 16px;">0.0 µm</span>
+      </div>
+      <div class="gauge-bar-wrap">
+        <div class="gauge-zone-rub"></div>
+        <div class="gauge-zone-cut"></div>
+        <div class="gauge-zone-break"></div>
+        <div class="gauge-needle" id="gaugeNeedle"></div>
+      </div>
+      <div class="control-header" style="font-size: 10px; color: var(--secondary); font-weight: 600;">
+        <span>0 µm (Reiben)</span>
+        <span id="gaugeZoneLabel" style="font-weight: 800; color: var(--accent);">Optimal</span>
+        <span id="gaugeMaxLabel">3% D µm (Bruch)</span>
+      </div>
+    </div>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th data-i18n="op">Op</th>
-            <th data-i18n="param">Parameter</th>
-            <th>vf</th>
-          </tr>
-        </thead>
-        <tbody id="specialTbody"></tbody>
-      </table>
+    <div class="section-title" data-i18n="milling_ops">Fräsoperationen (CAM)</div>
+    
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th data-i18n="op">Op</th>
+          <th>ae (mm)</th>
+          <th>ap (mm)</th>
+          <th>vf (mm/min)</th>
+        </tr>
+      </thead>
+      <tbody id="millingTbody"></tbody>
+    </table>
 
-      <div class="section-title" style="margin-top: 16px;" data-i18n="checks">Plausibilitätsprüfungen</div>
-      <div id="checksContainer"></div>
-    </section>
+    <!-- Secondary Ramp & Plunge -->
+    <div class="secondary-feeds-grid">
+      <div class="feed-card">
+        <label data-i18n="ramp_feed">Rampe (0.7×D, 1.5-2°)</label>
+        <div class="num" id="val_rampFeed" style="font-size: 14px;">0 mm/min</div>
+      </div>
+      <div class="feed-card">
+        <label data-i18n="plunge_feed">Eintauchen (Plunge)</label>
+        <div class="num" id="val_plungeFeed" style="font-size: 14px;">0 mm/min</div>
+      </div>
+    </div>
+
+    <div class="section-title" data-i18n="special_ops">Spezialoperationen</div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th data-i18n="op">Op</th>
+          <th data-i18n="param">Parameter</th>
+          <th>vf (mm/min)</th>
+        </tr>
+      </thead>
+      <tbody id="specialTbody"></tbody>
+    </table>
+
+    <!-- Checks & Warnings -->
+    <div class="section-title" style="margin-top: 16px;" data-i18n="checks">Plausibilitätsprüfungen</div>
+    <div id="checksContainer"></div>
+  </section>
+
+  <!-- iOS Bottom Toolbar -->
+  <div class="ios-toolbar">
+    <div class="ios-toolbar-inner">
+      <button class="btn-action" id="langToggle">DE</button>
+      <button class="btn-action btn-accent" id="copyBtn">COPY</button>
+    </div>
+  </div>
+
+  <!-- iOS Material Picker Bottom Sheet Modal -->
+  <div class="modal-overlay" id="materialModal" onclick="closeMaterialModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title" data-i18n="material">Werkstoff</div>
+        <button class="modal-close" onclick="closeMaterialModal()">✕</button>
+      </div>
+      <div class="material-option-list" id="materialOptionList"></div>
+    </div>
   </div>
 
   <script>
     const THEMES = {
       neumorphismLight: {
         label: "1. Neumorphism Light",
-        '--ground': '#e0e5ec', '--panel': '#e0e5ec',
-        '--shadow-out': '6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff',
-        '--shadow-out-sm': '4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff',
-        '--shadow-in': 'inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff',
-        '--shadow-btn-active': 'inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff',
-        '--accent': '#3182ce', '--secondary': '#718096', '--warning': '#dd6b20',
-        '--critical': '#e53e3e', '--ink': '#2d3748', '--ok': '#38a169', '--border': '1px solid transparent', '--blur': 'none'
+        '--ground': '#e0e5ec',
+        '--panel': '#e0e5ec',
+        '--shadow-out': '9px 9px 18px #a3b1c6, -9px -9px 18px #ffffff',
+        '--shadow-out-sm': '5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff',
+        '--shadow-in': 'inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff',
+        '--shadow-btn': '6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff',
+        '--shadow-btn-active': 'inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff',
+        '--accent': '#3182ce',
+        '--secondary': '#718096',
+        '--warning': '#dd6b20',
+        '--critical': '#e53e3e',
+        '--ink': '#2d3748',
+        '--ok': '#38a169',
+        '--border': '1px solid transparent',
+        '--blur': 'none'
+      },
+      neumorphismDark: {
+        label: "2. Neumorphism Dark",
+        '--ground': '#1e2227',
+        '--panel': '#1e2227',
+        '--shadow-out': '10px 10px 20px #14171a, -10px -10px 20px #282d34',
+        '--shadow-out-sm': '6px 6px 12px #14171a, -6px -6px 12px #282d34',
+        '--shadow-in': 'inset 4px 4px 8px #14171a, inset -4px -4px 8px #282d34',
+        '--shadow-btn': '6px 6px 12px #14171a, -6px -6px 12px #282d34',
+        '--shadow-btn-active': 'inset 4px 4px 8px #14171a, inset -4px -4px 8px #282d34',
+        '--accent': '#63b3ed',
+        '--secondary': '#a0aec0',
+        '--warning': '#f6ad55',
+        '--critical': '#fc8181',
+        '--ink': '#e2e8f0',
+        '--ok': '#68d391',
+        '--border': '1px solid transparent',
+        '--blur': 'none'
+      },
+      glassmorphismLight: {
+        label: "3. Glassmorphism Light",
+        '--ground': '#f0f4f8',
+        '--panel': 'rgba(255, 255, 255, 0.65)',
+        '--shadow-out': '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
+        '--shadow-out-sm': '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
+        '--shadow-in': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+        '--shadow-btn': '0 4px 12px rgba(0, 0, 0, 0.08)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+        '--accent': '#2563eb',
+        '--secondary': '#64748b',
+        '--warning': '#d97706',
+        '--critical': '#dc2626',
+        '--ink': '#1e293b',
+        '--ok': '#16a34a',
+        '--border': '1px solid rgba(255, 255, 255, 0.8)',
+        '--blur': 'blur(12px)'
+      },
+      glassmorphismDark: {
+        label: "4. Glassmorphism Dark",
+        '--ground': '#0f172a',
+        '--panel': 'rgba(30, 41, 59, 0.70)',
+        '--shadow-out': '0 8px 32px 0 rgba(0, 0, 0, 0.4)',
+        '--shadow-out-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.3)',
+        '--shadow-in': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.05)',
+        '--shadow-btn': '0 4px 12px rgba(0, 0, 0, 0.3)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.4)',
+        '--accent': '#38bdf8',
+        '--secondary': '#94a3b8',
+        '--warning': '#fbbf24',
+        '--critical': '#f87171',
+        '--ink': '#f8fafc',
+        '--ok': '#4ade80',
+        '--border': '1px solid rgba(255, 255, 255, 0.1)',
+        '--blur': 'blur(14px)'
+      },
+      cyberpunk: {
+        label: "5. Cyberpunk Neon",
+        '--ground': '#0b0c10',
+        '--panel': '#1f2833',
+        '--shadow-out': '0 0 15px rgba(255, 0, 127, 0.2), 0 0 5px rgba(0, 240, 255, 0.2)',
+        '--shadow-out-sm': '0 0 8px rgba(0, 240, 255, 0.2)',
+        '--shadow-in': 'inset 0 0 8px rgba(0, 0, 0, 0.8)',
+        '--shadow-btn': '0 0 10px rgba(0, 240, 255, 0.4)',
+        '--shadow-btn-active': 'inset 0 0 10px rgba(255, 0, 127, 0.6)',
+        '--accent': '#00f0ff',
+        '--secondary': '#c5c6c7',
+        '--warning': '#ffe600',
+        '--critical': '#ff0055',
+        '--ink': '#ffffff',
+        '--ok': '#00ff66',
+        '--border': '1px solid #00f0ff',
+        '--blur': 'none'
+      },
+      industrialCNC: {
+        label: "6. Industrial CNC",
+        '--ground': '#2b2d2f',
+        '--panel': '#36393e',
+        '--shadow-out': '3px 3px 6px #1b1c1e, -1px -1px 3px #45484e',
+        '--shadow-out-sm': '2px 2px 4px #1b1c1e',
+        '--shadow-in': 'inset 2px 2px 5px #1b1c1e',
+        '--shadow-btn': '2px 2px 5px #1a1b1d',
+        '--shadow-btn-active': 'inset 2px 2px 4px #101112',
+        '--accent': '#f59e0b',
+        '--secondary': '#9ca3af',
+        '--warning': '#f97316',
+        '--critical': '#ef4444',
+        '--ink': '#f3f4f6',
+        '--ok': '#10b981',
+        '--border': '1px solid #4b5563',
+        '--blur': 'none'
+      },
+      matrix: {
+        label: "7. Matrix Terminal",
+        '--ground': '#020d04',
+        '--panel': '#051808',
+        '--shadow-out': '0 0 10px rgba(0, 255, 65, 0.15)',
+        '--shadow-out-sm': '0 0 5px rgba(0, 255, 65, 0.15)',
+        '--shadow-in': 'inset 0 0 8px rgba(0, 0, 0, 0.9)',
+        '--shadow-btn': '0 0 8px rgba(0, 255, 65, 0.3)',
+        '--shadow-btn-active': 'inset 0 0 8px rgba(0, 255, 65, 0.5)',
+        '--accent': '#00ff41',
+        '--secondary': '#008f11',
+        '--warning': '#ccff00',
+        '--critical': '#ff3300',
+        '--ink': '#00ff41',
+        '--ok': '#00ff41',
+        '--border': '1px solid #008f11',
+        '--blur': 'none'
       },
       iosLight: {
-        label: "2. iOS Clean Light",
-        '--ground': '#f2f2f7', '--panel': '#ffffff',
+        label: "8. iOS Clean Light",
+        '--ground': '#f2f2f7',
+        '--panel': '#ffffff',
         '--shadow-out': '0 4px 20px rgba(0, 0, 0, 0.05)',
         '--shadow-out-sm': '0 2px 8px rgba(0, 0, 0, 0.04)',
         '--shadow-in': 'inset 0 1px 3px rgba(0, 0, 0, 0.06)',
         '--shadow-btn': '0 2px 6px rgba(0, 0, 0, 0.06)',
         '--shadow-btn-active': 'inset 0 1px 3px rgba(0, 0, 0, 0.1)',
-        '--accent': '#007aff', '--secondary': '#8e8e93', '--warning': '#ff9500',
-        '--critical': '#ff3b30', '--ink': '#000000', '--ok': '#34c759', '--border': '1px solid #e5e5ea', '--blur': 'none'
+        '--accent': '#007aff',
+        '--secondary': '#8e8e93',
+        '--warning': '#ff9500',
+        '--critical': '#ff3b30',
+        '--ink': '#000000',
+        '--ok': '#34c759',
+        '--border': '1px solid #e5e5ea',
+        '--blur': 'none'
       },
       iosDark: {
-        label: "3. iOS Clean Dark",
-        '--ground': '#000000', '--panel': '#1c1c1e',
+        label: "9. iOS Clean Dark",
+        '--ground': '#000000',
+        '--panel': '#1c1c1e',
         '--shadow-out': '0 4px 20px rgba(0, 0, 0, 0.5)',
         '--shadow-out-sm': '0 2px 8px rgba(0, 0, 0, 0.4)',
         '--shadow-in': 'inset 0 1px 3px rgba(255, 255, 255, 0.05)',
         '--shadow-btn': '0 2px 6px rgba(255, 255, 255, 0.05)',
         '--shadow-btn-active': 'inset 0 1px 3px rgba(0, 0, 0, 0.5)',
-        '--accent': '#0a84ff', '--secondary': '#8e8e93', '--warning': '#ff9f0a',
-        '--critical': '#ff453a', '--ink': '#ffffff', '--ok': '#30d158', '--border': '1px solid #2c2c2e', '--blur': 'none'
+        '--accent': '#0a84ff',
+        '--secondary': '#8e8e93',
+        '--warning': '#ff9f0a',
+        '--critical': '#ff453a',
+        '--ink': '#ffffff',
+        '--ok': '#30d158',
+        '--border': '1px solid #2c2c2e',
+        '--blur': 'none'
+      },
+      nord: {
+        label: "10. Nord Arctic",
+        '--ground': '#2e3440',
+        '--panel': '#3b4252',
+        '--shadow-out': '5px 5px 12px #242932, -5px -5px 12px #424b5d',
+        '--shadow-out-sm': '3px 3px 6px #242932',
+        '--shadow-in': 'inset 3px 3px 6px #242932',
+        '--shadow-btn': '4px 4px 8px #242932',
+        '--shadow-btn-active': 'inset 3px 3px 6px #242932',
+        '--accent': '#88c0d0',
+        '--secondary': '#d8dee9',
+        '--warning': '#ebcb8b',
+        '--critical': '#bf616a',
+        '--ink': '#eceff4',
+        '--ok': '#a3be8c',
+        '--border': '1px solid #4c566a',
+        '--blur': 'none'
+      },
+      dracula: {
+        label: "11. Dracula Theme",
+        '--ground': '#282a36',
+        '--panel': '#44475a',
+        '--shadow-out': '4px 4px 10px #1e1f29, -2px -2px 8px #52566d',
+        '--shadow-out-sm': '2px 2px 5px #1e1f29',
+        '--shadow-in': 'inset 3px 3px 6px #1e1f29',
+        '--shadow-btn': '3px 3px 8px #1e1f29',
+        '--shadow-btn-active': 'inset 3px 3px 6px #1e1f29',
+        '--accent': '#bd93f9',
+        '--secondary': '#6272a4',
+        '--warning': '#ffb86c',
+        '--critical': '#ff5555',
+        '--ink': '#f8f8f2',
+        '--ok': '#50fa7b',
+        '--border': '1px solid #6272a4',
+        '--blur': 'none'
+      },
+      monokai: {
+        label: "12. Monokai Pro",
+        '--ground': '#2d2a2e',
+        '--panel': '#403e41',
+        '--shadow-out': '4px 4px 10px #222023, -2px -2px 8px #4e4c50',
+        '--shadow-out-sm': '2px 2px 5px #222023',
+        '--shadow-in': 'inset 3px 3px 6px #222023',
+        '--shadow-btn': '3px 3px 6px #222023',
+        '--shadow-btn-active': 'inset 3px 3px 6px #222023',
+        '--accent': '#ffd866',
+        '--secondary': '#939293',
+        '--warning': '#fc9867',
+        '--critical': '#ff6188',
+        '--ink': '#fcfcfa',
+        '--ok': '#a9dc76',
+        '--border': '1px solid #5b595c',
+        '--blur': 'none'
+      },
+      solarizedLight: {
+        label: "13. Solarized Light",
+        '--ground': '#fdf6e3',
+        '--panel': '#eee8d5',
+        '--shadow-out': '4px 4px 10px #d3cbb7, -4px -4px 10px #ffffff',
+        '--shadow-out-sm': '2px 2px 5px #d3cbb7',
+        '--shadow-in': 'inset 3px 3px 6px #d3cbb7',
+        '--shadow-btn': '3px 3px 6px #d3cbb7',
+        '--shadow-btn-active': 'inset 3px 3px 6px #d3cbb7',
+        '--accent': '#268bd2',
+        '--secondary': '#93a1a1',
+        '--warning': '#cb4b16',
+        '--critical': '#dc322f',
+        '--ink': '#073642',
+        '--ok': '#859900',
+        '--border': '1px solid #d3cbb7',
+        '--blur': 'none'
+      },
+      solarizedDark: {
+        label: "14. Solarized Dark",
+        '--ground': '#002b36',
+        '--panel': '#073642',
+        '--shadow-out': '4px 4px 10px #001f27, -2px -2px 8px #0e4d5e',
+        '--shadow-out-sm': '2px 2px 5px #001f27',
+        '--shadow-in': 'inset 3px 3px 6px #001f27',
+        '--shadow-btn': '3px 3px 6px #001f27',
+        '--shadow-btn-active': 'inset 3px 3px 6px #001f27',
+        '--accent': '#2aa198',
+        '--secondary': '#657b83',
+        '--warning': '#b58900',
+        '--critical': '#dc322f',
+        '--ink': '#839496',
+        '--ok': '#859900',
+        '--border': '1px solid #586e75',
+        '--blur': 'none'
       },
       slateSteel: {
-        label: "4. Slate Steel",
-        '--ground': '#1e293b', '--panel': '#334155',
+        label: "15. Slate Steel",
+        '--ground': '#1e293b',
+        '--panel': '#334155',
         '--shadow-out': '6px 6px 14px #111827, -4px -4px 10px #475569',
         '--shadow-out-sm': '3px 3px 6px #111827',
         '--shadow-in': 'inset 3px 3px 6px #111827',
         '--shadow-btn': '4px 4px 8px #111827',
         '--shadow-btn-active': 'inset 3px 3px 6px #111827',
-        '--accent': '#14b8a6', '--secondary': '#94a3b8', '--warning': '#f59e0b',
-        '--critical': '#f43f5e', '--ink': '#f8fafc', '--ok': '#10b981', '--border': '1px solid #475569', '--blur': 'none'
+        '--accent': '#14b8a6',
+        '--secondary': '#94a3b8',
+        '--warning': '#f59e0b',
+        '--critical': '#f43f5e',
+        '--ink': '#f8fafc',
+        '--ok': '#10b981',
+        '--border': '1px solid #475569',
+        '--blur': 'none'
       },
-      cyberpunk: {
-        label: "5. Cyberpunk Neon",
-        '--ground': '#0d0221', '--panel': '#190a38',
-        '--shadow-out': '4px 4px 12px #04010a, -4px -4px 12px #2e1366',
-        '--shadow-out-sm': '2px 2px 6px #04010a',
-        '--shadow-in': 'inset 2px 2px 5px #04010a, inset -2px -2px 5px #2e1366',
-        '--shadow-btn': '3px 3px 8px #04010a',
-        '--shadow-btn-active': 'inset 2px 2px 5px #04010a',
-        '--accent': '#ff007f', '--secondary': '#00f0ff', '--warning': '#ffb800',
-        '--critical': '#ff0055', '--ink': '#ffffff', '--ok': '#00ffcc', '--border': '1px solid #ff007f', '--blur': 'none'
+      synthwave: {
+        label: "16. Synthwave 80s",
+        '--ground': '#1a102f',
+        '--panel': '#271947',
+        '--shadow-out': '0 0 12px rgba(255, 0, 128, 0.3)',
+        '--shadow-out-sm': '0 0 6px rgba(255, 0, 128, 0.2)',
+        '--shadow-in': 'inset 0 0 8px rgba(0, 0, 0, 0.8)',
+        '--shadow-btn': '0 0 8px rgba(0, 240, 255, 0.4)',
+        '--shadow-btn-active': 'inset 0 0 8px rgba(255, 0, 128, 0.6)',
+        '--accent': '#ff007f',
+        '--secondary': '#a855f7',
+        '--warning': '#facc15',
+        '--critical': '#ff2a6d',
+        '--ink': '#00f0ff',
+        '--ok': '#05ffa1',
+        '--border': '1px solid #ff007f',
+        '--blur': 'none'
+      },
+      highContrast: {
+        label: "17. High Contrast (A11y)",
+        '--ground': '#000000',
+        '--panel': '#000000',
+        '--shadow-out': 'none',
+        '--shadow-out-sm': 'none',
+        '--shadow-in': 'none',
+        '--shadow-btn': 'none',
+        '--shadow-btn-active': 'none',
+        '--accent': '#ffff00',
+        '--secondary': '#ffffff',
+        '--warning': '#ffaa00',
+        '--critical': '#ff0000',
+        '--ink': '#ffffff',
+        '--ok': '#00ff00',
+        '--border': '2px solid #ffffff',
+        '--blur': 'none'
+      },
+      emeraldGreen: {
+        label: "18. Emerald Forest",
+        '--ground': '#062c21',
+        '--panel': '#0c3e30',
+        '--shadow-out': '5px 5px 12px #031812, -3px -3px 8px #155442',
+        '--shadow-out-sm': '3px 3px 6px #031812',
+        '--shadow-in': 'inset 3px 3px 6px #031812',
+        '--shadow-btn': '4px 4px 8px #031812',
+        '--shadow-btn-active': 'inset 3px 3px 6px #031812',
+        '--accent': '#34d399',
+        '--secondary': '#6ee7b7',
+        '--warning': '#fbbf24',
+        '--critical': '#f87171',
+        '--ink': '#ecfdf5',
+        '--ok': '#10b981',
+        '--border': '1px solid #10b981',
+        '--blur': 'none'
       },
       midnightBlue: {
-        label: "6. Midnight Blue",
-        '--ground': '#0f172a', '--panel': '#1e293b',
-        '--shadow-out': '5px 5px 12px #0b1120, -5px -5px 12px #334155',
-        '--shadow-out-sm': '3px 3px 6px #0b1120',
-        '--shadow-in': 'inset 3px 3px 6px #0b1120, inset -3px -3px 6px #334155',
-        '--shadow-btn': '4px 4px 8px #0b1120',
-        '--shadow-btn-active': 'inset 3px 3px 6px #0b1120',
-        '--accent': '#38bdf8', '--secondary': '#64748b', '--warning': '#fbbf24',
-        '--critical': '#f87171', '--ink': '#e2e8f0', '--ok': '#34d399', '--border': '1px solid #334155', '--blur': 'none'
+        label: "19. Midnight Blue",
+        '--ground': '#0a192f',
+        '--panel': '#112240',
+        '--shadow-out': '6px 6px 14px #020c1b, -3px -3px 8px #1d3557',
+        '--shadow-out-sm': '3px 3px 6px #020c1b',
+        '--shadow-in': 'inset 3px 3px 6px #020c1b',
+        '--shadow-btn': '4px 4px 8px #020c1b',
+        '--shadow-btn-active': 'inset 3px 3px 6px #020c1b',
+        '--accent': '#64ffda',
+        '--secondary': '#8892b0',
+        '--warning': '#ffd166',
+        '--critical': '#ff5a5f',
+        '--ink': '#e6f1ff',
+        '--ok': '#00f5d4',
+        '--border': '1px solid #233554',
+        '--blur': 'none'
       },
-      forestDark: {
-        label: "7. Forest Dark",
-        '--ground': '#111c16', '--panel': '#1b2d23',
-        '--shadow-out': '5px 5px 12px #0a110e, -5px -5px 12px #2c4938',
-        '--shadow-out-sm': '3px 3px 6px #0a110e',
-        '--shadow-in': 'inset 3px 3px 6px #0a110e, inset -3px -3px 6px #2c4938',
-        '--shadow-btn': '4px 4px 8px #0a110e',
-        '--shadow-btn-active': 'inset 3px 3px 6px #0a110e',
-        '--accent': '#22c55e', '--secondary': '#6ee7b7', '--warning': '#f59e0b',
-        '--critical': '#ef4444', '--ink': '#f0fdf4', '--ok': '#10b981', '--border': '1px solid #2c4938', '--blur': 'none'
+      sunsetAmber: {
+        label: "20. Sunset Amber",
+        '--ground': '#1c1917',
+        '--panel': '#292524',
+        '--shadow-out': '5px 5px 12px #0c0a09, -3px -3px 8px #3a3533',
+        '--shadow-out-sm': '3px 3px 6px #0c0a09',
+        '--shadow-in': 'inset 3px 3px 6px #0c0a09',
+        '--shadow-btn': '4px 4px 8px #0c0a09',
+        '--shadow-btn-active': 'inset 4px 4px 8px #0c0a09',
+        '--accent': '#f97316',
+        '--secondary': '#a8a29e',
+        '--warning': '#eab308',
+        '--critical': '#ef4444',
+        '--ink': '#fafaf9',
+        '--ok': '#22c55e',
+        '--border': '1px solid #44403c',
+        '--blur': 'none'
       },
-      autumnWarmth: {
-        label: "8. Autumn Warmth",
-        '--ground': '#fdfbf7', '--panel': '#f4efe6',
-        '--shadow-out': '5px 5px 10px #e6dfd1, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #e6dfd1',
-        '--shadow-in': 'inset 3px 3px 6px #e6dfd1, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #e6dfd1',
-        '--shadow-btn-active': 'inset 3px 3px 6px #e6dfd1',
-        '--accent': '#c2410c', '--secondary': '#78716c', '--warning': '#d97706',
-        '--critical': '#dc2626', '--ink': '#292524', '--ok': '#15803d', '--border': '1px solid #e7e0d3', '--blur': 'none'
-      },
-      coffeeCream: {
-        label: "9. Coffee & Cream",
-        '--ground': '#f3eee3', '--panel': '#e8dec9',
-        '--shadow-out': '5px 5px 10px #d4c8b0, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #d4c8b0',
-        '--shadow-in': 'inset 3px 3px 6px #d4c8b0, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #d4c8b0',
-        '--shadow-btn-active': 'inset 3px 3px 6px #d4c8b0',
-        '--accent': '#78350f', '--secondary': '#827464', '--warning': '#b45309',
-        '--critical': '#b91c1c', '--ink': '#3f2c1d', '--ok': '#047857', '--border': '1px solid #dcd1bd', '--blur': 'none'
-      },
-      solarizedLight: {
-        label: "10. Solarized Light",
-        '--ground': '#eee8d5', '--panel': '#fdf6e3',
-        '--shadow-out': '5px 5px 10px #d9d2be, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #d9d2be',
-        '--shadow-in': 'inset 3px 3px 6px #d9d2be, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #d9d2be',
-        '--shadow-btn-active': 'inset 3px 3px 6px #d9d2be',
-        '--accent': '#268bd2', '--secondary': '#657b83', '--warning': '#b58900',
-        '--critical': '#dc322f', '--ink': '#073642', '--ok': '#859900', '--border': '1px solid #e2dbcc', '--blur': 'none'
-      },
-      solarizedDark: {
-        label: "11. Solarized Dark",
-        '--ground': '#002b36', '--panel': '#073642',
-        '--shadow-out': '5px 5px 12px #001e24, -5px -5px 12px #0f4d5c',
-        '--shadow-out-sm': '3px 3px 6px #001e24',
-        '--shadow-in': 'inset 3px 3px 6px #001e24, inset -3px -3px 6px #0f4d5c',
-        '--shadow-btn': '4px 4px 8px #001e24',
-        '--shadow-btn-active': 'inset 3px 3px 6px #001e24',
-        '--accent': '#2aa198', '--secondary': '#839496', '--warning': '#b58900',
-        '--critical': '#dc322f', '--ink': '#eee8d5', '--ok': '#859900', '--border': '1px solid #0f4d5c', '--blur': 'none'
-      },
-      dracula: {
-        label: "12. Dracula",
-        '--ground': '#282a36', '--panel': '#44475a',
-        '--shadow-out': '5px 5px 12px #1e2029, -5px -5px 12px #5a5f78',
-        '--shadow-out-sm': '3px 3px 6px #1e2029',
-        '--shadow-in': 'inset 3px 3px 6px #1e2029, inset -3px -3px 6px #5a5f78',
-        '--shadow-btn': '4px 4px 8px #1e2029',
-        '--shadow-btn-active': 'inset 3px 3px 6px #1e2029',
-        '--accent': '#bd93f9', '--secondary': '#6272a4', '--warning': '#ffb86c',
-        '--critical': '#ff5555', '--ink': '#f8f8f2', '--ok': '#50fa7b', '--border': '1px solid #6272a4', '--blur': 'none'
-      },
-      nord: {
-        label: "13. Nord",
-        '--ground': '#2e3440', '--panel': '#3b4252',
-        '--shadow-out': '5px 5px 12px #232832, -5px -5px 12px #4c566a',
-        '--shadow-out-sm': '3px 3px 6px #232832',
-        '--shadow-in': 'inset 3px 3px 6px #232832, inset -3px -3px 6px #4c566a',
-        '--shadow-btn': '4px 4px 8px #232832',
-        '--shadow-btn-active': 'inset 3px 3px 6px #232832',
-        '--accent': '#88c0d0', '--secondary': '#d8dee9', '--warning': '#ebcb8b',
-        '--critical': '#bf616a', '--ink': '#eceff4', '--ok': '#a3be8c', '--border': '1px solid #4c566a', '--blur': 'none'
-      },
-      monokaiPro: {
-        label: "14. Monokai Pro",
-        '--ground': '#2d2a2e', '--panel': '#403e41',
-        '--shadow-out': '5px 5px 12px #1e1c1e, -5px -5px 12px #5a575b',
-        '--shadow-out-sm': '3px 3px 6px #1e1c1e',
-        '--shadow-in': 'inset 3px 3px 6px #1e1c1e, inset -3px -3px 6px #5a575b',
-        '--shadow-btn': '4px 4px 8px #1e1c1e',
-        '--shadow-btn-active': 'inset 3px 3px 6px #1e1c1e',
-        '--accent': '#ffd866', '--secondary': '#939293', '--warning': '#fc9867',
-        '--critical': '#ff6188', '--ink': '#fcfcfa', '--ok': '#a9dc76', '--border': '1px solid #5a575b', '--blur': 'none'
-      },
-      gruvboxDark: {
-        label: "15. Gruvbox Dark",
-        '--ground': '#282828', '--panel': '#3c3836',
-        '--shadow-out': '5px 5px 12px #1d1d1d, -5px -5px 12px #4d4d4d',
-        '--shadow-out-sm': '3px 3px 6px #1d1d1d',
-        '--shadow-in': 'inset 3px 3px 6px #1d1d1d, inset -3px -3px 6px #4d4d4d',
-        '--shadow-btn': '4px 4px 8px #1d1d1d',
-        '--shadow-btn-active': 'inset 3px 3px 6px #1d1d1d',
-        '--accent': '#fe8019', '--secondary': '#a89984', '--warning': '#fabd2f',
-        '--critical': '#fb4934', '--ink': '#ebdbb2', '--ok': '#b8bb26', '--border': '1px solid #504945', '--blur': 'none'
-      },
-      tokyoNight: {
-        label: "16. Tokyo Night",
-        '--ground': '#1a1b26', '--panel': '#24283b',
-        '--shadow-out': '5px 5px 12px #101017, -5px -5px 12px #38405f',
-        '--shadow-out-sm': '3px 3px 6px #101017',
-        '--shadow-in': 'inset 3px 3px 6px #101017, inset -3px -3px 6px #38405f',
-        '--shadow-btn': '4px 4px 8px #101017',
-        '--shadow-btn-active': 'inset 3px 3px 6px #101017',
-        '--accent': '#7aa2f7', '--secondary': '#565f89', '--warning': '#e0af68',
-        '--critical': '#f7768e', '--ink': '#c0caf5', '--ok': '#9ece6a', '--border': '1px solid #414868', '--blur': 'none'
-      },
-      emeraldLight: {
-        label: "17. Emerald Light",
-        '--ground': '#f0fdf4', '--panel': '#dcfce7',
-        '--shadow-out': '5px 5px 10px #c5e6d0, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #c5e6d0',
-        '--shadow-in': 'inset 3px 3px 6px #c5e6d0, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #c5e6d0',
-        '--shadow-btn-active': 'inset 3px 3px 6px #c5e6d0',
-        '--accent': '#059669', '--secondary': '#6b7280', '--warning': '#d97706',
-        '--critical': '#dc2626', '--ink': '#064e3b', '--ok': '#10b981', '--border': '1px solid #bbf7d0', '--blur': 'none'
-      },
-      crimsonDark: {
-        label: "18. Crimson Dark",
-        '--ground': '#180d0d', '--panel': '#2b1515',
-        '--shadow-out': '5px 5px 12px #0d0606, -5px -5px 12px #492424',
-        '--shadow-out-sm': '3px 3px 6px #0d0606',
-        '--shadow-in': 'inset 3px 3px 6px #0d0606, inset -3px -3px 6px #492424',
-        '--shadow-btn': '4px 4px 8px #0d0606',
-        '--shadow-btn-active': 'inset 3px 3px 6px #0d0606',
-        '--accent': '#f43f5e', '--secondary': '#9ca3af', '--warning': '#f59e0b',
-        '--critical': '#e11d48', '--ink': '#fff1f2', '--ok': '#34d399', '--border': '1px solid #492424', '--blur': 'none'
-      },
-      sunsetOrange: {
-        label: "19. Sunset Orange",
-        '--ground': '#fffaf0', '--panel': '#feebc8',
-        '--shadow-out': '5px 5px 10px #f3d5a3, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #f3d5a3',
-        '--shadow-in': 'inset 3px 3px 6px #f3d5a3, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #f3d5a3',
-        '--shadow-btn-active': 'inset 3px 3px 6px #f3d5a3',
-        '--accent': '#dd6b20', '--secondary': '#718096', '--warning': '#d69e2e',
-        '--critical': '#e53e3e', '--ink': '#7b341e', '--ok': '#38a169', '--border': '1px solid #fbd38d', '--blur': 'none'
-      },
-      lavenderDream: {
-        label: "20. Lavender Dream",
-        '--ground': '#f5f3ff', '--panel': '#ede9fe',
-        '--shadow-out': '5px 5px 10px #ddd6fe, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #ddd6fe',
-        '--shadow-in': 'inset 3px 3px 6px #ddd6fe, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #ddd6fe',
-        '--shadow-btn-active': 'inset 3px 3px 6px #ddd6fe',
-        '--accent': '#7c3aed', '--secondary': '#6b7280', '--warning': '#d97706',
-        '--critical': '#dc2626', '--ink': '#4c1d95', '--ok': '#059669', '--border': '1px solid #c4b5fd', '--blur': 'none'
-      },
-      mintFresh: {
-        label: "21. Mint Fresh",
-        '--ground': '#f0fdf4', '--panel': '#ccfbf1',
-        '--shadow-out': '5px 5px 10px #a7f3d0, -5px -5px 10px #ffffff',
-        '--shadow-out-sm': '3px 3px 6px #a7f3d0',
-        '--shadow-in': 'inset 3px 3px 6px #a7f3d0, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '4px 4px 8px #a7f3d0',
-        '--shadow-btn-active': 'inset 3px 3px 6px #a7f3d0',
-        '--accent': '#0d9488', '--secondary': '#64748b', '--warning': '#ca8a04',
-        '--critical': '#e11d48', '--ink': '#134e4a', '--ok': '#16a34a', '--border': '1px solid #99f6e4', '--blur': 'none'
-      },
-      monochromeDark: {
-        label: "22. Monochrome Dark",
-        '--ground': '#121212', '--panel': '#1e1e1e',
-        '--shadow-out': '5px 5px 12px #050505, -5px -5px 12px #2e2e2e',
-        '--shadow-out-sm': '3px 3px 6px #050505',
-        '--shadow-in': 'inset 3px 3px 6px #050505, inset -3px -3px 6px #2e2e2e',
-        '--shadow-btn': '4px 4px 8px #050505',
-        '--shadow-btn-active': 'inset 3px 3px 6px #050505',
-        '--accent': '#ffffff', '--secondary': '#888888', '--warning': '#ffa500',
-        '--critical': '#ff4d4d', '--ink': '#e0e0e0', '--ok': '#4cd137', '--border': '1px solid #333333', '--blur': 'none'
+      softPastel: {
+        label: "21. Lavender Soft",
+        '--ground': '#f3f0ff',
+        '--panel': '#e9e3ff',
+        '--shadow-out': '6px 6px 14px #d2c8f5, -6px -6px 14px #ffffff',
+        '--shadow-out-sm': '3px 3px 6px #d2c8f5',
+        '--shadow-in': 'inset 3px 3px 6px #d2c8f5',
+        '--shadow-btn': '4px 4px 8px #d2c8f5',
+        '--shadow-btn-active': 'inset 3px 3px 6px #d2c8f5',
+        '--accent': '#7c3aed',
+        '--secondary': '#8b5cf6',
+        '--warning': '#f59e0b',
+        '--critical': '#e11d48',
+        '--ink': '#2e1065',
+        '--ok': '#059669',
+        '--border': '1px solid transparent',
+        '--blur': 'none'
       },
       materialLight: {
-        label: "23. Material Light",
-        '--ground': '#fafafa', '--panel': '#ffffff',
-        '--shadow-out': '0 2px 5px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.15)',
-        '--shadow-out-sm': '0 1px 3px rgba(0,0,0,0.12)',
-        '--shadow-in': 'inset 0 2px 4px rgba(0,0,0,0.06)',
-        '--shadow-btn': '0 1px 3px rgba(0,0,0,0.2)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.15)',
-        '--accent': '#6200ee', '--secondary': '#757575', '--warning': '#f57c00',
-        '--critical': '#b00020', '--ink': '#212121', '--ok': '#388e3c', '--border': '1px solid #e0e0e0', '--blur': 'none'
+        label: "22. Material Light",
+        '--ground': '#f5f5f5',
+        '--panel': '#ffffff',
+        '--shadow-out': '0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05)',
+        '--shadow-out-sm': '0 1px 3px rgba(0,0,0,0.1)',
+        '--shadow-in': 'inset 0 1px 3px rgba(0,0,0,0.12)',
+        '--shadow-btn': '0 2px 5px rgba(0,0,0,0.15)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.2)',
+        '--accent': '#6200ee',
+        '--secondary': '#757575',
+        '--warning': '#ff9800',
+        '--critical': '#b00020',
+        '--ink': '#212121',
+        '--ok': '#4caf50',
+        '--border': '1px solid #e0e0e0',
+        '--blur': 'none'
       },
       materialDark: {
-        label: "24. Material Dark",
-        '--ground': '#121212', '--panel': '#1e1e1e',
-        '--shadow-out': '0 4px 6px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.5)',
+        label: "23. Material Dark",
+        '--ground': '#121212',
+        '--panel': '#1e1e1e',
+        '--shadow-out': '0 4px 10px rgba(0,0,0,0.5)',
         '--shadow-out-sm': '0 2px 4px rgba(0,0,0,0.4)',
-        '--shadow-in': 'inset 0 2px 4px rgba(0,0,0,0.6)',
-        '--shadow-btn': '0 2px 4px rgba(0,0,0,0.4)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.8)',
-        '--accent': '#bb86fc', '--secondary': '#9e9e9e', '--warning': '#ffb74d',
-        '--critical': '#cf6679', '--ink': '#e0e0e0', '--ok': '#81c784', '--border': '1px solid #2d2d2d', '--blur': 'none'
+        '--shadow-in': 'inset 0 1px 3px rgba(255,255,255,0.05)',
+        '--shadow-btn': '0 2px 6px rgba(0,0,0,0.4)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0,0,0,0.6)',
+        '--accent': '#03dac6',
+        '--secondary': '#9e9e9e',
+        '--warning': '#ffb74d',
+        '--critical': '#cf6679',
+        '--ink': '#ffffff',
+        '--ok': '#81c784',
+        '--border': '1px solid #2c2c2c',
+        '--blur': 'none'
       },
-      rosePine: {
-        label: "25. Rosé Pine",
-        '--ground': '#191724', '--panel': '#1f1d2e',
-        '--shadow-out': '5px 5px 12px #100f17, -5px -5px 12px #2a283d',
-        '--shadow-out-sm': '3px 3px 6px #100f17',
-        '--shadow-in': 'inset 3px 3px 6px #100f17, inset -3px -3px 6px #2a283d',
-        '--shadow-btn': '4px 4px 8px #100f17',
-        '--shadow-btn-active': 'inset 3px 3px 6px #100f17',
-        '--accent': '#ebbcba', '--secondary': '#908caa', '--warning': '#f6c177',
-        '--critical': '#eb6f92', '--ink': '#e0def4', '--ok': '#31748f', '--border': '1px solid #2a283d', '--blur': 'none'
+      retroTerminal: {
+        label: "24. Retro Amber CRT",
+        '--ground': '#120a00',
+        '--panel': '#1f1200',
+        '--shadow-out': '0 0 10px rgba(255, 170, 0, 0.2)',
+        '--shadow-out-sm': '0 0 5px rgba(255, 170, 0, 0.2)',
+        '--shadow-in': 'inset 0 0 8px rgba(0,0,0,0.9)',
+        '--shadow-btn': '0 0 8px rgba(255, 170, 0, 0.3)',
+        '--shadow-btn-active': 'inset 0 0 8px rgba(255, 170, 0, 0.5)',
+        '--accent': '#ffaa00',
+        '--secondary': '#b37700',
+        '--warning': '#ffdd00',
+        '--critical': '#ff3300',
+        '--ink': '#ffaa00',
+        '--ok': '#ffcc00',
+        '--border': '1px solid #b37700',
+        '--blur': 'none'
+      },
+      cleanMinimalist: {
+        label: "25. Stark Minimalist",
+        '--ground': '#ffffff',
+        '--panel': '#f8f9fa',
+        '--shadow-out': '0 1px 3px rgba(0,0,0,0.05)',
+        '--shadow-out-sm': '0 1px 2px rgba(0,0,0,0.05)',
+        '--shadow-in': 'inset 0 1px 2px rgba(0,0,0,0.05)',
+        '--shadow-btn': '0 1px 2px rgba(0,0,0,0.05)',
+        '--shadow-btn-active': 'inset 0 1px 2px rgba(0,0,0,0.1)',
+        '--accent': '#09090b',
+        '--secondary': '#71717a',
+        '--warning': '#d97706',
+        '--critical': '#ef4444',
+        '--ink': '#09090b',
+        '--ok': '#16a34a',
+        '--border': '1px solid #e4e4e7',
+        '--blur': 'none'
       }
     };
 
@@ -958,96 +1320,108 @@
     }
 
     function applyTheme(themeKey) {
+      triggerHaptic();
       const selectedTheme = THEMES[themeKey];
       if (!selectedTheme) return;
+      
       const root = document.documentElement;
       for (const [property, value] of Object.entries(selectedTheme)) {
-        if (property !== 'label') root.style.setProperty(property, value);
+        if (property !== 'label') {
+          root.style.setProperty(property, value);
+        }
       }
+
       const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme && selectedTheme['--ground']) metaTheme.setAttribute('content', selectedTheme['--ground']);
+      if (metaTheme && selectedTheme['--ground']) {
+        metaTheme.setAttribute('content', selectedTheme['--ground']);
+      }
     }
 
+    // Material Database
     const MATERIALS = [
-      { id: 'ms58', name: 'Brass MS58', vcMin: 150, vcMax: 250, ff: 1.00, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
+      { id: 'ms58', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
+      { id: 'ms63', name: 'Brass MS63 (CuZn37, sheet)', vcMin: 120, vcMax: 200, ff: 0.85, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
+      { id: 'mail', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
+      { id: 'cu',   name: 'Copper', vcMin: 120, vcMax: 200, ff: 0.80, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
       { id: 'alu',  name: 'Aluminium', vcMin: 200, vcMax: 400, ff: 1.10, noteDE: 'Aufbauschneide beachten.', noteEN: 'Watch for built-up edge.' },
-      { id: 'steel',name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air/coolant required.' },
-      { id: 'ino',  name: 'Stainless (304)', vcMin: 50, vcMax: 80, ff: 0.40, noteDE: 'Härtet aus bei geringem Vorschub.', noteEN: 'Work-hardens if feed low.' },
-      { id: 'pom',  name: 'POM / Plastics', vcMin: 200, vcMax: 500, ff: 1.30, noteDE: 'Schmilzt bei geringem Vorschub.', noteEN: 'Melts if feed low.' }
+      { id: 'steel',name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
+      { id: 'ino',  name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
+      { id: 'ti',   name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
+      { id: 'pom',  name: 'POM / plastics', vcMin: 200, vcMax: 500, ff: 1.30, noteDE: 'Schmilzt bei geringem Vorschub.', noteEN: 'Melts if feed too low.' }
     ];
 
     const PCT_Z = { 1: 0.012, 2: 0.010, 3: 0.008, 4: 0.007, 5: 0.006, 6: 0.0055, 7: 0.005, 8: 0.0045 };
 
     const I18N = {
       DE: {
-        max_spindle: "MAX RPM",
-        theme_label: "Design",
+        max_spindle: "MAX U/MIN:",
+        theme_label: "Design:",
         tool_material: "Werkzeug & Werkstoff",
-        presets: "Tool Presets",
+        presets: "Tool-Presets",
         tool_dia: "Fräserdurchmesser (D)",
         flutes: "Schneidenanzahl (Z)",
         material: "Werkstoff",
         spindle: "Spindeldrehzahl (n)",
         chip_thinning: "Spanausdünnung kompensieren",
         feature_dims: "Form-Geometrien",
-        bore_dia: "Bohrung Ø",
-        thread_dia: "Gewinde Ø",
-        chamfer_w: "Fase",
-        drill_dia: "Bohrer Ø",
-        hole_depth: "Bohrtiefe",
+        bore_dia: "Bohrung Ø (mm)",
+        thread_dia: "Gewinde Ø (mm)",
+        chamfer_w: "Fasenbreite (mm)",
+        drill_dia: "Bohrer Ø (mm)",
+        hole_depth: "Bohrtiefe (mm)",
         chip_load_gauge: "Spanungsdicke h (Adaptive)",
         milling_ops: "Fräsoperationen (CAM)",
         special_ops: "Spezialoperationen",
         op: "Op",
         param: "Parameter",
         checks: "Plausibilitätsprüfungen",
-        ramp_feed: "Rampe",
-        plunge_feed: "Eintauchen",
+        ramp_feed: "Rampe (0.7×D, 1.5-2°)",
+        plunge_feed: "Eintauchen (Plunge)",
         dec_sep: ",",
         rubbing: "Reiben (<3µm)",
         cutting: "Schneiden",
-        breakage: "Bruchrisiko",
-        all_ok: "Werte im grünen Bereich."
+        breakage: "Bruchrisiko (>2% D)",
+        all_ok: "Keine Auffälligkeiten – Werte liegen im grünen Bereich."
       },
       EN: {
-        max_spindle: "MAX RPM",
-        theme_label: "Theme",
+        max_spindle: "MAX RPM:",
+        theme_label: "Theme:",
         tool_material: "Tool & Material",
         presets: "Tool Presets",
         tool_dia: "Tool Diameter (D)",
         flutes: "Flute Count (Z)",
         material: "Material",
         spindle: "Spindle Speed (n)",
-        chip_thinning: "Chip thinning comp.",
+        chip_thinning: "Chip thinning compensation",
         feature_dims: "Feature Dimensions",
-        bore_dia: "Bore Ø",
-        thread_dia: "Thread Ø",
-        chamfer_w: "Chamfer",
-        drill_dia: "Drill Ø",
-        hole_depth: "Depth",
+        bore_dia: "Bore Ø (mm)",
+        thread_dia: "Thread Ø (mm)",
+        chamfer_w: "Chamfer Width (mm)",
+        drill_dia: "Drill Ø (mm)",
+        hole_depth: "Hole Depth (mm)",
         chip_load_gauge: "Chip Thickness h (Adaptive)",
         milling_ops: "Milling Operations (CAM)",
         special_ops: "Special Operations",
         op: "Op",
         param: "Parameters",
         checks: "Plausibility Checks",
-        ramp_feed: "Ramp Feed",
+        ramp_feed: "Ramp Feed (0.7×D, 1.5-2°)",
         plunge_feed: "Plunge Feed",
         dec_sep: ".",
         rubbing: "Rubbing (<3µm)",
         cutting: "Cutting Properly",
-        breakage: "Breakage Risk",
-        all_ok: "All values look solid."
+        breakage: "Breakage Risk (>2% D)",
+        all_ok: "Nothing to flag — the values sit inside the window."
       }
     };
 
     let lang = 'DE';
     let selectedFlutes = 2;
+    let selectedMaterialIndex = 0;
 
     const inpMaxSpindle = document.getElementById('inp_maxSpindle');
     const inpToolDia = document.getElementById('inp_toolDia');
     const valToolDia = document.getElementById('val_toolDia');
-    const inpMaterial = document.getElementById('inp_material');
     const matNote = document.getElementById('matNote');
     const inpSpindle = document.getElementById('inp_spindle');
     const valSpindle = document.getElementById('val_spindle');
@@ -1061,26 +1435,58 @@
     const langToggle = document.getElementById('langToggle');
     const copyBtn = document.getElementById('copyBtn');
 
-    MATERIALS.forEach((m, idx) => {
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = m.name;
-      inpMaterial.appendChild(opt);
-    });
+    function triggerHaptic() {
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(10);
+      }
+    }
+
+    // Modal Control Functions for iOS Sheet
+    function openMaterialModal() {
+      triggerHaptic();
+      populateMaterialModal();
+      document.getElementById('materialModal').classList.add('active');
+    }
+
+    function closeMaterialModal(event) {
+      if (event) event.stopPropagation();
+      document.getElementById('materialModal').classList.remove('active');
+    }
+
+    function populateMaterialModal() {
+      const list = document.getElementById('materialOptionList');
+      list.innerHTML = '';
+      MATERIALS.forEach((m, idx) => {
+        const item = document.createElement('div');
+        item.className = `material-option-item ${idx === selectedMaterialIndex ? 'selected' : ''}`;
+        item.innerHTML = `<span>${m.name}</span> ${idx === selectedMaterialIndex ? '✓' : ''}`;
+        item.onclick = () => {
+          triggerHaptic();
+          selectedMaterialIndex = idx;
+          document.getElementById('materialTriggerText').textContent = m.name;
+          closeMaterialModal();
+          recalc();
+        };
+        list.appendChild(item);
+      });
+    }
 
     langToggle.addEventListener('click', () => {
+      triggerHaptic();
       lang = lang === 'DE' ? 'EN' : 'DE';
       langToggle.textContent = lang;
       updateUI();
     });
 
     window.applyPreset = function(dia, flutes) {
+      triggerHaptic();
       inpToolDia.value = dia;
       setFlutes(flutes);
       recalc();
     };
 
     window.setFlutes = function(z) {
+      triggerHaptic();
       selectedFlutes = z;
       document.querySelectorAll('.flute-btn').forEach((btn, idx) => {
         btn.classList.toggle('active', (idx + 1) === z);
@@ -1088,7 +1494,7 @@
       recalc();
     };
 
-    [inpMaxSpindle, inpToolDia, inpSpindle, inpMaterial, inpComp, inpBore, inpThread, inpChamfer, inpDrill, inpDepth].forEach(el => {
+    [inpMaxSpindle, inpToolDia, inpSpindle, inpComp, inpBore, inpThread, inpChamfer, inpDrill, inpDepth].forEach(el => {
       el.addEventListener('input', recalc);
     });
 
@@ -1108,6 +1514,7 @@
     }
 
     function recalc() {
+      // Dynamic Max Spindle Limit
       const maxSpindleLimit = Math.max(1000, parseInt(inpMaxSpindle.value) || 18000);
       inpSpindle.max = maxSpindleLimit;
 
@@ -1119,7 +1526,7 @@
 
       const D = parseFloat(inpToolDia.value);
       const z = selectedFlutes;
-      const mat = MATERIALS[parseInt(inpMaterial.value)];
+      const mat = MATERIALS[selectedMaterialIndex];
       const comp = inpComp.checked;
 
       const boreDia = parseFloat(inpBore.value) || 0;
@@ -1128,33 +1535,43 @@
       const drillDia = parseFloat(inpDrill.value) || 0;
       const holeDepth = parseFloat(inpDepth.value) || 0;
 
-      document.querySelectorAll('.preset-btn').forEach((btn, index) => {
-        const presets = [0.5, 0.6, 0.8, 1.0, 2.0];
-        const flutesMap = [1, 2, 2, 2, 2];
-        btn.classList.toggle('active', Math.abs(presets[index] - D) < 0.01 && flutesMap[index] === z);
+      // Active preset toggle state
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        const pDia = parseFloat(btn.getAttribute('data-dia'));
+        const pZ = parseInt(btn.getAttribute('data-flutes'), 10);
+        btn.classList.toggle('active', Math.abs(pDia - D) < 0.01 && pZ === z);
       });
 
       valToolDia.textContent = `${formatNum(D, 2)} mm`;
       valSpindle.textContent = `${n.toLocaleString()} min⁻¹`;
       matNote.textContent = lang === 'DE' ? mat.noteDE : mat.noteEN;
 
+      // Spindle limit check
       const isAtMaxLimit = n >= maxSpindleLimit;
       if (isAtMaxLimit) {
         spindleWarn.style.display = 'block';
-        spindleWarn.textContent = lang === 'DE' ? `⚠️ Max Spindellimit erreicht` : `⚠️ Max spindle limit reached`;
+        spindleWarn.textContent = lang === 'DE' 
+          ? `⚠️ MAX Spindellimit erreicht (${maxSpindleLimit.toLocaleString()} min⁻¹)`
+          : `⚠️ MAX spindle limit reached (${maxSpindleLimit.toLocaleString()} rpm)`;
       } else {
         spindleWarn.style.display = 'none';
       }
 
       const fz = D * PCT_Z[z] * mat.ff;
       const vc = (Math.PI * D * n) / 1000;
-      let axCap = mat.ff <= 0.4 ? 0.35 : (mat.ff <= 0.5 ? 0.50 : 1.0);
+      const targetVcMean = (mat.vcMin + mat.vcMax) / 2;
+
+      let axCap = 1.0;
+      if (mat.ff <= 0.4) axCap = 0.35;
+      else if (mat.ff <= 0.5) axCap = 0.50;
 
       const opsConfig = [
-        { name: 'Adaptive', ae: 0.20 * D, ap: 1.00 * D, factor: 1.00 },
+        { name: 'Adaptive / Trochoidal', ae: 0.20 * D, ap: 1.00 * D, factor: 1.00 },
         { name: 'Full Slot', ae: 1.00 * D, ap: 0.45 * D, factor: 0.60 },
-        { name: 'Contour', ae: 0.50 * D, ap: 0.45 * D, factor: 0.75 },
-        { name: 'Finishing', ae: 0.05 * D, ap: 1.00 * D, factor: 1.10 }
+        { name: 'Contour (Side Wall)', ae: 0.50 * D, ap: 0.45 * D, factor: 0.75 },
+        { name: 'Finishing', ae: 0.05 * D, ap: 1.00 * D, factor: 1.10 },
+        { name: 'Freeing Pass (Last)', ae: 1.00 * D, ap: Math.min(0.20 * D, 0.15), factor: 0.50 },
+        { name: 'Helical Interp.', ae: 0.10 * D, ap: 1.00 * D, factor: 0.45 }
       ];
 
       let millingHTML = '';
@@ -1162,13 +1579,16 @@
       let adaptiveFeed = 0;
 
       opsConfig.forEach((op, idx) => {
-        const ap = Math.min(op.ap, axCap * D);
+        const uncappedAp = op.ap;
+        const ap = Math.min(uncappedAp, axCap * D);
         const ae = op.ae;
+
         let k = 1;
         if (ae < D / 2) {
           const r = 1 - (2 * ae / D);
           k = Math.sqrt(1 - (r * r));
         }
+
         const fzProg = comp ? fz / k : fz;
         const effectiveH = fzProg * k;
         const vf = n * z * fzProg * op.factor;
@@ -1182,8 +1602,8 @@
           <tr>
             <td><strong>${op.name}</strong></td>
             <td class="num">${formatNum(ae, 2)}</td>
-            <td class="num">${formatNum(ap, 2)}</td>
-            <td class="num" style="font-weight:700; color:var(--accent);">${Math.round(vf)}</td>
+            <td class="num">${formatNum(ap, 2)}${ap < uncappedAp ? '*' : ''}</td>
+            <td class="num" style="font-weight:700; color:var(--accent); font-size:14px;">${Math.round(vf)}</td>
           </tr>
         `;
       });
@@ -1198,11 +1618,13 @@
       const maxMicrons = 0.03 * D * 1000;
       const gaugePercent = Math.min(100, Math.max(0, (hMicrons / maxMicrons) * 100));
 
-      document.getElementById('gaugeNeedle').style.left = `${gaugePercent}%`;
+      const needle = document.getElementById('gaugeNeedle');
+      needle.style.left = `${gaugePercent}%`;
       document.getElementById('gaugeVal').textContent = `${formatNum(hMicrons, 1)} µm`;
-      document.getElementById('gaugeMaxLabel').textContent = `${formatNum(maxMicrons, 0)} µm`;
 
       const zoneLabel = document.getElementById('gaugeZoneLabel');
+      document.getElementById('gaugeMaxLabel').textContent = `${formatNum(maxMicrons, 0)} µm (3%D)`;
+
       if (hMicrons < 3.0) {
         zoneLabel.textContent = I18N[lang].rubbing;
         zoneLabel.style.color = 'var(--critical)';
@@ -1215,23 +1637,81 @@
       }
 
       let specialHTML = '';
-      let boreFeed = boreDia > D ? (n * z * fz * 0.60) * ((boreDia - D) / boreDia) : 0;
-      specialHTML += `<tr><td><strong>Helical Bore</strong></td><td>Ø ${formatNum(boreDia, 2)}</td><td class="num">${Math.round(boreFeed)}</td></tr>`;
 
-      let threadFeed = threadDia > D ? (n * z * (fz * 0.60)) * ((threadDia - D) / threadDia) : 0;
-      specialHTML += `<tr><td><strong>Thread Mill</strong></td><td>Ø ${formatNum(threadDia, 2)}</td><td class="num">${Math.round(threadFeed)}</td></tr>`;
+      // Helical Bore
+      let boreFeed = 0;
+      if (boreDia > D) {
+        const pathDia = boreDia - D;
+        const factor = pathDia / boreDia;
+        const slotFeed = n * z * fz * 0.60;
+        boreFeed = slotFeed * factor;
+      }
+      specialHTML += `
+        <tr>
+          <td><strong>Helical Bore</strong></td>
+          <td>Bore Ø ${formatNum(boreDia, 2)} mm</td>
+          <td class="num" style="font-weight:700;">${Math.round(boreFeed)}</td>
+        </tr>
+      `;
 
-      let chamferFeed = n * z * (fz * 1.4142);
-      specialHTML += `<tr><td><strong>Chamfer</strong></td><td>${formatNum(chamferW, 2)}mm</td><td class="num">${Math.round(chamferFeed)}</td></tr>`;
+      // Thread Milling
+      let threadFeed = 0;
+      if (threadDia > D) {
+        const fzThread = fz * 0.60;
+        const factor = (threadDia - D) / threadDia;
+        const edgeFeed = n * z * fzThread;
+        threadFeed = edgeFeed * factor;
+      }
+      specialHTML += `
+        <tr>
+          <td><strong>Thread Mill</strong></td>
+          <td>Thread Ø ${formatNum(threadDia, 2)} mm</td>
+          <td class="num" style="font-weight:700;">${Math.round(threadFeed)}</td>
+        </tr>
+      `;
 
-      let drillFeed = (Math.min(maxSpindleLimit, (((mat.vcMin + mat.vcMax) / 2) * 0.70 * 1000) / (Math.PI * drillDia))) * (drillDia * 0.02 * mat.ff);
-      specialHTML += `<tr><td><strong>Drill</strong></td><td>Ø ${formatNum(drillDia, 2)}</td><td class="num">${Math.round(drillFeed)}</td></tr>`;
+      // Chamfering
+      const effChamferDia = D + chamferW;
+      const fzCham = fz * 1.4142;
+      const chamferFeed = n * z * fzCham;
+      specialHTML += `
+        <tr>
+          <td><strong>Chamfer (45°)</strong></td>
+          <td>Eff Ø ${formatNum(effChamferDia, 2)} mm</td>
+          <td class="num" style="font-weight:700;">${Math.round(chamferFeed)}</td>
+        </tr>
+      `;
+
+      // Drilling
+      const drillVc = targetVcMean * 0.70;
+      const nDrill = Math.min(maxSpindleLimit, (drillVc * 1000) / (Math.PI * drillDia));
+      const feedPerRev = drillDia * 0.02 * mat.ff;
+      const depthRatio = holeDepth / drillDia;
+      const depthFactor = depthRatio <= 3 ? 1.00 : (depthRatio <= 5 ? 0.85 : 0.70);
+      const drillFeed = nDrill * feedPerRev * depthFactor;
+      specialHTML += `
+        <tr>
+          <td><strong>Drilling</strong></td>
+          <td>${Math.round(nDrill)} min⁻¹</td>
+          <td class="num" style="font-weight:700;">${Math.round(drillFeed)}</td>
+        </tr>
+      `;
 
       document.getElementById('specialTbody').innerHTML = specialHTML;
 
       const checks = [];
-      if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Spanungsdicke < 3 µm: Reibungsgefahr.' : 'Chip thickness < 3 µm: rubbing risk.' });
-      if (fz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% D: Bruchrisiko.' : 'fz > 2% D: breakage risk.' });
+
+      if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Effektive Spanungsdicke < 3 µm: Werkzeug reibt und überhitzt.' : 'Effective chip thickness < 3 µm: tool rubs and overheats.' });
+      if (fz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% des Durchmessers: Hohes Bruchrisiko!' : 'fz > 2% of diameter: high breakage risk!' });
+      if (boreDia <= D) checks.push({ type: 'critical', text: lang === 'DE' ? 'Bohrung Ø ≤ Werkzeug Ø: Helisches Einfahren unmöglich.' : 'Bore Ø ≤ tool Ø: helical entry impossible.' });
+      if (D > (0.70 * threadDia)) checks.push({ type: 'critical', text: lang === 'DE' ? 'Werkzeug Ø > 70% Gewinde Ø: Gewindeprofil verzerrt.' : 'Tool Ø > 70% of thread Ø: thread profile distorts.' });
+
+      if (vc < (mat.vcMin * 0.7)) checks.push({ type: 'warning', text: lang === 'DE' ? `Schnittgeschwindigkeit Vc (${formatNum(vc,1)} m/min) unter 70% des Zielbereichs (${mat.vcMin} m/min).` : `Cutting speed Vc (${formatNum(vc,1)} m/min) below 70% of target (${mat.vcMin} m/min).` });
+      if (isAtMaxLimit) checks.push({ type: 'warning', text: lang === 'DE' ? `Drehzahl ist am eingestellten Spindellimit (${maxSpindleLimit.toLocaleString()} min⁻¹).` : `Spindle speed is at configured max limit (${maxSpindleLimit.toLocaleString()} rpm).` });
+      if (boreDia < (1.15 * D) && boreDia > D) checks.push({ type: 'warning', text: lang === 'DE' ? 'Bohrung Ø < 1.15× Werkzeug Ø: Kein Spanraum; Druckluft nutzen.' : 'Bore Ø < 1.15 × tool Ø: no chip room; air into bore.' });
+      if (z >= 3 && D < 0.8) checks.push({ type: 'warning', text: lang === 'DE' ? '3+ Schneiden bei Ø < 0,8 mm: Spanraummangel; 2Z bevorzugen.' : '3+ flutes below Ø0.8 mm: lack of chip room, prefer 2 flutes.' });
+      if (depthRatio > 3) checks.push({ type: 'warning', text: lang === 'DE' ? 'Lochtiefe > 3×Ø: Vorschub reduziert, Entspan-Zyklen (Pecking) wählen.' : 'Hole depth > 3×Ø: feed cut to depth factor, peck in 1×Ø steps.' });
+      if (axCap < 1.0) checks.push({ type: 'warning', text: lang === 'DE' ? `Werkstoff-Axialkappung aktiv (ap auf max ${axCap}×D begrenzt).` : `Material axial cap applied (ap capped to max ${axCap}×D).` });
 
       const checksContainer = document.getElementById('checksContainer');
       if (checks.length === 0) {
@@ -1241,16 +1721,33 @@
       }
 
       copyBtn.onclick = () => {
-        const payload = `FEEDS & SPEEDS [iPhone Layout]\nTool: Ø${D}mm | ${z}Z | Material: ${mat.name}\nSpindle: ${n} rpm | Adaptive Feed: ${Math.round(adaptiveFeed)} mm/min`;
-        navigator.clipboard.writeText(payload).then(() => {
-          copyBtn.textContent = 'DONE';
-          setTimeout(() => copyBtn.textContent = 'COPY', 1200);
+        triggerHaptic();
+        const copyPayload = `FEEDS & SPEEDS CALCULATOR
+Configured Max Spindle: ${maxSpindleLimit.toLocaleString()} rpm
+Tool: Ø${formatNum(D, 2)} mm | ${z}Z | Material: ${mat.name}
+Spindle Speed: ${n} rpm | vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(fz, 4)} mm
+Thinning Comp: ${comp ? 'ON' : 'OFF'}
+
+CAM OPERATIONS:
+- Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(0.2*D,2)}, ap=${formatNum(Math.min(1.0*D, axCap*D),2)})
+- Ramp Feed: ${Math.round(rampFeed)} mm/min
+- Plunge Feed: ${Math.round(plungeFeed)} mm/min
+- Helical Bore (Ø${boreDia}mm): ${Math.round(boreFeed)} mm/min
+- Thread Mill (Ø${threadDia}mm): ${Math.round(threadFeed)} mm/min
+- Chamfer: ${Math.round(chamferFeed)} mm/min
+- Drilling (Ø${drillDia}mm): ${Math.round(drillFeed)} mm/min (${Math.round(nDrill)} rpm)`;
+
+        navigator.clipboard.writeText(copyPayload).then(() => {
+          copyBtn.textContent = 'COPIED!';
+          setTimeout(() => copyBtn.textContent = 'COPY', 1500);
         });
       };
     }
 
+    // On Load Initialization
     populateThemeSelector();
-    applyTheme('iosLight');
+    applyTheme('neumorphismLight');
+    document.getElementById('materialTriggerText').textContent = MATERIALS[0].name;
     recalc();
   </script>
 </body>
