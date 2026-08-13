@@ -1,3 +1,12 @@
+Here is the fully optimized, localized, and streamlined code designed specifically for display on an iPhone 13 Pro (390px width grid).
+Key Optimizations Implemented:
+ * iPhone 13 Pro Screen Alignment:
+   * Compressed layout paddings and tight grid alignment targeting the 390pt screen width.
+   * Shortened label texts systematically across both EN and DE to prevent multi-line wrapping and awkward flex wrapping.
+   * Standardized typography and unified input container widths for visual consistency.
+ * Complete Localization (DE / EN):
+   * Fully localized input fields, select options (Coatings, Coolants, Ramp types, Thread types), placeholders, and unit displays.
+   * Dynamic dynamic text localization (e.g., auto placeholders, modal sheet headers, alert messages) when swapping between EN and DE.
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +16,17 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Feeds&Speeds">
   <meta name="theme-color" content="#e0e5ec">
-  <title>CNC Feeds and Speeds Calculator</title>
+  <title>CNC Feeds & Speeds</title>
   <style>
     :root {
       /* Theme Defaults (Neumorphism Light) */
       --ground: #e0e5ec;
       --panel: #e0e5ec;
-      --shadow-out: 6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff;
-      --shadow-out-sm: 4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff;
-      --shadow-in: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
-      --shadow-btn: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
-      --shadow-btn-active: inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff;
+      --shadow-out: 5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff;
+      --shadow-out-sm: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+      --shadow-in: inset 2.5px 2.5px 5px #a3b1c6, inset -2.5px -2.5px 5px #ffffff;
+      --shadow-btn: 4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff;
+      --shadow-btn-active: inset 2.5px 2.5px 5px #a3b1c6, inset -2.5px -2.5px 5px #ffffff;
       --accent: #3182ce;
       --secondary: #718096;
       --warning: #dd6b20;
@@ -27,10 +36,10 @@
       --border: 1px solid transparent;
       --blur: none;
 
-      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
-      --radius-lg: 16px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
     }
 
     * {
@@ -38,7 +47,7 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     }
 
     body {
@@ -47,16 +56,15 @@
       font-family: var(--font-family);
       width: 100%;
       min-height: 100vh;
-      /* iPhone 13 Pro Viewport & Safe Area Adaptation */
-      padding-top: max(12px, env(safe-area-inset-top));
-      padding-bottom: max(90px, calc(env(safe-area-inset-bottom) + 65px));
-      padding-left: max(12px, env(safe-area-inset-left));
-      padding-right: max(12px, env(safe-area-inset-right));
-      max-width: 430px; /* Precise fit for 390px-430px display bounds */
+      /* iPhone 13 Pro Optimized Layout Constraints */
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: max(75px, calc(env(safe-area-inset-bottom) + 55px));
+      padding-left: max(10px, env(safe-area-inset-left));
+      padding-right: max(10px, env(safe-area-inset-right));
+      max-width: 390px; /* Precise iPhone 13 Pro portrait width constraint */
       margin: 0 auto;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none;
       overflow-x: hidden;
     }
 
@@ -64,29 +72,26 @@
     .ios-header {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 10px;
       background: var(--panel);
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-out);
       border: var(--border);
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
     }
 
     .ios-title-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .app-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       letter-spacing: -0.2px;
-      line-height: 1.2;
       color: var(--ink);
       flex: 1;
       white-space: nowrap;
@@ -101,47 +106,25 @@
       flex-shrink: 0;
     }
 
-    .header-input-label {
-      font-size: 10px;
+    /* Labels - Uniform and Compact */
+    label, .label-style, .header-input-label {
+      font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--secondary);
+      display: block;
+      margin-bottom: 3px;
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .header-input-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--ground);
-      box-shadow: var(--shadow-in);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0 8px;
-      height: 34px;
-      width: 100%;
+    .header-theme-wrapper {
+      width: 105px;
     }
 
-    .input-unit-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-
-    .input-unit-wrapper input {
-      padding-right: 55px;
-    }
-
-    .input-unit-label {
-      position: absolute;
-      right: 10px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--secondary);
-      pointer-events: none;
-    }
-
-    /* Standard Segmented Wrapper & Select Dropdowns */
+    /* Standard Segmented & Inputs */
     .segmented-wrapper {
       width: 100%;
       background: var(--ground);
@@ -152,10 +135,6 @@
       position: relative;
     }
 
-    .header-theme-wrapper {
-      min-width: 120px;
-    }
-
     .select-input {
       width: 100%;
       background: transparent;
@@ -163,24 +142,24 @@
       color: var(--ink);
       font-size: 11px;
       font-weight: 600;
-      height: 32px;
+      height: 30px;
       outline: none;
       appearance: none;
       -webkit-appearance: none;
       font-family: var(--font-family);
-      padding-left: 8px;
-      padding-right: 20px;
+      padding-left: 6px;
+      padding-right: 18px;
       cursor: pointer;
     }
 
     .segmented-wrapper::after {
       content: "⌵";
       position: absolute;
-      right: 8px;
-      top: 45%;
+      right: 6px;
+      top: 40%;
       transform: translateY(-50%);
       font-weight: bold;
-      font-size: 10px;
+      font-size: 9px;
       color: var(--accent);
       pointer-events: none;
     }
@@ -190,21 +169,30 @@
       color: var(--ink);
     }
 
-    /* Typography */
+    .input-unit-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-unit-wrapper input {
+      padding-right: 48px;
+    }
+
+    .input-unit-label {
+      position: absolute;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--secondary);
+      pointer-events: none;
+    }
+
     .num {
       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
       font-variant-numeric: tabular-nums;
       color: var(--accent);
-      font-weight: 700;
-    }
-
-    label, .label-style {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--secondary);
-      display: block;
-      margin-bottom: 4px;
       font-weight: 700;
     }
 
@@ -213,21 +201,19 @@
       background: var(--panel);
       box-shadow: var(--shadow-out);
       border: var(--border);
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
       border-radius: var(--radius-lg);
-      padding: 12px;
-      margin-bottom: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
     }
 
     .section-title {
-      font-size: 10px;
-      letter-spacing: 0.1em;
+      font-size: 9px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--secondary);
-      padding-bottom: 4px;
-      margin-top: 10px;
-      margin-bottom: 8px;
+      padding-bottom: 3px;
+      margin-top: 8px;
+      margin-bottom: 6px;
       font-weight: 800;
       border-bottom: 1px solid rgba(128, 128, 128, 0.15);
     }
@@ -236,9 +222,9 @@
       margin-top: 0;
     }
 
-    /* Form Controls & Groups */
+    /* Form Controls */
     .control-group {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .control-group:last-child {
@@ -249,66 +235,59 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .control-header label {
       margin-bottom: 0;
     }
 
-    /* Touch Sliders */
+    /* Slider styling */
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 8px;
+      height: 6px;
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       outline: none;
-      margin: 8px 0;
+      margin: 6px 0;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      height: 26px;
-      width: 26px;
+      height: 22px;
+      width: 22px;
       border-radius: 50%;
       background: var(--ground);
       box-shadow: var(--shadow-btn);
       cursor: pointer;
       border: 2px solid var(--accent);
-      transition: transform 0.1s ease;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:active {
-      transform: scale(1.1);
-      box-shadow: var(--shadow-btn-active);
     }
 
     input[type="number"] {
       width: 100%;
-      height: 38px;
+      height: 32px;
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
       border-radius: var(--radius-sm);
       color: var(--ink);
-      padding: 0 10px;
-      font-size: 14px;
+      padding: 0 8px;
+      font-size: 12px;
       font-family: "SF Mono", ui-monospace, monospace;
       outline: none;
       font-weight: 600;
     }
 
     input[type="number"]:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+      opacity: 0.45;
     }
 
-    /* Flute Segmented Control */
+    /* Flute Control Grid */
     .flute-segmented-control {
       display: flex;
       background: var(--ground);
@@ -323,21 +302,20 @@
     .flute-btn {
       flex: 1;
       min-width: 0;
-      height: 32px;
+      height: 28px;
       background: transparent;
       border: 1px solid transparent;
-      border-radius: 6px;
+      border-radius: 4px;
       color: var(--ink);
       font-family: "SF Mono", ui-monospace, monospace;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
     }
 
-    .flute-btn:active, .flute-btn.active {
+    .flute-btn.active {
       box-shadow: var(--shadow-btn-active);
       color: var(--accent);
       border-color: var(--accent);
@@ -352,14 +330,14 @@
       box-shadow: var(--shadow-in);
       border: var(--border);
       border-radius: var(--radius-sm);
-      padding: 0 10px;
-      height: 38px;
+      padding: 0 8px;
+      height: 32px;
       width: 100%;
       cursor: pointer;
     }
 
     .material-trigger-text {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--ink);
       white-space: nowrap;
@@ -370,7 +348,60 @@
     .material-trigger-arrow {
       color: var(--accent);
       font-weight: bold;
-      margin-left: 6px;
+      margin-left: 4px;
+      font-size: 12px;
+    }
+
+    /* Dynamic Form Grid */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .form-grid-2 .control-group {
+      margin-bottom: 0;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      gap: 8px;
+      cursor: pointer;
+      background: var(--ground);
+      box-shadow: var(--shadow-in);
+      border: var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 8px;
+    }
+
+    .checkbox-group input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-inline {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+
+    .checkbox-inline input {
+      width: 12px;
+      height: 12px;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      font-weight: 700;
     }
 
     /* Modal Sheet */
@@ -385,7 +416,7 @@
       align-items: flex-end;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .modal-overlay.active {
@@ -395,16 +426,16 @@
 
     .modal-sheet {
       width: 100%;
-      max-height: 80vh;
+      max-height: 75vh;
       background: var(--panel);
-      border-radius: 20px 20px 0 0;
-      padding: 16px 14px max(20px, env(safe-area-inset-bottom));
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 16px 16px 0 0;
+      padding: 14px 12px max(16px, env(safe-area-inset-bottom));
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
       transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+      transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
       overflow-y: auto;
       margin: 0 auto;
-      max-width: 430px;
+      max-width: 390px;
     }
 
     .modal-overlay.active .modal-sheet {
@@ -415,11 +446,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .modal-title {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 800;
       color: var(--ink);
     }
@@ -429,22 +460,23 @@
       box-shadow: var(--shadow-btn);
       border: var(--border);
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--ink);
       font-weight: bold;
+      font-size: 11px;
     }
 
     .material-category-header {
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--accent);
-      margin: 10px 0 4px 2px;
+      margin: 8px 0 3px 2px;
     }
 
     .material-category-header:first-child {
@@ -454,18 +486,18 @@
     .material-option-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .material-option-item {
-      padding: 10px 12px;
+      padding: 8px 10px;
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-sm);
       color: var(--ink);
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -478,109 +510,65 @@
       color: var(--accent);
     }
 
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      min-height: 38px;
-      gap: 10px;
-      cursor: pointer;
-      background: var(--ground);
-      box-shadow: var(--shadow-in);
-      border: var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0 10px;
-      margin-bottom: 0;
-    }
-
-    .checkbox-group input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .checkbox-inline {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    .checkbox-inline input {
-      width: 14px;
-      height: 14px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    .checkbox-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    /* Gauge Card */
+    /* Gauge Visual */
     .gauge-card {
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-md);
-      padding: 10px;
-      margin-bottom: 10px;
+      padding: 8px;
+      margin-bottom: 8px;
     }
 
     .gauge-bar-wrap {
       position: relative;
-      height: 12px;
+      height: 10px;
       background: var(--ground);
       box-shadow: var(--shadow-in);
       border: var(--border);
-      border-radius: 8px;
-      margin: 6px 0 4px 0;
+      border-radius: 6px;
+      margin: 4px 0 3px 0;
       display: flex;
       overflow: hidden;
-      padding: 2px;
+      padding: 1px;
     }
 
-    .gauge-zone-rub { width: 10%; background: var(--critical); opacity: 0.8; border-radius: 4px 0 0 4px; }
+    .gauge-zone-rub { width: 10%; background: var(--critical); opacity: 0.8; border-radius: 3px 0 0 3px; }
     .gauge-zone-cut { width: 56.6%; background: var(--ok); opacity: 0.8; }
-    .gauge-zone-break { width: 33.4%; background: var(--critical); opacity: 0.8; border-radius: 0 4px 4px 0; }
+    .gauge-zone-break { width: 33.4%; background: var(--critical); opacity: 0.8; border-radius: 0 3px 3px 0; }
 
     .gauge-needle {
       position: absolute;
       top: 0; bottom: 0;
-      width: 5px;
+      width: 4px;
       background: var(--ink);
-      border-radius: 3px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+      border-radius: 2px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.5);
       transition: left 0.15s ease-out;
       transform: translateX(-50%);
     }
 
-    /* Data Tables */
+    /* Tables */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .data-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 4px;
-      font-size: 12px;
+      border-spacing: 0 3px;
+      font-size: 11px;
     }
 
     .data-table th {
       color: var(--secondary);
       font-weight: 700;
-      font-size: 9px;
-      letter-spacing: 0.08em;
+      font-size: 8px;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 2px 6px;
+      padding: 2px 4px;
       text-align: left;
     }
 
@@ -588,7 +576,7 @@
       background: var(--ground);
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
-      padding: 6px 6px;
+      padding: 5px 5px;
       text-align: left;
     }
 
@@ -602,9 +590,9 @@
 
     .secondary-feeds-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 8px;
-      margin-bottom: 8px;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
     }
 
     .feed-card {
@@ -612,15 +600,14 @@
       box-shadow: var(--shadow-out-sm);
       border: var(--border);
       border-radius: var(--radius-sm);
-      padding: 8px 10px;
+      padding: 6px 8px;
     }
 
-    /* Checks Section */
     .check-item {
-      padding: 8px 10px;
-      margin-bottom: 6px;
-      font-size: 11px;
-      line-height: 1.35;
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      font-size: 10px;
+      line-height: 1.3;
       border-radius: var(--radius-sm);
       background: var(--ground);
       box-shadow: var(--shadow-in);
@@ -633,25 +620,14 @@
     .check-item.ok { color: var(--ok); }
 
     .note-text {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--secondary);
-      margin-top: 4px;
-      line-height: 1.3;
+      margin-top: 3px;
+      line-height: 1.2;
       font-weight: 500;
     }
 
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .form-grid-2 .control-group {
-      margin-bottom: 0;
-    }
-
-    /* Sticky Bottom Toolbar */
+    /* iOS Sticky Bottom Toolbar */
     .ios-toolbar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -659,8 +635,8 @@
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-top: var(--border);
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-      padding: 8px 12px max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
+      padding: 6px 10px max(6px, env(safe-area-inset-bottom));
       display: flex;
       z-index: 999;
       justify-content: center;
@@ -668,9 +644,9 @@
 
     .ios-toolbar-inner {
       width: 100%;
-      max-width: 430px;
+      max-width: 390px;
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-action {
@@ -680,10 +656,10 @@
       border: var(--border);
       border-radius: var(--radius-sm);
       color: var(--ink);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 0.03em;
-      height: 40px;
+      letter-spacing: 0.02em;
+      height: 36px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -705,9 +681,7 @@
   <!-- 1. Header Area -->
   <header class="ios-header">
     <div class="ios-title-bar">
-      <!-- Main Headline -->
-      <div class="app-title">CNC Feeds and Speeds Calculator</div>
-      <!-- Theme Input with adjacent label -->
+      <div class="app-title" data-i18n="app_title">Feeds & Speeds</div>
       <div class="header-field-inline">
         <label for="themeSelector" class="header-input-label" data-i18n="theme_label">Theme</label>
         <div class="segmented-wrapper header-theme-wrapper">
@@ -719,39 +693,35 @@
 
   <!-- 2. Machine Parameters Section -->
   <section class="panel">
-    <div class="section-title" data-i18n="machine_params">Machine Parameters</div>
+    <div class="section-title" data-i18n="machine_params">Machine Limits</div>
 
-    <!-- Max RPM -->
     <div class="control-group">
-      <label for="inp_maxSpindle" data-i18n="max_spindle">Max RPM</label>
+      <label for="inp_maxSpindle" data-i18n="max_spindle">Max Spindle Speed</label>
       <div class="input-unit-wrapper">
         <input type="number" id="inp_maxSpindle" value="18000" min="1000" max="100000" step="500">
         <span class="input-unit-label">RPM</span>
       </div>
     </div>
 
-    <!-- Spindle Speed: Interactive input slider with live numerical feedback -->
     <div class="control-group">
       <div class="control-header">
         <label data-i18n="spindle">Spindle Speed (n)</label>
-        <span class="num" id="val_spindle" style="font-size: 14px;">16,000 min⁻¹</span>
+        <span class="num" id="val_spindle" style="font-size: 12px;">16,000 min⁻¹</span>
       </div>
       <input type="range" id="inp_spindle" min="1000" max="18000" step="500" value="16000">
       <div class="note-text" id="spindleWarn" style="display:none; color: var(--warning); font-weight:700;"></div>
     </div>
 
     <div class="form-grid-2">
-      <!-- Max Machine Acceleration with units -->
       <div class="control-group">
-        <label data-i18n="machine_accel">Max Machine Acceleration</label>
+        <label data-i18n="machine_accel">Max Accel</label>
         <div class="input-unit-wrapper">
           <input type="number" id="inp_accel" value="5000" step="100" min="100" max="20000">
           <span class="input-unit-label">mm/s²</span>
         </div>
       </div>
-      <!-- Max Feed Rate with units -->
       <div class="control-group">
-        <label data-i18n="max_feed">Max Feed Rate</label>
+        <label data-i18n="max_feed">Max Feed</label>
         <div class="input-unit-wrapper">
           <input type="number" id="inp_maxFeed" value="8000" step="500" min="100" max="100000">
           <span class="input-unit-label">mm/min</span>
@@ -760,32 +730,29 @@
     </div>
   </section>
 
-  <!-- TOOL & MATERIAL INPUTS PANEL -->
+  <!-- 3. Tool & Material Section -->
   <section class="panel">
-    <div class="section-title" data-i18n="tool_material">Werkzeug & Werkstoff</div>
+    <div class="section-title" data-i18n="tool_material">Tool & Material</div>
 
-    <!-- Tool Diameter -->
     <div class="control-group">
       <div class="control-header">
-        <label data-i18n="tool_dia">Fräserdurchmesser (D)</label>
-        <span class="num" id="val_toolDia" style="font-size: 14px;">4.0 mm</span>
+        <label data-i18n="tool_dia">Tool Dia (D)</label>
+        <span class="num" id="val_toolDia" style="font-size: 12px;">4.0 mm</span>
       </div>
       <input type="range" id="inp_toolDia" min="0.1" max="16.0" step="0.1" value="4.0">
     </div>
 
-    <!-- Tool Stickout (L/D) Penalty Slider -->
     <div class="control-group">
       <div class="control-header">
-        <label data-i18n="overhang">Werkzeug-Auskragung (L/D)</label>
-        <span class="num" id="val_overhang" style="font-size: 14px;">3.0 × D</span>
+        <label data-i18n="overhang">Stickout (L/D)</label>
+        <span class="num" id="val_overhang" style="font-size: 12px;">3.0 × D</span>
       </div>
       <input type="range" id="inp_overhang" min="1.0" max="10.0" step="0.5" value="3.0">
-      <div class="note-text" id="overhangNote">L/D ≤ 3.0: Standard Steifigkeit (100%)</div>
+      <div class="note-text" id="overhangNote">L/D ≤ 3.0: 100%</div>
     </div>
 
-    <!-- Flutes (Z) Segmented Control -->
     <div class="control-group">
-      <label data-i18n="flutes">Schneidenanzahl (Z)</label>
+      <label data-i18n="flutes">Flute Count (Z)</label>
       <div class="flute-segmented-control" id="fluteGrid">
         <button class="flute-btn" onclick="setFlutes(1)">1Z</button>
         <button class="flute-btn active" onclick="setFlutes(2)">2Z</button>
@@ -798,9 +765,8 @@
       </div>
     </div>
 
-    <!-- Material Select Modal Trigger -->
     <div class="control-group">
-      <label data-i18n="material">Werkstoff</label>
+      <label data-i18n="material">Material</label>
       <div class="material-trigger" id="materialTrigger" onclick="openMaterialModal()">
         <span class="material-trigger-text" id="materialTriggerText">Brass MS58 (CuZn39Pb3)</span>
         <span class="material-trigger-arrow">›</span>
@@ -808,45 +774,34 @@
       <div class="note-text" id="matNote">---</div>
     </div>
 
-    <!-- Tool Coating & Coolant Modifiers -->
     <div class="form-grid-2">
       <div class="control-group">
-        <label data-i18n="coating">Beschichtung</label>
+        <label data-i18n="coating">Coating</label>
         <div class="segmented-wrapper">
-          <select id="inp_coating" class="select-input">
-            <option value="uncoated">Uncoated (1.0× Vc)</option>
-            <option value="tialn">TiAlN (+25% Vc)</option>
-            <option value="dlc">DLC (+50% Vc)</option>
-          </select>
+          <select id="inp_coating" class="select-input"></select>
         </div>
       </div>
       <div class="control-group">
-        <label data-i18n="coolant">Kühlung</label>
+        <label data-i18n="coolant">Coolant</label>
         <div class="segmented-wrapper">
-          <select id="inp_coolant" class="select-input">
-            <option value="dry">Dry / Air (1.0× Vc)</option>
-            <option value="mql">MQL (+15% Vc)</option>
-            <option value="flood">Flood (+30% Vc)</option>
-          </select>
+          <select id="inp_coolant" class="select-input"></select>
         </div>
       </div>
     </div>
 
-    <!-- Chip Thinning Checkbox -->
     <div class="control-group">
       <label class="checkbox-group">
         <input type="checkbox" id="inp_comp" checked>
-        <span class="checkbox-label" data-i18n="chip_thinning">Spanausdünnung kompensieren</span>
+        <span class="checkbox-label" data-i18n="chip_thinning">Chip Thinning Comp</span>
       </label>
     </div>
 
-    <div class="section-title" data-i18n="feature_dims">Form-Geometrien & CAM Parameter</div>
+    <div class="section-title" data-i18n="feature_dims">Geometry & Params</div>
 
-    <!-- Dynamic Custom Overrides ae / ap with Auto Mode Checkboxes -->
     <div class="form-grid-2">
       <div class="control-group">
         <div class="control-header">
-          <label data-i18n="custom_ae">Custom ae (mm)</label>
+          <label data-i18n="custom_ae">Custom ae</label>
           <label class="checkbox-inline">
             <input type="checkbox" id="chk_autoAe" checked onchange="toggleAutoMode('ae')">
             <span class="checkbox-label" data-i18n="auto_mode">Auto</span>
@@ -856,7 +811,7 @@
       </div>
       <div class="control-group">
         <div class="control-header">
-          <label data-i18n="custom_ap">Custom ap (mm)</label>
+          <label data-i18n="custom_ap">Custom ap</label>
           <label class="checkbox-inline">
             <input type="checkbox" id="chk_autoAp" checked onchange="toggleAutoMode('ap')">
             <span class="checkbox-label" data-i18n="auto_mode">Auto</span>
@@ -866,78 +821,85 @@
       </div>
     </div>
 
-    <!-- Ramp Configuration -->
     <div class="form-grid-2">
       <div class="control-group">
-        <label data-i18n="ramp_angle">Rampen-Winkel (°)</label>
-        <input type="number" id="inp_rampAngle" value="2.0" step="0.5" min="0.5" max="15.0">
+        <label data-i18n="ramp_angle">Ramp Angle</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_rampAngle" value="2.0" step="0.5" min="0.5" max="15.0">
+          <span class="input-unit-label">°</span>
+        </div>
       </div>
       <div class="control-group">
-        <label data-i18n="ramp_type">Rampen-Typ</label>
+        <label data-i18n="ramp_type">Ramp Type</label>
         <div class="segmented-wrapper">
-          <select id="inp_rampType" class="select-input">
-            <option value="helical" selected>Helical Ramp</option>
-            <option value="linear">Linear ZigZag</option>
-          </select>
+          <select id="inp_rampType" class="select-input"></select>
         </div>
       </div>
     </div>
 
-    <!-- Thread Mode Selection -->
     <div class="control-group">
-      <label data-i18n="thread_mode">Gewinde-Typ (Thread Mill)</label>
+      <label data-i18n="thread_mode">Thread Type</label>
       <div class="segmented-wrapper">
-        <select id="inp_threadMode" class="select-input">
-          <option value="internal" data-i18n="thread_internal">Innen-Gewinde</option>
-          <option value="external" data-i18n="thread_external">Aussen-Gewinde</option>
-        </select>
+        <select id="inp_threadMode" class="select-input"></select>
       </div>
     </div>
 
-    <!-- Feature Inputs -->
     <div class="form-grid-2">
       <div class="control-group">
-        <label data-i18n="bore_dia">Bohrung Ø (mm)</label>
-        <input type="number" id="inp_bore" value="1.00" step="0.05">
+        <label data-i18n="bore_dia">Bore Ø</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_bore" value="1.00" step="0.05">
+          <span class="input-unit-label">mm</span>
+        </div>
       </div>
       <div class="control-group">
-        <label data-i18n="thread_dia">Gewinde Ø (mm)</label>
-        <input type="number" id="inp_thread" value="2.00" step="0.05">
+        <label data-i18n="thread_dia">Thread Ø</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_thread" value="2.00" step="0.05">
+          <span class="input-unit-label">mm</span>
+        </div>
       </div>
       <div class="control-group">
-        <label data-i18n="chamfer_w">Fasenbreite (mm)</label>
-        <input type="number" id="inp_chamfer" value="0.20" step="0.05">
+        <label data-i18n="chamfer_w">Chamfer Width</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_chamfer" value="0.20" step="0.05">
+          <span class="input-unit-label">mm</span>
+        </div>
       </div>
       <div class="control-group">
-        <label data-i18n="drill_dia">Bohrer Ø (mm)</label>
-        <input type="number" id="inp_drill" value="1.00" step="0.1">
+        <label data-i18n="drill_dia">Drill Ø</label>
+        <div class="input-unit-wrapper">
+          <input type="number" id="inp_drill" value="1.00" step="0.1">
+          <span class="input-unit-label">mm</span>
+        </div>
       </div>
     </div>
     <div class="control-group">
-      <label data-i18n="hole_depth">Bohrtiefe (mm)</label>
-      <input type="number" id="inp_depth" value="2.00" step="0.1">
+      <label data-i18n="hole_depth">Hole Depth</label>
+      <div class="input-unit-wrapper">
+        <input type="number" id="inp_depth" value="2.00" step="0.1">
+        <span class="input-unit-label">mm</span>
+      </div>
     </div>
   </section>
 
-  <!-- RESULTS PANEL -->
+  <!-- 4. Results Section -->
   <section class="panel">
-    <!-- Power & MRR Summary Card -->
     <div class="secondary-feeds-grid">
       <div class="feed-card">
-        <label data-i18n="mrr_label">Zeitspanvolumen (MRR)</label>
-        <div class="num" id="val_mrr" style="font-size: 13px;">0.00 cm³/min</div>
+        <label data-i18n="mrr_label">MRR Rate</label>
+        <div class="num" id="val_mrr" style="font-size: 11px;">0.00 cm³/min</div>
       </div>
       <div class="feed-card">
-        <label data-i18n="power_label">Spindelleistung (P)</label>
-        <div class="num" id="val_power" style="font-size: 13px;">0.00 W</div>
+        <label data-i18n="power_label">Spindle Power</label>
+        <div class="num" id="val_power" style="font-size: 11px;">0.00 W</div>
       </div>
     </div>
 
-    <!-- Chip Load Gauge -->
     <div class="gauge-card">
       <div class="control-header">
-        <label data-i18n="chip_load_gauge">Spanungsdicke h (Adaptive)</label>
-        <span class="num" id="gaugeVal" style="font-size: 15px;">0.0 µm</span>
+        <label data-i18n="chip_load_gauge">Chip Thickness (h)</label>
+        <span class="num" id="gaugeVal" style="font-size: 12px;">0.0 µm</span>
       </div>
       <div class="gauge-bar-wrap">
         <div class="gauge-zone-rub"></div>
@@ -945,22 +907,22 @@
         <div class="gauge-zone-break"></div>
         <div class="gauge-needle" id="gaugeNeedle"></div>
       </div>
-      <div class="control-header" style="font-size: 9px; color: var(--secondary); font-weight: 600;">
-        <span>0 µm (Reiben)</span>
+      <div class="control-header" style="font-size: 8px; color: var(--secondary); font-weight: 600;">
+        <span>0 µm</span>
         <span id="gaugeZoneLabel" style="font-weight: 800; color: var(--accent);">Optimal</span>
-        <span id="gaugeMaxLabel">3% D µm (Bruch)</span>
+        <span id="gaugeMaxLabel">3% D µm</span>
       </div>
     </div>
 
-    <div class="section-title" data-i18n="milling_ops">Fräsoperationen (CAM)</div>
+    <div class="section-title" data-i18n="milling_ops">Milling Operations</div>
     
     <div class="table-responsive">
       <table class="data-table">
         <thead>
           <tr>
             <th data-i18n="op">Op</th>
-            <th>ae (mm)</th>
-            <th>ap (mm)</th>
+            <th>ae</th>
+            <th>ap</th>
             <th>vf (mm/min)</th>
           </tr>
         </thead>
@@ -968,26 +930,25 @@
       </table>
     </div>
 
-    <!-- Ramp & Plunge Secondary Feeds -->
     <div class="secondary-feeds-grid">
       <div class="feed-card">
-        <label id="lbl_rampFeed" data-i18n="ramp_feed">Rampe Feed</label>
-        <div class="num" id="val_rampFeed" style="font-size: 13px;">0 mm/min</div>
+        <label id="lbl_rampFeed" data-i18n="ramp_feed">Ramp Feed</label>
+        <div class="num" id="val_rampFeed" style="font-size: 11px;">0 mm/min</div>
       </div>
       <div class="feed-card">
-        <label data-i18n="plunge_feed">Eintauchen (Plunge)</label>
-        <div class="num" id="val_plungeFeed" style="font-size: 13px;">0 mm/min</div>
+        <label data-i18n="plunge_feed">Plunge Feed</label>
+        <div class="num" id="val_plungeFeed" style="font-size: 11px;">0 mm/min</div>
       </div>
     </div>
 
-    <div class="section-title" data-i18n="special_ops">Spezialoperationen</div>
+    <div class="section-title" data-i18n="special_ops">Special Operations</div>
 
     <div class="table-responsive">
       <table class="data-table">
         <thead>
           <tr>
             <th data-i18n="op">Op</th>
-            <th data-i18n="param">Parameter</th>
+            <th data-i18n="param">Params</th>
             <th>vf (mm/min)</th>
           </tr>
         </thead>
@@ -995,30 +956,28 @@
       </table>
     </div>
 
-    <!-- Drilling Pecking Schedule Output Card -->
-    <div class="feed-card" style="margin-bottom:10px;">
-      <label data-i18n="peck_schedule">Bohr-Tiefzyklus (Pecking Schedule)</label>
-      <div id="val_peckSchedule" class="num" style="font-size: 11px; margin-top:4px; color:var(--ink);">1st Peck: - | Sub: -</div>
+    <div class="feed-card" style="margin-bottom:8px;">
+      <label data-i18n="peck_schedule">Drilling Cycle</label>
+      <div id="val_peckSchedule" class="num" style="font-size: 10px; margin-top:2px; color:var(--ink);">1st: - | Sub: -</div>
     </div>
 
-    <!-- Checks & Warnings -->
-    <div class="section-title" data-i18n="checks">Plausibilitätsprüfungen</div>
+    <div class="section-title" data-i18n="checks">Plausibility Checks</div>
     <div id="checksContainer"></div>
   </section>
 
-  <!-- Sticky Bottom Toolbar -->
+  <!-- Sticky Bottom Bar -->
   <div class="ios-toolbar">
     <div class="ios-toolbar-inner">
-      <button class="btn-action" id="langToggle">EN</button>
+      <button class="btn-action" id="langToggle">DE</button>
       <button class="btn-action btn-accent" id="copyBtn">COPY TXT</button>
     </div>
   </div>
 
-  <!-- Material Picker Bottom Sheet Modal -->
+  <!-- Material Bottom Sheet Modal -->
   <div class="modal-overlay" id="materialModal" onclick="closeMaterialModal(event)">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <div class="modal-title" data-i18n="material">Werkstoff</div>
+        <div class="modal-title" data-i18n="material">Material</div>
         <button class="modal-close" onclick="closeMaterialModal()">✕</button>
       </div>
       <div id="materialOptionList"></div>
@@ -1028,14 +987,14 @@
   <script>
     const THEMES = {
       neumorphismLight: {
-        label: "1. Neumorphism Light",
+        label: "Neumorphism Light",
         '--ground': '#e0e5ec',
         '--panel': '#e0e5ec',
-        '--shadow-out': '6px 6px 12px #a3b1c6, -6px -6px 12px #ffffff',
-        '--shadow-out-sm': '4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff',
-        '--shadow-in': 'inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff',
-        '--shadow-btn': '5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff',
-        '--shadow-btn-active': 'inset 3px 3px 6px #a3b1c6, inset -3px -3px 6px #ffffff',
+        '--shadow-out': '5px 5px 10px #a3b1c6, -5px -5px 10px #ffffff',
+        '--shadow-out-sm': '3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff',
+        '--shadow-in': 'inset 2.5px 2.5px 5px #a3b1c6, inset -2.5px -2.5px 5px #ffffff',
+        '--shadow-btn': '4px 4px 8px #a3b1c6, -4px -4px 8px #ffffff',
+        '--shadow-btn-active': 'inset 2.5px 2.5px 5px #a3b1c6, inset -2.5px -2.5px 5px #ffffff',
         '--accent': '#3182ce',
         '--secondary': '#718096',
         '--warning': '#dd6b20',
@@ -1046,14 +1005,14 @@
         '--blur': 'none'
       },
       neumorphismDark: {
-        label: "2. Neumorphism Dark",
+        label: "Neumorphism Dark",
         '--ground': '#1e2227',
         '--panel': '#1e2227',
-        '--shadow-out': '6px 6px 14px #14171a, -6px -6px 14px #282d34',
-        '--shadow-out-sm': '4px 4px 8px #14171a, -4px -4px 8px #282d34',
-        '--shadow-in': 'inset 3px 3px 6px #14171a, inset -3px -3px 6px #282d34',
-        '--shadow-btn': '5px 5px 10px #14171a, -5px -5px 10px #282d34',
-        '--shadow-btn-active': 'inset 3px 3px 6px #14171a, inset -3px -3px 6px #282d34',
+        '--shadow-out': '5px 5px 12px #14171a, -5px -5px 12px #282d34',
+        '--shadow-out-sm': '3px 3px 6px #14171a, -3px -3px 6px #282d34',
+        '--shadow-in': 'inset 2.5px 2.5px 5px #14171a, inset -2.5px -2.5px 5px #282d34',
+        '--shadow-btn': '4px 4px 8px #14171a, -4px -4px 8px #282d34',
+        '--shadow-btn-active': 'inset 2.5px 2.5px 5px #14171a, inset -2.5px -2.5px 5px #282d34',
         '--accent': '#63b3ed',
         '--secondary': '#a0aec0',
         '--warning': '#f6ad55',
@@ -1064,14 +1023,14 @@
         '--blur': 'none'
       },
       glassmorphismLight: {
-        label: "3. Glassmorphism Light",
+        label: "Glassmorphism Light",
         '--ground': '#f0f4f8',
         '--panel': 'rgba(255, 255, 255, 0.65)',
-        '--shadow-out': '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
-        '--shadow-out-sm': '0 4px 16px 0 rgba(31, 38, 135, 0.08)',
-        '--shadow-in': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-        '--shadow-btn': '0 4px 12px rgba(0, 0, 0, 0.08)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+        '--shadow-out': '0 6px 24px 0 rgba(31, 38, 135, 0.10)',
+        '--shadow-out-sm': '0 3px 12px 0 rgba(31, 38, 135, 0.06)',
+        '--shadow-in': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
+        '--shadow-btn': '0 3px 10px rgba(0, 0, 0, 0.06)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.08)',
         '--accent': '#2563eb',
         '--secondary': '#64748b',
         '--warning': '#d97706',
@@ -1079,17 +1038,17 @@
         '--ink': '#1e293b',
         '--ok': '#16a34a',
         '--border': '1px solid rgba(255, 255, 255, 0.8)',
-        '--blur': 'blur(12px)'
+        '--blur': 'blur(10px)'
       },
       glassmorphismDark: {
-        label: "4. Glassmorphism Dark",
+        label: "Glassmorphism Dark",
         '--ground': '#0f172a',
         '--panel': 'rgba(30, 41, 59, 0.70)',
-        '--shadow-out': '0 8px 32px 0 rgba(0, 0, 0, 0.4)',
-        '--shadow-out-sm': '0 4px 16px 0 rgba(0, 0, 0, 0.3)',
+        '--shadow-out': '0 6px 24px 0 rgba(0, 0, 0, 0.35)',
+        '--shadow-out-sm': '0 3px 12px 0 rgba(0, 0, 0, 0.25)',
         '--shadow-in': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.05)',
-        '--shadow-btn': '0 4px 12px rgba(0, 0, 0, 0.3)',
-        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.4)',
+        '--shadow-btn': '0 3px 10px rgba(0, 0, 0, 0.25)',
+        '--shadow-btn-active': 'inset 0 2px 4px rgba(0, 0, 0, 0.35)',
         '--accent': '#38bdf8',
         '--secondary': '#94a3b8',
         '--warning': '#fbbf24',
@@ -1097,17 +1056,17 @@
         '--ink': '#f8fafc',
         '--ok': '#4ade80',
         '--border': '1px solid rgba(255, 255, 255, 0.1)',
-        '--blur': 'blur(14px)'
+        '--blur': 'blur(12px)'
       },
       cyberpunk: {
-        label: "5. Cyberpunk Neon",
+        label: "Cyberpunk Neon",
         '--ground': '#0b0c10',
         '--panel': '#1f2833',
-        '--shadow-out': '0 0 10px rgba(255, 0, 127, 0.2), 0 0 4px rgba(0, 240, 255, 0.2)',
-        '--shadow-out-sm': '0 0 6px rgba(0, 240, 255, 0.2)',
-        '--shadow-in': 'inset 0 0 6px rgba(0, 0, 0, 0.8)',
-        '--shadow-btn': '0 0 8px rgba(0, 240, 255, 0.4)',
-        '--shadow-btn-active': 'inset 0 0 8px rgba(255, 0, 127, 0.6)',
+        '--shadow-out': '0 0 8px rgba(255, 0, 127, 0.2), 0 0 3px rgba(0, 240, 255, 0.2)',
+        '--shadow-out-sm': '0 0 5px rgba(0, 240, 255, 0.2)',
+        '--shadow-in': 'inset 0 0 5px rgba(0, 0, 0, 0.8)',
+        '--shadow-btn': '0 0 6px rgba(0, 240, 255, 0.3)',
+        '--shadow-btn-active': 'inset 0 0 6px rgba(255, 0, 127, 0.5)',
         '--accent': '#00f0ff',
         '--secondary': '#c5c6c7',
         '--warning': '#ffe600',
@@ -1118,14 +1077,14 @@
         '--blur': 'none'
       },
       industrialCNC: {
-        label: "6. Industrial CNC",
+        label: "Industrial CNC",
         '--ground': '#2b2d2f',
         '--panel': '#36393e',
-        '--shadow-out': '3px 3px 6px #1b1c1e, -1px -1px 3px #45484e',
-        '--shadow-out-sm': '2px 2px 4px #1b1c1e',
-        '--shadow-in': 'inset 2px 2px 5px #1b1c1e',
-        '--shadow-btn': '2px 2px 5px #1a1b1d',
-        '--shadow-btn-active': 'inset 2px 2px 4px #101112',
+        '--shadow-out': '3px 3px 5px #1b1c1e, -1px -1px 3px #45484e',
+        '--shadow-out-sm': '2px 2px 3px #1b1c1e',
+        '--shadow-in': 'inset 2px 2px 4px #1b1c1e',
+        '--shadow-btn': '2px 2px 4px #1a1b1d',
+        '--shadow-btn-active': 'inset 2px 2px 3px #101112',
         '--accent': '#f59e0b',
         '--secondary': '#9ca3af',
         '--warning': '#f97316',
@@ -1137,152 +1096,189 @@
       }
     };
 
-    function populateThemeSelector() {
-      const select = document.getElementById('themeSelector');
-      select.innerHTML = '';
-      for (const [key, theme] of Object.entries(THEMES)) {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = theme.label;
-        select.appendChild(opt);
-      }
-    }
-
-    function applyTheme(themeKey) {
-      triggerHaptic();
-      const selectedTheme = THEMES[themeKey];
-      if (!selectedTheme) return;
-      
-      const root = document.documentElement;
-      for (const [property, value] of Object.entries(selectedTheme)) {
-        if (property !== 'label') {
-          root.style.setProperty(property, value);
-        }
-      }
-
-      const metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (metaTheme && selectedTheme['--ground']) {
-        metaTheme.setAttribute('content', selectedTheme['--ground']);
-      }
-    }
-
-    // Extended Material Database
     const MATERIALS = [
-      { id: 'ms58', category: 'Metals / Metalle', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
-      { id: 'ms63', category: 'Metals / Metalle', name: 'Brass MS63 (CuZn37)', vcMin: 120, vcMax: 200, ff: 0.85, kc: 750, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
-      { id: 'mail', category: 'Metals / Metalle', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, kc: 900, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
-      { id: 'cu',   category: 'Metals / Metalle', name: 'Copper (Kupfer)', vcMin: 120, vcMax: 200, ff: 0.80, kc: 650, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
-      { id: 'alu_cast', category: 'Metals / Metalle', name: 'Aluminum (Cast / Guss)', vcMin: 180, vcMax: 350, ff: 0.90, kc: 700, noteDE: 'Kurzspanend, Kühlung empfohlen.', noteEN: 'Short chips, coolant recommended.' },
-      { id: 'alu_alloy', category: 'Metals / Metalle', name: 'Aluminum (Alloy / Legierung)', vcMin: 200, vcMax: 500, ff: 1.10, kc: 800, noteDE: 'Hohe Schnittwerte, Aufbauschneide meiden.', noteEN: 'High speeds, prevent built-up edge.' },
-      { id: 'bronze', category: 'Metals / Metalle', name: 'Bronze', vcMin: 80, vcMax: 150, ff: 0.75, kc: 1100, noteDE: 'Zähes Material, scharfe Schneide nötig.', noteEN: 'Tough material, sharp edges needed.' },
-      { id: 'steel',category: 'Metals / Metalle', name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, kc: 1900, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
-      { id: 'ino',  category: 'Metals / Metalle', name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, kc: 2200, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
-      { id: 'ti',   category: 'Metals / Metalle', name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, kc: 1400, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
-      { id: 'wood_soft', category: 'Wood & Composites / Holz & CFK', name: 'Softwood / Standard Wood', vcMin: 300, vcMax: 800, ff: 1.40, kc: 100, noteDE: 'Faserrichtung beachten, hohe Drehzahlen.', noteEN: 'Mind grain direction, high RPM.' },
-      { id: 'wood_hard', category: 'Wood & Composites / Holz & CFK', name: 'Hardwood (Hartholz)', vcMin: 250, vcMax: 600, ff: 1.20, kc: 180, noteDE: 'Dichte Holzstruktur, Brandspuren vermeiden.', noteEN: 'Dense structure, avoid burn marks.' },
-      { id: 'mdf', category: 'Wood & Composites / Holz & CFK', name: 'MDF', vcMin: 250, vcMax: 500, ff: 1.30, kc: 120, noteDE: 'Stark abrasiv, Absaugung zwingend.', noteEN: 'Highly abrasive, dust extraction essential.' },
-      { id: 'cfk', category: 'Wood & Composites / Holz & CFK', name: 'CFK (Carbon Fiber)', vcMin: 100, vcMax: 250, ff: 0.60, kc: 350, noteDE: 'Abrasiv, Vollhartmetall mit Spezialverzahnung.', noteEN: 'Abrasive, carbide with diamond/special geometry.' },
-      { id: 'gfk', category: 'Wood & Composites / Holz & CFK', name: 'GFK (Fiberglass)', vcMin: 120, vcMax: 300, ff: 0.70, kc: 300, noteDE: 'Glasfaser-Abrieb, Schutzbrille & Absaugung.', noteEN: 'Glass fiber wear, safety gear & extraction required.' },
-      { id: 'foam', category: 'Wood & Composites / Holz & CFK', name: 'Foam / Schaumstoff', vcMin: 400, vcMax: 1000, ff: 2.00, kc: 30, noteDE: 'Scharfe Einzahnfräser, sehr hohe Vorschübe.', noteEN: 'Sharp single-flute cutters, very high feeds.' },
-      { id: 'pmma', category: 'Plastics / Kunststoffe', name: 'Acrylic / Acrylglas (PMMA)', vcMin: 150, vcMax: 350, ff: 1.00, kc: 200, noteDE: 'Polier-Schnitt, Schmelzen durch Kühlung verhindern.', noteEN: 'Polished cut, prevent melting with air/coolant.' },
-      { id: 'plastic_soft', category: 'Plastics / Kunststoffe', name: 'Soft Plastics (PE/PP/PTFE)', vcMin: 150, vcMax: 400, ff: 1.20, kc: 150, noteDE: 'Sehr scharfe Schneiden, neigt zum Schmieren.', noteEN: 'Sharp flutes, tends to smear.' },
-      { id: 'plastic_hard', category: 'Plastics / Kunststoffe', name: 'Hard Plastics (POM/Nylon/ABS)', vcMin: 200, vcMax: 500, ff: 1.30, kc: 250, noteDE: 'Sehr gute Spanbildung, hohe Vorschübe.', noteEN: 'Excellent chip formation, high feeds.' }
+      { id: 'ms58', catDE: 'Metalle', catEN: 'Metals', name: 'Brass MS58 (CuZn39Pb3)', vcMin: 150, vcMax: 250, ff: 1.00, kc: 700, noteDE: 'Kurze Späne, erste Wahl.', noteEN: 'Short chips, first choice.' },
+      { id: 'ms63', catDE: 'Metalle', catEN: 'Metals', name: 'Brass MS63 (CuZn37)', vcMin: 120, vcMax: 200, ff: 0.85, kc: 750, noteDE: 'Schmiegend, neigt zum Haken.', noteEN: 'Gummy, tends to grab.' },
+      { id: 'mail', catDE: 'Metalle', catEN: 'Metals', name: 'Nickel silver / Maillechort', vcMin: 80, vcMax: 140, ff: 0.60, kc: 900, noteDE: 'Zäher als Messing, verschmiert.', noteEN: 'Tougher than brass, smears.' },
+      { id: 'cu',   catDE: 'Metalle', catEN: 'Metals', name: 'Copper (Kupfer)', vcMin: 120, vcMax: 200, ff: 0.80, kc: 650, noteDE: 'Sehr schmiegend, lange Späne.', noteEN: 'Very gummy, long chips.' },
+      { id: 'alu_cast', catDE: 'Metalle', catEN: 'Metals', name: 'Aluminum (Cast / Guss)', vcMin: 180, vcMax: 350, ff: 0.90, kc: 700, noteDE: 'Kurzspanend, Kühlung empfohlen.', noteEN: 'Short chips, coolant recommended.' },
+      { id: 'alu_alloy', catDE: 'Metalle', catEN: 'Metals', name: 'Aluminum (Alloy / Legierung)', vcMin: 200, vcMax: 500, ff: 1.10, kc: 800, noteDE: 'Hohe Schnittwerte, Aufbauschneide meiden.', noteEN: 'High speeds, prevent built-up edge.' },
+      { id: 'bronze', catDE: 'Metalle', catEN: 'Metals', name: 'Bronze', vcMin: 80, vcMax: 150, ff: 0.75, kc: 1100, noteDE: 'Zähes Material, scharfe Schneide nötig.', noteEN: 'Tough material, sharp edges needed.' },
+      { id: 'steel',catDE: 'Metalle', catEN: 'Metals', name: 'Steel (S235 / C45)', vcMin: 80, vcMax: 120, ff: 0.50, kc: 1900, noteDE: 'Luft/Kühlmittel erforderlich.', noteEN: 'Air blast or coolant required.' },
+      { id: 'ino',  catDE: 'Metalle', catEN: 'Metals', name: 'Stainless (1.4301 / 304)', vcMin: 50, vcMax: 80, ff: 0.40, kc: 2200, noteDE: 'Härtet aus wenn Vorschub zu gering.', noteEN: 'Work-hardens if feed too low.' },
+      { id: 'ti',   catDE: 'Metalle', catEN: 'Metals', name: 'Titanium (Gr5)', vcMin: 40, vcMax: 60, ff: 0.35, kc: 1400, noteDE: 'Hitze bleibt im Werkzeug.', noteEN: 'Heat stays in the tool.' },
+      { id: 'wood_soft', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'Softwood / Standard Wood', vcMin: 300, vcMax: 800, ff: 1.40, kc: 100, noteDE: 'Faserrichtung beachten, hohe Drehzahlen.', noteEN: 'Mind grain direction, high RPM.' },
+      { id: 'wood_hard', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'Hardwood (Hartholz)', vcMin: 250, vcMax: 600, ff: 1.20, kc: 180, noteDE: 'Dichte Holzstruktur, Brandspuren vermeiden.', noteEN: 'Dense structure, avoid burn marks.' },
+      { id: 'mdf', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'MDF', vcMin: 250, vcMax: 500, ff: 1.30, kc: 120, noteDE: 'Stark abrasiv, Absaugung zwingend.', noteEN: 'Highly abrasive, dust extraction essential.' },
+      { id: 'cfk', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'CFK (Carbon Fiber)', vcMin: 100, vcMax: 250, ff: 0.60, kc: 350, noteDE: 'Abrasiv, Vollhartmetall mit Spezialverzahnung.', noteEN: 'Abrasive, carbide with diamond/special geometry.' },
+      { id: 'gfk', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'GFK (Fiberglass)', vcMin: 120, vcMax: 300, ff: 0.70, kc: 300, noteDE: 'Glasfaser-Abrieb, Schutzbrille & Absaugung.', noteEN: 'Glass fiber wear, safety gear & extraction required.' },
+      { id: 'foam', catDE: 'Holz & CFK', catEN: 'Wood & Composites', name: 'Foam / Schaumstoff', vcMin: 400, vcMax: 1000, ff: 2.00, kc: 30, noteDE: 'Scharfe Einzahnfräser, sehr hohe Vorschübe.', noteEN: 'Sharp single-flute cutters, very high feeds.' },
+      { id: 'pmma', catDE: 'Kunststoffe', catEN: 'Plastics', name: 'Acrylic / Acrylglas (PMMA)', vcMin: 150, vcMax: 350, ff: 1.00, kc: 200, noteDE: 'Polier-Schnitt, Schmelzen durch Kühlung verhindern.', noteEN: 'Polished cut, prevent melting with air/coolant.' },
+      { id: 'plastic_soft', catDE: 'Kunststoffe', catEN: 'Plastics', name: 'Soft Plastics (PE/PP/PTFE)', vcMin: 150, vcMax: 400, ff: 1.20, kc: 150, noteDE: 'Sehr scharfe Schneiden, neigt zum Schmieren.', noteEN: 'Sharp flutes, tends to smear.' },
+      { id: 'plastic_hard', catDE: 'Kunststoffe', catEN: 'Plastics', name: 'Hard Plastics (POM/Nylon/ABS)', vcMin: 200, vcMax: 500, ff: 1.30, kc: 250, noteDE: 'Sehr gute Spanbildung, hohe Vorschübe.', noteEN: 'Excellent chip formation, high feeds.' }
     ];
 
     const PCT_Z = { 1: 0.012, 2: 0.010, 3: 0.008, 4: 0.007, 5: 0.006, 6: 0.0055, 7: 0.005, 8: 0.0045 };
 
+    const SELECT_OPTIONS = {
+      DE: {
+        coating: [
+          { val: 'uncoated', label: 'Unbeschichtet (1.0× Vc)' },
+          { val: 'tialn', label: 'TiAlN (+25% Vc)' },
+          { val: 'dlc', label: 'DLC (+50% Vc)' }
+        ],
+        coolant: [
+          { val: 'dry', label: 'Trocken/Luft (1.0× Vc)' },
+          { val: 'mql', label: 'MMS (+15% Vc)' },
+          { val: 'flood', label: 'Flutkühlung (+30% Vc)' }
+        ],
+        rampType: [
+          { val: 'helical', label: 'Helisch' },
+          { val: 'linear', label: 'Linear ZigZag' }
+        ],
+        threadMode: [
+          { val: 'internal', label: 'Innengewinde' },
+          { val: 'external', label: 'Aussengewinde' }
+        ]
+      },
+      EN: {
+        coating: [
+          { val: 'uncoated', label: 'Uncoated (1.0× Vc)' },
+          { val: 'tialn', label: 'TiAlN (+25% Vc)' },
+          { val: 'dlc', label: 'DLC (+50% Vc)' }
+        ],
+        coolant: [
+          { val: 'dry', label: 'Dry / Air (1.0× Vc)' },
+          { val: 'mql', label: 'MQL (+15% Vc)' },
+          { val: 'flood', label: 'Flood (+30% Vc)' }
+        ],
+        rampType: [
+          { val: 'helical', label: 'Helical Ramp' },
+          { val: 'linear', label: 'Linear ZigZag' }
+        ],
+        threadMode: [
+          { val: 'internal', label: 'Internal Thread' },
+          { val: 'external', label: 'External Thread' }
+        ]
+      }
+    };
+
     const I18N = {
       DE: {
-        max_spindle: "Max RPM",
-        machine_params: "Maschinenparameter",
+        app_title: "Feeds & Speeds",
+        max_spindle: "Max Drehzahl",
+        machine_params: "Maschinengrenzen",
         theme_label: "Theme",
-        tool_material: "Werkzeug & Werkstoff",
-        tool_dia: "Fräserdurchmesser (D)",
-        overhang: "Werkzeug-Auskragung (L/D)",
-        flutes: "Schneidenanzahl (Z)",
+        tool_material: "Werkzeug & Material",
+        tool_dia: "Fräser-Ø (D)",
+        overhang: "Auskragung (L/D)",
+        flutes: "Schneiden (Z)",
         material: "Werkstoff",
         coating: "Beschichtung",
         coolant: "Kühlung",
-        spindle: "Spindeldrehzahl (n)",
-        machine_accel: "Max Maschinen-Beschleunigung",
+        spindle: "Drehzahl (n)",
+        machine_accel: "Max Beschl.",
         max_feed: "Max Vorschub",
-        chip_thinning: "Spanausdünnung kompensieren",
-        feature_dims: "Form-Geometrien & CAM Parameter",
-        custom_ae: "Custom ae (mm)",
-        custom_ap: "Custom ap (mm)",
+        chip_thinning: "Spanausdünnung Komp.",
+        feature_dims: "Geometrie & Parameter",
+        custom_ae: "Custom ae",
+        custom_ap: "Custom ap",
         auto_mode: "Auto",
-        ramp_angle: "Rampen-Winkel (°)",
+        ramp_angle: "Rampen-Winkel",
         ramp_type: "Rampen-Typ",
-        thread_mode: "Gewinde-Typ (Thread Mill)",
-        thread_internal: "Innen-Gewinde",
-        thread_external: "Aussen-Gewinde",
-        bore_dia: "Bohrung Ø (mm)",
-        thread_dia: "Gewinde Ø (mm)",
-        chamfer_w: "Fasenbreite (mm)",
-        drill_dia: "Bohrer Ø (mm)",
-        hole_depth: "Bohrtiefe (mm)",
-        mrr_label: "Zeitspanvolumen (MRR)",
-        power_label: "Spindelleistung (P)",
-        chip_load_gauge: "Spanungsdicke h (Adaptive)",
-        milling_ops: "Fräsoperationen (CAM)",
+        thread_mode: "Gewinde-Typ",
+        bore_dia: "Bohrung Ø",
+        thread_dia: "Gewinde Ø",
+        chamfer_w: "Fasenbreite",
+        drill_dia: "Bohrer Ø",
+        hole_depth: "Bohrtiefe",
+        mrr_label: "Zeitspanvolumen",
+        power_label: "Spindelleistung",
+        chip_load_gauge: "Spanungsdicke (h)",
+        milling_ops: "Fräsoperationen",
         special_ops: "Spezialoperationen",
-        peck_schedule: "Bohr-Tiefzyklus (Pecking Schedule)",
+        peck_schedule: "Bohr-Tiefzyklus",
         op: "Op",
         param: "Parameter",
         checks: "Plausibilitätsprüfungen",
         ramp_feed: "Rampen-Vorschub",
-        plunge_feed: "Eintauchen (Plunge)",
+        plunge_feed: "Eintauch-Vorschub",
         dec_sep: ",",
         rubbing: "Reiben (<3µm)",
-        cutting: "Schneiden",
+        cutting: "Optimal",
         breakage: "Bruchrisiko (>2% D)",
-        all_ok: "Keine Auffälligkeiten – Werte liegen im grünen Bereich."
+        all_ok: "Keine Auffälligkeiten – Werte liegen im grünen Bereich.",
+        auto_ph: "Auto",
+        op_adaptive: "Adaptive / Trochoidal",
+        op_slot: "Vollnut (Slot)",
+        op_contour: "Kontur (Wand)",
+        op_finish: "Schlichten",
+        op_freeing: "Schlichtpass (Letzter)",
+        op_helical: "Helisch Fräsen",
+        op_bore: "Helische Bohrung",
+        op_thread: "Gewindefräsen",
+        op_chamfer: "Fasen (45°)",
+        op_drill: "Bohren",
+        ext_short: "Aussen",
+        int_short: "Innen"
       },
       EN: {
-        max_spindle: "Max RPM",
-        machine_params: "Machine Parameters",
+        app_title: "Feeds & Speeds",
+        max_spindle: "Max Spindle Speed",
+        machine_params: "Machine Limits",
         theme_label: "Theme",
         tool_material: "Tool & Material",
-        tool_dia: "Tool Diameter (D)",
-        overhang: "Tool Stickout (L/D)",
+        tool_dia: "Tool Dia (D)",
+        overhang: "Stickout (L/D)",
         flutes: "Flute Count (Z)",
         material: "Material",
         coating: "Coating",
         coolant: "Coolant",
         spindle: "Spindle Speed (n)",
-        machine_accel: "Max Machine Acceleration",
-        max_feed: "Max Feed Rate",
-        chip_thinning: "Chip thinning compensation",
-        feature_dims: "Feature Dims & CAM Params",
-        custom_ae: "Custom ae (mm)",
-        custom_ap: "Custom ap (mm)",
+        machine_accel: "Max Accel",
+        max_feed: "Max Feed",
+        chip_thinning: "Chip Thinning Comp",
+        feature_dims: "Geometry & Params",
+        custom_ae: "Custom ae",
+        custom_ap: "Custom ap",
         auto_mode: "Auto",
-        ramp_angle: "Ramp Angle (°)",
+        ramp_angle: "Ramp Angle",
         ramp_type: "Ramp Type",
-        thread_mode: "Thread Mill Type",
-        thread_internal: "Internal Thread",
-        thread_external: "External Thread",
-        bore_dia: "Bore Ø (mm)",
-        thread_dia: "Thread Ø (mm)",
-        chamfer_w: "Chamfer Width (mm)",
-        drill_dia: "Drill Ø (mm)",
-        hole_depth: "Hole Depth (mm)",
-        mrr_label: "Material Removal (MRR)",
-        power_label: "Spindle Power (P)",
-        chip_load_gauge: "Chip Thickness h (Adaptive)",
-        milling_ops: "Milling Operations (CAM)",
+        thread_mode: "Thread Type",
+        bore_dia: "Bore Ø",
+        thread_dia: "Thread Ø",
+        chamfer_w: "Chamfer Width",
+        drill_dia: "Drill Ø",
+        hole_depth: "Hole Depth",
+        mrr_label: "MRR Rate",
+        power_label: "Spindle Power",
+        chip_load_gauge: "Chip Thickness (h)",
+        milling_ops: "Milling Operations",
         special_ops: "Special Operations",
-        peck_schedule: "Drilling Pecking Schedule",
+        peck_schedule: "Drilling Cycle",
         op: "Op",
-        param: "Parameters",
+        param: "Params",
         checks: "Plausibility Checks",
-        ramp_feed: "Ramp Feed Rate",
+        ramp_feed: "Ramp Feed",
         plunge_feed: "Plunge Feed",
         dec_sep: ".",
         rubbing: "Rubbing (<3µm)",
         cutting: "Cutting Properly",
         breakage: "Breakage Risk (>2% D)",
-        all_ok: "Nothing to flag — the values sit inside the window."
+        all_ok: "Nothing to flag — values sit inside proper parameters.",
+        auto_ph: "Auto",
+        op_adaptive: "Adaptive / Trochoidal",
+        op_slot: "Full Slot",
+        op_contour: "Contour Wall",
+        op_finish: "Finishing",
+        op_freeing: "Spring Pass",
+        op_helical: "Helical Interp.",
+        op_bore: "Helical Bore",
+        op_thread: "Thread Mill",
+        op_chamfer: "Chamfer (45°)",
+        op_drill: "Drilling",
+        ext_short: "Ext",
+        int_short: "Int"
       }
     };
 
@@ -1324,7 +1320,36 @@
 
     function triggerHaptic() {
       if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(10);
+        window.navigator.vibrate(8);
+      }
+    }
+
+    function populateThemeSelector() {
+      const select = document.getElementById('themeSelector');
+      select.innerHTML = '';
+      for (const [key, theme] of Object.entries(THEMES)) {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = theme.label;
+        select.appendChild(opt);
+      }
+    }
+
+    function applyTheme(themeKey) {
+      triggerHaptic();
+      const selectedTheme = THEMES[themeKey];
+      if (!selectedTheme) return;
+      
+      const root = document.documentElement;
+      for (const [property, value] of Object.entries(selectedTheme)) {
+        if (property !== 'label') {
+          root.style.setProperty(property, value);
+        }
+      }
+
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme && selectedTheme['--ground']) {
+        metaTheme.setAttribute('content', selectedTheme['--ground']);
       }
     }
 
@@ -1342,12 +1367,12 @@
     function populateMaterialModal() {
       const list = document.getElementById('materialOptionList');
       list.innerHTML = '';
-      
       let currentCategory = '';
 
       MATERIALS.forEach((m, idx) => {
-        if (m.category !== currentCategory) {
-          currentCategory = m.category;
+        const categoryName = lang === 'DE' ? m.catDE : m.catEN;
+        if (categoryName !== currentCategory) {
+          currentCategory = categoryName;
           const catHeader = document.createElement('div');
           catHeader.className = 'material-category-header';
           catHeader.textContent = currentCategory;
@@ -1368,10 +1393,31 @@
       });
     }
 
+    function populateSelects() {
+      const opts = SELECT_OPTIONS[lang];
+      
+      const setSelect = (el, items) => {
+        const curVal = el.value;
+        el.innerHTML = '';
+        items.forEach(item => {
+          const opt = document.createElement('option');
+          opt.value = item.val;
+          opt.textContent = item.label;
+          el.appendChild(opt);
+        });
+        if (curVal) el.value = curVal;
+      };
+
+      setSelect(inpCoating, opts.coating);
+      setSelect(inpCoolant, opts.coolant);
+      setSelect(inpRampType, opts.rampType);
+      setSelect(inpThreadMode, opts.threadMode);
+    }
+
     langToggle.addEventListener('click', () => {
       triggerHaptic();
       lang = lang === 'DE' ? 'EN' : 'DE';
-      langToggle.textContent = lang;
+      langToggle.textContent = lang === 'DE' ? 'EN' : 'DE';
       updateUI();
     });
 
@@ -1381,7 +1427,7 @@
         if (chkAutoAe.checked) {
           inpCustomAe.disabled = true;
           inpCustomAe.value = '';
-          inpCustomAe.placeholder = 'Auto';
+          inpCustomAe.placeholder = I18N[lang].auto_ph;
         } else {
           inpCustomAe.disabled = false;
           inpCustomAe.value = lastAutoCalculatedAe.toFixed(2);
@@ -1390,7 +1436,7 @@
         if (chkAutoAp.checked) {
           inpCustomAp.disabled = true;
           inpCustomAp.value = '';
-          inpCustomAp.placeholder = 'Auto';
+          inpCustomAp.placeholder = I18N[lang].auto_ph;
         } else {
           inpCustomAp.disabled = false;
           inpCustomAp.value = lastAutoCalculatedAp.toFixed(2);
@@ -1426,10 +1472,15 @@
     }
 
     function updateUI() {
+      populateSelects();
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (I18N[lang][key]) el.textContent = I18N[lang][key];
       });
+
+      if (chkAutoAe.checked) inpCustomAe.placeholder = I18N[lang].auto_ph;
+      if (chkAutoAp.checked) inpCustomAp.placeholder = I18N[lang].auto_ph;
+
       recalc();
     }
 
@@ -1476,7 +1527,6 @@
 
       const baseFz = D * PCT_Z[z] * mat.ff * ldPenalty;
       const vc = (Math.PI * D * n) / 1000;
-      const targetVcMean = ((mat.vcMin + mat.vcMax) / 2) * coatingMult * coolantMult;
 
       let axCap = 1.0 * Math.min(1.0, Math.sqrt(ldPenalty));
       if (mat.ff <= 0.4) axCap = 0.35 * Math.min(1.0, Math.sqrt(ldPenalty));
@@ -1490,8 +1540,8 @@
       if (isAtMaxLimit) {
         spindleWarn.style.display = 'block';
         spindleWarn.textContent = lang === 'DE' 
-          ? `⚠️ MAX Spindellimit (${maxSpindleLimit.toLocaleString()} min⁻¹)`
-          : `⚠️ MAX spindle limit (${maxSpindleLimit.toLocaleString()} rpm)`;
+          ? `⚠️ MAX Limit (${maxSpindleLimit.toLocaleString()} min⁻¹)`
+          : `⚠️ MAX limit (${maxSpindleLimit.toLocaleString()} rpm)`;
       } else {
         spindleWarn.style.display = 'none';
       }
@@ -1505,12 +1555,12 @@
       const customAp = !isApAuto ? parseFloat(inpCustomAp.value) : NaN;
 
       const opsConfig = [
-        { name: 'Adaptive / Trochoidal', ae: !isNaN(customAe) ? customAe : 0.20 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.00 },
-        { name: 'Full Slot', ae: 1.00 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.60 },
-        { name: 'Contour (Side Wall)', ae: 0.50 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.75 },
-        { name: 'Finishing', ae: 0.05 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.10 },
-        { name: 'Freeing Pass (Last)', ae: 1.00 * D, ap: Math.min(0.20 * D, 0.15), factor: 0.50 },
-        { name: 'Helical Interp.', ae: 0.10 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 0.45 }
+        { name: I18N[lang].op_adaptive, ae: !isNaN(customAe) ? customAe : 0.20 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.00 },
+        { name: I18N[lang].op_slot, ae: 1.00 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.60 },
+        { name: I18N[lang].op_contour, ae: 0.50 * D, ap: !isNaN(customAp) ? customAp : 0.45 * D, factor: 0.75 },
+        { name: I18N[lang].op_finish, ae: 0.05 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 1.10 },
+        { name: I18N[lang].op_freeing, ae: 1.00 * D, ap: Math.min(0.20 * D, 0.15), factor: 0.50 },
+        { name: I18N[lang].op_helical, ae: 0.10 * D, ap: !isNaN(customAp) ? customAp : 1.00 * D, factor: 0.45 }
       ];
 
       let millingHTML = '';
@@ -1552,7 +1602,7 @@
             <td><strong>${op.name}</strong></td>
             <td class="num">${formatNum(ae, 2)}</td>
             <td class="num">${formatNum(ap, 2)}${ap < uncappedAp && isNaN(customAp) ? '*' : ''}</td>
-            <td class="num" style="font-weight:700; color:var(--accent); font-size:13px;">${Math.round(vf)}</td>
+            <td class="num" style="font-weight:700; color:var(--accent);">${Math.round(vf)}</td>
           </tr>
         `;
       });
@@ -1571,7 +1621,7 @@
       const rampFeed = Math.min(slotFeed * rampFactor, maxFeed);
       const plungeFeed = Math.min(n * z * baseFz * 0.12, maxFeed);
 
-      document.getElementById('lbl_rampFeed').textContent = `${isHelicalRamp ? 'Helical' : 'Linear'} Ramp (${rampDeg}°)`;
+      document.getElementById('lbl_rampFeed').textContent = `${isHelicalRamp ? 'Helical' : 'Linear'} (${rampDeg}°)`;
       document.getElementById('val_rampFeed').textContent = `${Math.round(rampFeed)} mm/min`;
       document.getElementById('val_plungeFeed').textContent = `${Math.round(plungeFeed)} mm/min`;
 
@@ -1614,8 +1664,8 @@
       }
       specialHTML += `
         <tr>
-          <td><strong>Helical Bore</strong></td>
-          <td>Bore Ø ${formatNum(boreDia, 2)} mm</td>
+          <td><strong>${I18N[lang].op_bore}</strong></td>
+          <td>Ø ${formatNum(boreDia, 2)} mm</td>
           <td class="num" style="font-weight:700;">${Math.round(boreFeed)}</td>
         </tr>
       `;
@@ -1629,14 +1679,12 @@
           : (threadDia - D) / threadDia;
         threadFeed = Math.min(edgeFeed * factor, maxFeed);
       }
-      const threadLabel = isExternalThread 
-        ? (lang === 'DE' ? 'Aussen' : 'Ext') 
-        : (lang === 'DE' ? 'Innen' : 'Int');
+      const threadLabel = isExternalThread ? I18N[lang].ext_short : I18N[lang].int_short;
 
       specialHTML += `
         <tr>
-          <td><strong>Thread Mill (${threadLabel})</strong></td>
-          <td>Thread Ø ${formatNum(threadDia, 2)} mm</td>
+          <td><strong>${I18N[lang].op_thread} (${threadLabel})</strong></td>
+          <td>Ø ${formatNum(threadDia, 2)} mm</td>
           <td class="num" style="font-weight:700;">${Math.round(threadFeed)}</td>
         </tr>
       `;
@@ -1646,12 +1694,13 @@
       const chamferFeed = Math.min(n * z * fzCham, maxFeed);
       specialHTML += `
         <tr>
-          <td><strong>Chamfer (45°)</strong></td>
+          <td><strong>${I18N[lang].op_chamfer}</strong></td>
           <td>Eff Ø ${formatNum(effChamferDia, 2)} mm</td>
           <td class="num" style="font-weight:700;">${Math.round(chamferFeed)}</td>
         </tr>
       `;
 
+      const targetVcMean = ((mat.vcMin + mat.vcMax) / 2) * coatingMult * coolantMult;
       const drillVc = targetVcMean * 0.70;
       const nDrill = Math.min(maxSpindleLimit, (drillVc * 1000) / (Math.PI * drillDia));
       const feedPerRev = drillDia * 0.02 * mat.ff * ldPenalty;
@@ -1661,12 +1710,12 @@
       
       const firstPeck = 1.0 * drillDia;
       const subPeck = 0.5 * drillDia;
-      const peckText = `1st Peck: ${formatNum(firstPeck, 2)} mm | Sub Pecks: ${formatNum(subPeck, 2)} mm ${depthRatio > 3 ? '(Full Retract)' : '(Chip Break)'}`;
+      const peckText = `1st: ${formatNum(firstPeck, 2)} mm | Sub: ${formatNum(subPeck, 2)} mm ${depthRatio > 3 ? '(Retract)' : '(Break)'}`;
       document.getElementById('val_peckSchedule').textContent = peckText;
 
       specialHTML += `
         <tr>
-          <td><strong>Drilling</strong></td>
+          <td><strong>${I18N[lang].op_drill}</strong></td>
           <td>${Math.round(nDrill)} min⁻¹</td>
           <td class="num" style="font-weight:700;">${Math.round(drillFeed)}</td>
         </tr>
@@ -1681,23 +1730,23 @@
       const checks = [];
 
       if (isFeedCapped) {
-        checks.push({ type: 'warning', text: lang === 'DE' ? `Vorschubwerte durch Limit (${maxFeed} mm/min) begrenzt.` : `Feed rates capped by limit (${maxFeed} mm/min).` });
+        checks.push({ type: 'warning', text: lang === 'DE' ? `Vorschub durch Limit (${maxFeed} mm/min) begrenzt.` : `Feeds capped by max limit (${maxFeed} mm/min).` });
       }
-      if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Effektive Spanungsdicke < 3 µm: Werkzeug reibt.' : 'Effective chip thickness < 3 µm: tool rubs.' });
+      if (hMicrons < 3.0) checks.push({ type: 'critical', text: lang === 'DE' ? 'Spanungsdicke < 3 µm: Werkzeug reibt.' : 'Effective chip thickness < 3 µm: tool rubs.' });
       if (baseFz > (0.02 * D)) checks.push({ type: 'critical', text: lang === 'DE' ? 'fz > 2% des Durchmessers: Bruchrisiko!' : 'fz > 2% of diameter: breakage risk!' });
-      if (boreDia <= D) checks.push({ type: 'critical', text: lang === 'DE' ? 'Bohrung Ø ≤ Werkzeug Ø: Helisches Einfahren unmöglich.' : 'Bore Ø ≤ tool Ø: helical entry impossible.' });
-      if (D > (0.70 * threadDia)) checks.push({ type: 'critical', text: lang === 'DE' ? 'Werkzeug Ø > 70% Gewinde Ø: Gewindeprofil verzerrt.' : 'Tool Ø > 70% of thread Ø: thread profile distorts.' });
+      if (boreDia <= D) checks.push({ type: 'critical', text: lang === 'DE' ? 'Bohrung Ø ≤ Werkzeug Ø: Helisch unmöglich.' : 'Bore Ø ≤ tool Ø: helical entry impossible.' });
+      if (D > (0.70 * threadDia)) checks.push({ type: 'critical', text: lang === 'DE' ? 'Werkzeug Ø > 70% Gewinde Ø: Profil verzerrt.' : 'Tool Ø > 70% of thread Ø: profile distorts.' });
 
       if (distToAccel > 0.5 && distToAccel > (minCornerDist / 2)) {
         checks.push({ type: 'warning', text: lang === 'DE' 
-          ? `Beschleunigung (${accel} mm/s²) zu gering: V_f wird auf kurzen Wegen nicht erreicht.` 
-          : `Acceleration (${accel} mm/s²) low: Feed rate won't be reached in small paths.` });
+          ? `Beschleunigung (${accel} mm/s²) gering: V_f kurz nicht erreicht.` 
+          : `Accel (${accel} mm/s²) low: Feed rate won't be reached in short moves.` });
       }
 
-      if (ld > 3.0) checks.push({ type: 'warning', text: lang === 'DE' ? `L/D Auskragung ist ${ld}×D. Schnittdaten reduziert.` : `L/D Tool Stickout is ${ld}×D. Parameters adjusted.` });
-      if (vc < (mat.vcMin * 0.7)) checks.push({ type: 'warning', text: lang === 'DE' ? `Schnittgeschwindigkeit Vc unter 70% des Zielbereichs.` : `Cutting speed Vc below 70% of target.` });
-      if (isAtMaxLimit) checks.push({ type: 'warning', text: lang === 'DE' ? `Drehzahl am Spindellimit (${maxSpindleLimit.toLocaleString()} min⁻¹).` : `Spindle speed at max limit (${maxSpindleLimit.toLocaleString()} rpm).` });
-      if (depthRatio > 3) checks.push({ type: 'warning', text: lang === 'DE' ? 'Lochtiefe > 3×Ø: Pecking-Zyklen zwingend.' : 'Hole depth > 3×Ø: pecking cycles mandatory.' });
+      if (ld > 3.0) checks.push({ type: 'warning', text: lang === 'DE' ? `L/D Auskragung ist ${ld}×D. Daten reduziert.` : `L/D Tool Stickout is ${ld}×D. Values adjusted.` });
+      if (vc < (mat.vcMin * 0.7)) checks.push({ type: 'warning', text: lang === 'DE' ? `Schnittgeschwindigkeit Vc unter Target.` : `Cutting speed Vc below target.` });
+      if (isAtMaxLimit) checks.push({ type: 'warning', text: lang === 'DE' ? `Drehzahl am Limit (${maxSpindleLimit.toLocaleString()} min⁻¹).` : `Spindle speed at max limit (${maxSpindleLimit.toLocaleString()} rpm).` });
+      if (depthRatio > 3) checks.push({ type: 'warning', text: lang === 'DE' ? 'Lochtiefe > 3×Ø: Pecking erforderlich.' : 'Hole depth > 3×Ø: pecking mandatory.' });
 
       const checksContainer = document.getElementById('checksContainer');
       if (checks.length === 0) {
@@ -1708,20 +1757,20 @@
 
       copyBtn.onclick = () => {
         triggerHaptic();
-        const copyPayload = `CNC FEEDS AND SPEEDS CALCULATOR
-Tool: Ø${formatNum(D, 2)} mm | Tool Stickout L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
+        const copyPayload = `FEEDS & SPEEDS CALCULATOR
+Tool: Ø${formatNum(D, 2)} mm | L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
 Material: ${mat.name} | Coolant: ${inpCoolant.value.toUpperCase()}
-Spindle Speed: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
-Max Feed Limit: ${maxFeed} mm/min | Acceleration: ${accel} mm/s²
+Spindle: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
+Max Feed: ${maxFeed} mm/min | Accel: ${accel} mm/s²
 MRR: ${formatNum(mrr, 2)} cm³/min | Power: ${formatNum(powerW, 1)} W
 
-CAM OPERATIONS:
+OPERATIONS:
 - Adaptive: vf=${Math.round(adaptiveFeed)} mm/min (ae=${formatNum(adaptiveAe,2)}, ap=${formatNum(adaptiveAp,2)})
-- Ramp Feed (${inpRampType.value}): ${Math.round(rampFeed)} mm/min
-- Plunge Feed: ${Math.round(plungeFeed)} mm/min
-- Helical Bore (Ø${boreDia}mm): ${Math.round(boreFeed)} mm/min
+- Ramp (${inpRampType.value}): ${Math.round(rampFeed)} mm/min
+- Plunge: ${Math.round(plungeFeed)} mm/min
+- Bore (Ø${boreDia}mm): ${Math.round(boreFeed)} mm/min
 - Thread Mill (${isExternalThread ? 'Ext':'Int'} Ø${threadDia}mm): ${Math.round(threadFeed)} mm/min
-- Drilling (Ø${drillDia}mm): ${Math.round(drillFeed)} mm/min (${Math.round(nDrill)} rpm) | Peck 1: ${formatNum(firstPeck,2)}mm`;
+- Drill (Ø${drillDia}mm): ${Math.round(drillFeed)} mm/min (${Math.round(nDrill)} rpm)`;
 
         navigator.clipboard.writeText(copyPayload).then(() => {
           copyBtn.textContent = 'COPIED!';
@@ -1730,7 +1779,7 @@ CAM OPERATIONS:
       };
     }
 
-    // On Load Initialization
+    // Initialize Page
     populateThemeSelector();
     applyTheme('neumorphismLight');
     document.getElementById('materialTriggerText').textContent = MATERIALS[0].name;
@@ -1738,3 +1787,4 @@ CAM OPERATIONS:
   </script>
 </body>
 </html>
+
