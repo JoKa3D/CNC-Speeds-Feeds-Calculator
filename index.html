@@ -1156,7 +1156,7 @@
 
     const I18N = {
       DE: {
-        app_title: "Feeds & Speeds",
+        app_title: "CNC Feeds & Speeds Calc",
         max_spindle: "Max Drehzahl",
         machine_params: "Maschinengrenzen",
         theme_label: "Theme",
@@ -1214,7 +1214,7 @@
         int_short: "Innen"
       },
       EN: {
-        app_title: "Feeds & Speeds",
+        app_title: "CNC Feeds & Speeds Calc",
         max_spindle: "Max Spindle Speed",
         machine_params: "Machine Limits",
         theme_label: "Theme",
@@ -1748,7 +1748,7 @@
 
       copyBtn.onclick = () => {
         triggerHaptic();
-        const copyPayload = `FEEDS & SPEEDS CALCULATOR
+        const copyPayload = `CNC FEEDS & SPEEDS CALCULATOR
 Tool: Ø${formatNum(D, 2)} mm | L/D: ${ld} | ${z}Z | Coating: ${inpCoating.value.toUpperCase()}
 Material: ${mat.name} | Coolant: ${inpCoolant.value.toUpperCase()}
 Spindle: ${n} rpm | Vc: ${formatNum(vc, 1)} m/min | fz: ${formatNum(baseFz, 4)} mm
